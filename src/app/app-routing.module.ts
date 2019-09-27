@@ -1,0 +1,45 @@
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './helpers/guards/auth.guard';
+const routes: Routes = [{
+  path: '',
+  loadChildren: './core/core.module#CoreModule',
+  pathMatch: 'full'
+},
+{
+  path: 'login',
+  loadChildren: './core/core.module#CoreModule',
+  pathMatch: 'full'
+},
+{
+  path: 'emp-list',
+  loadChildren: './modules/empregistation/empregistation.module#EmpregistationModule',
+  canActivate: [AuthGuard]
+
+},
+{
+  path: 'xl-upload',
+  loadChildren: './modules/xlupload/xlupload.module#XluploadModule',
+  canActivate: [AuthGuard]
+
+},
+{
+  path: 'assignLoanList',
+  loadChildren: './modules/assign-loan-list/assign-loan-list.module#AssignLoanListModule',
+  canActivate: [AuthGuard]
+
+},
+{
+  path: 'cutomerloandetails',
+  loadChildren: './modules/emplogin/emplogin.module#EmploginModule',
+  canActivate: [AuthGuard]
+
+},
+{ path: '**', redirectTo: '' }
+]
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

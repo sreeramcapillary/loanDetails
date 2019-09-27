@@ -1,0 +1,132 @@
+<div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">Loan Recovery </div>
+      <div class="list-group list-group-flush">
+        <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('elist')" *ngIf="userType == '1'">Employee List</a>
+        <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('xlupload')" *ngIf="userType == '1'">Excel Upload</a>
+        <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('aloan')" *ngIf="userType == '1'">Assign Loan</a>
+        <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('cdetails')" *ngIf="userType == '0'">Customer Loan Details</a>
+
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+  
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+  
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
+  
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+  
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <!-- <li class="nav-item active">
+                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Link</a>
+                </li> -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <!-- <a class="dropdown-item" href="#">Profile</a> -->
+                <a class="dropdown-item" href="#">Logout</a>
+                <!-- <div class="dropdown-divider"></div> -->
+                <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="container-fluid" style="padding-top: 20px;">
+        <div class="row">
+         <div class="col-md-12">
+           <h4 class="mb-3">View Details</h4>
+
+        </div> 
+        
+      </div>
+          
+      <div class="card row" style="margin: 1px;">
+          <div class="card-body row">
+            <div class="col-md-6">
+                <label>Customer Name:</label> {{cutomerDetials.customer_Name}}<br>
+                <label>Mobile:</label> {{cutomerDetials.mobile}}<br>
+                <label>Email:</label> {{cutomerDetials.email}}<br>
+                <label>Age:</label> {{cutomerDetials.Age}}<br>
+                <label>DOB:</label> {{cutomerDetials.DOB}}<br>
+                <label>Gender:</label> {{cutomerDetials.Gender}}<br>
+                <label>state:</label> {{cutomerDetials.state}}<br>
+                <label>City:</label> {{cutomerDetials.city}}<br>
+                <label>Pincode:</label> {{cutomerDetials.pin_code}}<br>
+                <label>Bucket:</label> {{cutomerDetials.bucket}}<br>
+                <label>Disbursal Amount:</label> {{cutomerDetials.disbursal_amt}}<br>
+                <label>Disbursal Date:</label> {{cutomerDetials.disbursal_date}}<br>
+                <label>Due Date:</label> {{cutomerDetials.due_date}}<br>
+                <label>Interest Amount:</label> {{cutomerDetials.interest_amount}}<br>
+                <label>Collected:</label> {{cutomerDetials.is_collected}}<br>
+            </div>
+            <div class="col-md-6">
+                <label>Loan Id:</label> {{cutomerDetials.loan_id}}<br>
+                <label>Overdue Days:</label> {{cutomerDetials.overdue_days}}<br>
+                <label>Penalty Amount:</label> {{cutomerDetials.penalty_amt}}<br>
+                <label>Principal Amount:</label> {{cutomerDetials.principal_amt}}<br>
+                <label>Reference Mobile Number 1:</label> {{cutomerDetials.ref_mobile_num1}}<br>
+                <label>Reference Name 1:</label> {{cutomerDetials.ref_name1}}<br>
+                <label>Reference Type 1:</label> {{cutomerDetials.ref_type1}}<br>
+                <label>Reference Mobile Number 2:</label> {{cutomerDetials.ref_mobile_num2}}<br>
+                <label>Reference  Name 2:</label> {{cutomerDetials.ref_name2}}<br>
+                <label>Reference Type 2:</label> {{cutomerDetials.ref_type2}}<br>
+                <label>Repayment Amount:</label> {{cutomerDetials.repayment_amt}}<br>
+              </div>
+            
+           
+
+          </div>
+        </div>
+        <div class="card row" style="margin: 1px;">
+            <div class="card-body">
+               
+                <form [formGroup]="selectForm">
+                    <label>Status</label>
+                    <select class="custom-select d-block w-100" id="status"  formControlName="status">
+                        <option value="">Choose...</option>
+                        <option value="{{status.id}}" *ngFor="let status of loanStatus">{{status.status_type}}</option>
+                    </select>
+                    <label>Upload Document</label>
+                    <div class="mb-3">
+                      <label for="comment">Comments</label>
+                      <textarea row="2" type="text" class="form-control" id="comment" formControlName="comment"></textarea>
+                    
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" name="file" ng2FileSelect [uploader]="uploader" />
+
+                        <button type="button" class="btn btn-success btn-s" 
+                          (click)="uploader.uploadAll()" 
+                          [disabled]="!uploader.getNotUploadedItems().length" >
+                              Upload
+                        </button>
+                    </div>
+                   
+         
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="submitDetails()"
+                   [disabled]="">Submit</button>
+                  </form>
+          
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>

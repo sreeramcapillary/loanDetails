@@ -55,3 +55,6 @@ body {
     font-size: 14px;
     box-shadow: none;
 }
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
+  color: unset !important;
+}

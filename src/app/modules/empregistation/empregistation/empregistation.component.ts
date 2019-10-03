@@ -17,6 +17,9 @@ export class EmpregistationComponent implements OnInit {
   loading: boolean;
   autoPassword: string | Int32Array;
   userType: string;
+  bList: any;
+  bucketList: any;
+  languageList: any;
 
   
   constructor(public fb: FormBuilder, private router: Router,private appService: AppService) {
@@ -34,8 +37,11 @@ export class EmpregistationComponent implements OnInit {
       username: [null, Validators.required],
       email:[null, [Validators.required,Validators.pattern(this.emailPattern)]],
       mobile:[null,[Validators.required]],
+      assignedbucket:[null, Validators.required],
       language:[null,[Validators.required]]
     });
+    this.getAllBucket();
+    this.getAllLanguage();
   }
   togglemenu(){
     $("#wrapper").toggleClass("toggled");
@@ -58,7 +64,8 @@ export class EmpregistationComponent implements OnInit {
       "email":this.f.email.value,
       "password": this.autoPassword,
       "mobile":this.f.mobile.value,
-      "language":this.f.language.value
+      "language_id":this.f.language.value,
+      "assignedbucket":this.f.assignedbucket.value
     }
     this.loading = true;
       this.appService.registerEmployee(data)
@@ -86,5 +93,21 @@ export class EmpregistationComponent implements OnInit {
       this.router.navigate(['/assignLoanList']);
 
     }
+  }
+  getAllBucket(){
+    this.appService.bucketList()
+    .subscribe(
+    (data:any) => {
+      console.log(data)
+      this.bucketList= data.bucketList
+    });
+  }
+  getAllLanguage(){
+    this.appService.laguageList()
+    .subscribe(
+    (data:any) => {
+      console.log(data)
+      this.languageList= data.languageList
+    });
   }
 }

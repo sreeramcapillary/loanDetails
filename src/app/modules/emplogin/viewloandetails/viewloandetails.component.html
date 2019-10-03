@@ -1,7 +1,7 @@
 <div class="d-flex" id="wrapper">
 
     <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
+    <!-- <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Loan Recovery </div>
       <div class="list-group list-group-flush">
         <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('elist')" *ngIf="userType == '1'">Employee List</a>
@@ -10,16 +10,17 @@
         <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('cdetails')" *ngIf="userType == '0'">Customer Loan Details</a>
 
       </div>
-    </div>
+    </div> -->
     <!-- /#sidebar-wrapper -->
   
     <!-- Page Content -->
     <div id="page-content-wrapper">
   
       <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-        <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars" aria-hidden="true"></i>
-        </button>
-  
+        <!-- <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars" aria-hidden="true"></i>
+        </button> -->
+        <div class="sidebar-heading">Loan Recovery </div>
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -94,39 +95,6 @@
 
           </div>
         </div>
-        <div class="card row" style="margin: 1px;">
-            <div class="card-body">
-               
-                <form [formGroup]="selectForm">
-                    <label>Status</label>
-                    <select class="custom-select d-block w-100" id="status"  formControlName="status">
-                        <option value="">Choose...</option>
-                        <option value="{{status.id}}" *ngFor="let status of loanStatus">{{status.status_type}}</option>
-                    </select>
-                    <label>Upload Document</label>
-                    <div class="mb-3">
-                      <label for="comment">Comments</label>
-                      <textarea row="2" type="text" class="form-control" id="comment" formControlName="comment"></textarea>
-                    
-                    </div>
-                    <div class="custom-file">
-                        <input type="file" name="file" ng2FileSelect [uploader]="uploader" />
-
-                        <button type="button" class="btn btn-success btn-s" 
-                          (click)="uploader.uploadAll()" 
-                          [disabled]="!uploader.getNotUploadedItems().length" >
-                              Upload
-                        </button>
-                    </div>
-                   
-         
-                    <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="submitDetails()"
-                   [disabled]="">Submit</button>
-                  </form>
-          
-            </div>
-          </div>
         </div>
     </div>
   </div>

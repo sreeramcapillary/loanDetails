@@ -56,9 +56,6 @@
                     <label for="name">Name</label>
                     <div class="input-group">  
                       <input type="text" class="form-control" id="name" placeholder="name"  formControlName="name">
-                      <!-- <div class="invalid-feedback" style="width: 100%;">
-                        Your name is required.
-                      </div> -->
                     </div>
                   </div>
             
@@ -69,39 +66,39 @@
                         <span class="input-group-text">@</span>
                       </div>
                       <input type="text" class="form-control" id="username" placeholder="Username" formControlName="username">
-                      <!-- <div class="invalid-feedback" style="width: 100%;">
-                        Your username is required.
-                      </div> -->
                     </div>
                   </div>
             
                   <div class="mb-3">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" placeholder="you@example.com" formControlName="email">
-                    <!-- <div class="invalid-feedback">
-                      Please enter a valid email address for shipping updates.
-                    </div> -->
                   </div>
             
                   <div class="mb-3">
                     <label for="address">Mobile Number</label>
                     <input type="text" class="form-control" id="mobile" placeholder="918884757932"  formControlName="mobile">
-                    <!-- <div class="invalid-feedback">
-                      Please enter Mobile number.
-                    </div> -->
                   </div>
-       
+                  <div class="row">
+                      <div class="col-md-5 mb-3">
+                        <label for="assignedbucket">Assignee Bucket</label>
+                        <select class="custom-select d-block w-100" id="assignedbucket"  formControlName="assignedbucket">
+                          <option value="">Choose...</option>
+                          <option value="{{blist.id}}" *ngFor="let blist of bucketList">{{blist.bucket}}</option>
+                          <!-- <option>B2</option>
+                          <option>B3</option>
+                          <option>B4</option>
+                          <option>B5</option>
+                          <option>B6</option> -->
+                        </select>
+                      </div>
+                     </div>
                   <div class="row">
                     <div class="col-md-5 mb-3">
                       <label for="language">Language</label>
                       <select class="custom-select d-block w-100" id="language"  formControlName="language">
                         <option value="">Choose...</option>
-                        <option>Hindi</option>
-                        <option>English</option>
+                        <option value="{{langList.id}}" *ngFor="let langList of languageList">{{langList.state_name}}-{{langList.name}}</option>
                       </select>
-                      <!-- <div class="invalid-feedback">
-                        Please select a valid language.
-                      </div> -->
                     </div>
                    </div>
                   <hr class="mb-4">

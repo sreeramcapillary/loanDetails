@@ -63,9 +63,10 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
-    xlupload(data){
+    xlupload(loand){
       var loan = {
-        loanDetails:data
+        loanDetails:loand.data,
+        filename:loand.filename
       }
       return this.http.post(BaseURL.url+'insertExcel',loan, {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
@@ -96,6 +97,16 @@ export class AppService {
     }
     updateLoanDetails(data){
       return this.http.post(BaseURL.url+'updateLoan', data,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    bucketList(){
+      return this.http.get(BaseURL.url+'getBucketList', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    laguageList(){
+      return this.http.get(BaseURL.url+'getAllLanguage', {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }

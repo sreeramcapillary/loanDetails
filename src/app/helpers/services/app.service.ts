@@ -110,4 +110,12 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
+    updateLoanData(data){
+      var ldata={
+        "loanupdateData":data
+      }
+      return this.http.post(BaseURL.url+'updateLoanDetails',ldata ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
 }

@@ -25,7 +25,7 @@ export class CustomerloandetailsComponent implements OnInit {
   old_status: any;
   selected = [];
   SelectionType = SelectionType;
-  loan_log_Id: any;
+  loan_id: any;
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -67,8 +67,8 @@ export class CustomerloandetailsComponent implements OnInit {
   }
   onSelect({ selected }) {
     console.log('Select Event', selected, this.selected);
-    this.old_status = selected[0].old_Status;
-    this.loan_log_Id = selected[0].Id;
+    this.old_status = selected[0].old_status;
+    this.loan_id = selected[0].loan_id;
     this.selectForm.patchValue({    
       "status": selected[0].current_status,
       "comment":selected[0].comments
@@ -109,7 +109,7 @@ export class CustomerloandetailsComponent implements OnInit {
    }
   submitDetails(){
     var data={
-      loan_log_Id:this.loan_log_Id,
+      loan_id:this.loan_id,
       current_Status : this.f.status.value,
       old_Status : this.old_status,
       document : this.filename,

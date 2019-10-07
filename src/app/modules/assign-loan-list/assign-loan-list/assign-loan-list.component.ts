@@ -92,15 +92,16 @@ export class AssignLoanListComponent implements OnInit {
           this.assignedLoanData = data.assignedLoan;
           this.rows.map((loanData,index) =>{
             data.assignedLoan.map(aL => {
-              if(loanData.id == aL.loan_id){
+              if(loanData.loan_id == aL.loan_id){
                 this.rows[index].assignedLoan = true;
                 this.rows[index].assignedToName = aL.name;
-                this.rows[index].assignedToId = aL.emp_id;
+               // this.rows[index].assignedToId = aL.assigned_emp_id;
                 this.rows[index].assignedLoanId = aL.loan_id;
 
               }
             })
           })
+          console.log(this.rows)
         }
       });
   }
@@ -122,16 +123,16 @@ export class AssignLoanListComponent implements OnInit {
   }
   toggleVisibility(e,data){
    // console.log(e)
-   this.assignedToId = data.assignedToId;
+   this.assignedToId = data.assigned_emp_id;
    this.assignedLoanId = data.assignedLoanId
-   this.selectedLoanId = data.id
+   this.selectedLoanId = data.loan_id
    
-    if(this.selectedEmployee == data.assignedToId && data.id == data.assignedLoanId){
+    if(this.selectedEmployee == data.assigned_emp_id && data.loan_id == data.assignedLoanId){
       alert("Employee is already assigned to this Loan")
       e.target.checked = false;
     }else{
       if(e.target.checked == true){
-        this.loan_id.push(data.id);
+        this.loan_id.push(data.loan_id);
       }
     }
     

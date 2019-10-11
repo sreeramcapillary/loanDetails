@@ -101,7 +101,7 @@ router.get('/getAllALoanDetailsList', function (request, response) {
 });
 router.post('/getLoanListByEmp', function (request, response) {
 	var empId = request.body.empId
-	connection.query(`SELECT * FROM loan_details ld JOIN userdetails u on  u.id = ld.assigned_emp_id where u.id ='${empId}'`, function (error, results, fields) {
+	connection.query(`SELECT * FROM loan_details ld JOIN userdetails u on  u.id = ld.assigned_emp_id where u.id ='${empId}' AND ld.batch_status = 1`, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -221,7 +221,7 @@ router.post('/updateLoan', function (request, response) {
 	}
 });
 router.get('/getAllLoanDetailsList', function (request, response) {
-	connection.query('SELECT * FROM loan_details', function (error, results, fields) {
+	connection.query('SELECT * FROM loan_details WHERE batch_status = 1 ORDER BY is_assigned ASC', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -235,6 +235,14 @@ router.get('/getAllLoanDetailsList', function (request, response) {
 	});
 
 });
+router.get('/inactiveCurrentBatch', function (request, response) {
+	connection.query('UPDATE loan_details SET `batch_status` = 0 WHERE `batch_status` = 1', function (error, results, fields) {
+		let responseData = { "status": true, "code": 200, "message": "Current Batch Inactivated." }
+		response.json(responseData)
+	});
+
+});
+
 router.get('/getLoanStatus', function (request, response) {
 	connection.query('SELECT * FROM Loan_status ', function (error, results, fields) {
 		if (results.length > 0) {
@@ -309,6 +317,8 @@ router.post("/uploadExcel", (request, response) => {
 	});
 })
 router.post('/insertExcel', function (request, response) {
+	// let responseData = { "status": true, "code": 200, "message": "Excel uploaded successfully" }
+	// response.json(responseData)
 	var loanDetails = request.body.loanDetails;
 	var filename = request.body.filename;
 	if (loanDetails == null) {
@@ -379,10 +389,6 @@ router.post('/insertExcel', function (request, response) {
 				
 			});
 		}
-
-
-
-
 	}
 });
 router.post('/updateLoanDetails', function (request, response) {
@@ -455,5 +461,31 @@ router.get('/getAllLanguage', function (request, response) {
 		response.end();
 	});
 
+});
+
+router.get('/getUsersWithKnownLanguages', function (request, response) {
+	connection.query('SELECT UKL.userId, UKL.languageId as language_id, LT.name as language_name, UD.email, UD.id, UD.mobile, UD.name, UD.bucket_id, LT.state_name, UD.client_id, BL.bucket as bucket, UD.username FROM user_known_languages UKL JOIN userdetails UD ON UKL.userId = UD.id JOIN language_table LT ON UKL.languageId = LT.id JOIN bucket_list BL ON BL.id = UD.bucket_id', function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "languageList": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "languageList": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+});
+
+router.get('/getDayReport', function (request, response) {
+	connection.query('SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) as collectedAmout, COALESCE(((COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id', function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "reportData": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "reportData": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
 });
 module.exports = router

@@ -105,8 +105,18 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
+    inactiveCurrentBatch(){
+      return this.http.get(BaseURL.url+'inactiveCurrentBatch', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
     laguageList(){
       return this.http.get(BaseURL.url+'getAllLanguage', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    usersWithKnownLanguages(){
+      return this.http.get(BaseURL.url+'getUsersWithKnownLanguages', {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }

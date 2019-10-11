@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { XluploadRoutingModule } from './xlupload-routing.module';
 import { XluploadComponent } from './xlupload/xlupload.component';
 import { FileSelectDirective } from 'ng2-file-upload';
@@ -9,7 +9,9 @@ import { FileSelectDirective } from 'ng2-file-upload';
   declarations: [XluploadComponent,FileSelectDirective],
   imports: [
     CommonModule,
-    XluploadRoutingModule
+    XluploadRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class XluploadModule { }

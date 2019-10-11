@@ -56,6 +56,18 @@
         [disabled]="!uploader.getNotUploadedItems().length" >
             Upload
       </button>
+      <form [formGroup]="newDataForm">
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <label for="newbatch"><b>New Batch ?</b></label>
+            <select class="custom-select d-block w-100" id="newbatch"  formControlName="newBatch">
+              <option value="NO">No</option>
+              <option value="YES">Yes</option>
+            </select>
+          </div>
+        </div>
+      </form>
+      
     </div>
   </div>
 </div>

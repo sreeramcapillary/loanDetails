@@ -53,12 +53,12 @@ export class LoginComponent implements OnInit {
     }
     this.loading = true;
     this.hashPassword = Md5.hashStr(this.f.password.value)
-    console.log(this.hashPassword)
+   // console.log(this.hashPassword)
       this.appService.login(this.f.username.value, this.hashPassword)
         .subscribe(
       (data:any) => {
         this.loading = false;
-       console.log(data.status);
+     //  console.log(data.status);
         if(data.status == true){
           localStorage.setItem('current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
         //  console.log(true)

@@ -5,9 +5,9 @@
     <div class="sidebar-heading">Loan Recovery </div>
     <div class="list-group list-group-flush">
       <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('elist')">Employee List</a>
-      <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('xlupload')">New Data Upload</a>
+      <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('xlupload')">New Data Upload</a>
       <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('oldxlupload')">Old Data Upload</a>
-      <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('aloan')">Assign Loan</a>
+      <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('aloan')">Assign Loan</a>
       <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('repaymentdataupload')">Repayment Data Upload</a>
       <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('reports')">Reports</a>
 
@@ -52,14 +52,38 @@
     </nav>
 
     <div class="container-fluid" style="padding-top: 20px;">
-      <h4 class="mb-3">Old Data Upload</h4>
-      <input type="file" name="file" ng2FileSelect [uploader]="uploader" />
-
-      <button type="button" class="btn btn-success btn-s" 
-        (click)="uploader.uploadAll()" 
-        [disabled]="!uploader.getNotUploadedItems().length" >
-            Upload
-      </button>
+    <div class="row">
+     <div class="col-md-6">
+       <h4 class="mb-3">Reports</h4>
+    </div> 
+  </div>
+      <div class="col-md-12 order-md-1">
+        <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+          [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]">
+          <ngx-datatable-column name="Employee Name">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.employeeName}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Assigned Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.assignedAmount}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Collected Amout">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.collectedAmout}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Percentage">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.inPercentage}}
+            </ng-template>
+          </ngx-datatable-column>
+          
+        </ngx-datatable>
+      </div>
     </div>
   </div>
 </div>
+<!-- /#wrapper -->

@@ -23,10 +23,10 @@ export class OlddatauploadComponent implements OnInit {
   ngOnInit() {
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      console.log(response)
+     // console.log(response)
       if (response) {
         this.olduploaddata = JSON.parse(response);
-        console.log(this.olduploaddata)
+        //console.log(this.olduploaddata)
 
         if (this.olduploaddata) {
           this.appService.oldxlupload(this.olduploaddata.data).subscribe(
@@ -54,6 +54,9 @@ export class OlddatauploadComponent implements OnInit {
 
     }else if(val == 'repaymentdataupload'){
       this.router.navigate(['/repaymentupload']);
+
+    }else if(val == 'reports'){
+      this.router.navigate(['/reports']);
 
     }
   }

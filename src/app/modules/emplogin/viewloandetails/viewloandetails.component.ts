@@ -30,7 +30,7 @@ export class ViewloandetailsComponent implements OnInit {
 
   ngOnInit() {
     this.cutomerDetials = JSON.parse(localStorage.getItem("customerData"))
-    console.log(this.cutomerDetials["current_status"])
+   // console.log(this.cutomerDetials["current_status"])
     this.getLoanStatus()
     this.selectForm = this.formBuilder.group({
       status: ['', Validators.required], 
@@ -68,7 +68,7 @@ export class ViewloandetailsComponent implements OnInit {
     .subscribe(
       (data: any) => {
         if (data.status) { 
-           console.log(data.loanStatus)
+          // console.log(data.loanStatus)
            this.loanStatus = data.loanStatus
            
         }
@@ -92,7 +92,7 @@ export class ViewloandetailsComponent implements OnInit {
     .subscribe(
       (data: any) => {
         if (data.status) { 
-           console.log(data.loanStatus)
+        //   console.log(data.loanStatus)
             alert("Loan Details updated Successfully")
             this.router.navigate(['/cutomerloandetails']);
 

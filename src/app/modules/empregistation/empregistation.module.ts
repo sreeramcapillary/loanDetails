@@ -5,18 +5,17 @@ import { EmpregistationRoutingModule } from './empregistation-routing.module';
 import { EmpregistationComponent } from './empregistation/empregistation.component';
 import { EmplistComponent } from './emplist/emplist.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { SharedModule } from '../shared/shared.module';
 
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 @NgModule({
   declarations: [EmpregistationComponent,EmplistComponent],
   imports: [
     CommonModule,
     EmpregistationRoutingModule,
-    NgxDatatableModule,
     FormsModule,
     ReactiveFormsModule,
-    NgMultiSelectDropDownModule.forRoot()
-    
+    NgMultiSelectDropDownModule.forRoot(),
+    SharedModule
   ]
 })
 export class EmpregistationModule { }

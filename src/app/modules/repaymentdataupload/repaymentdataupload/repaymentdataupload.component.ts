@@ -53,6 +53,9 @@ export class RepaymentdatauploadComponent implements OnInit {
     }else if(val == 'repaymentdataupload'){
       this.router.navigate(['/repaymentupload']);
 
+    }else if(val == 'reports'){
+      this.router.navigate(['/reports']);
+
     }
   }
 }

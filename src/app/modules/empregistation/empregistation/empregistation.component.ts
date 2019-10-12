@@ -80,13 +80,13 @@ export class EmpregistationComponent implements OnInit {
       "language":this.f.language.value,
       "assignedbucket":this.f.assignedbucket.value
     }
-    console.log( data.language)
+    //console.log( data.language)
     this.loading = true;
       this.appService.registerEmployee(data)
         .subscribe(
       (data:any) => {
         this.loading = false;
-       console.log(data.status);
+      // console.log(data.status);
         if(data.status == true){
          // localStorage.setItem('current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
         //  console.log(true)
@@ -112,13 +112,16 @@ export class EmpregistationComponent implements OnInit {
     }else if(val == 'repaymentdataupload'){
       this.router.navigate(['/repaymentupload']);
 
+    }else if(val == 'reports'){
+      this.router.navigate(['/reports']);
+
     }
   }
   getAllBucket(){
     this.appService.bucketList()
     .subscribe(
     (data:any) => {
-      console.log(data)
+      //console.log(data)
       this.bucketList= data.bucketList
     });
   }
@@ -126,7 +129,7 @@ export class EmpregistationComponent implements OnInit {
     this.appService.laguageList()
     .subscribe(
     (data:any) => {
-      console.log(data)
+   //   console.log(data)
       this.languageList= data.languageList
       var lList;
       this.dropdownList=[];
@@ -137,14 +140,14 @@ export class EmpregistationComponent implements OnInit {
           }
         this.dropdownList.push(lList)
       })
-      console.log(this.dropdownList)
+    //  console.log(this.dropdownList)
     });
   }
   onItemSelect(item: any) {
    //console.log( this.f.language.value)
-    console.log(item);
+   // console.log(item);
   }
   onSelectAll(items: any) {
-    console.log(items);
+  //  console.log(items);
   }
 }

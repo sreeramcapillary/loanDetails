@@ -56,6 +56,9 @@ export class AssignLoanListComponent implements OnInit {
     }else if(val == 'repaymentdataupload'){
       this.router.navigate(['/repaymentupload']);
 
+    }else if(val == 'reports'){
+      this.router.navigate(['/reports']);
+
     }
   }
   getAllEmp(){
@@ -86,7 +89,7 @@ export class AssignLoanListComponent implements OnInit {
           })
           
           this.rows = data.loanDetails;
-          console.log(this.rows)
+        //  console.log(this.rows)
         }
       });
   }
@@ -153,7 +156,7 @@ export class AssignLoanListComponent implements OnInit {
     this.appService.assignLoan(data)
     .subscribe(
       (data: any) => {
-        console.log(data)
+       // console.log(data)
         if(data.status){
           alert(data.message)
           this.loan_id=[];

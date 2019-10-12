@@ -92,7 +92,7 @@ export class XluploadComponent implements OnInit {
                   }
 
                 }
-                console.log("Loan Details Filetered", this.loanDetails);
+             //   console.log("Loan Details Filetered", this.loanDetails);
 
                 //Getting unique employee array and setting assigned loans count to 0 
                 let uniqueEmployeeList = []
@@ -101,7 +101,7 @@ export class XluploadComponent implements OnInit {
                     uniqueEmployeeList[employee.userId] = 0
                   }
                 })
-                console.log("uniqueEmployeeList", uniqueEmployeeList)
+              //  console.log("uniqueEmployeeList", uniqueEmployeeList)
 
                 var finalFilteredArray = [];
 
@@ -150,8 +150,8 @@ export class XluploadComponent implements OnInit {
                     }
                   }
                 }
-                console.log("uniqueEmployeeList", uniqueEmployeeList)
-                console.log("finalFilteredArray", finalFilteredArray)
+                //console.log("uniqueEmployeeList", uniqueEmployeeList)
+               // console.log("finalFilteredArray", finalFilteredArray)
                 if (finalFilteredArray) {
                   this.appService.updateLoanData(finalFilteredArray).subscribe(
                     (data: any) => {
@@ -196,7 +196,7 @@ export class XluploadComponent implements OnInit {
     this.appService.inactiveCurrentBatch()
     .subscribe(
       (data: any) => {
-        console.log("Invactive Branch", data)
+        //console.log("Invactive Branch", data)
       });
   }
   getUsersWithKnownLanguages(){
@@ -241,7 +241,7 @@ export class XluploadComponent implements OnInit {
 
           // console.log("finalarray", filteredUsersData)
           this.emplist = data.languageList
-          console.log(this.emplist)
+         // console.log(this.emplist)
         });
   }
   getAllEmp() {
@@ -269,6 +269,9 @@ export class XluploadComponent implements OnInit {
 
     }else if(val == 'repaymentdataupload'){
       this.router.navigate(['/repaymentupload']);
+
+    }else if(val == 'reports'){
+      this.router.navigate(['/reports']);
 
     }
   }

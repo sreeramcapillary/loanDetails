@@ -47,6 +47,12 @@ const routes: Routes = [{
   canActivate: [AuthGuard]
 
 },
+{
+  path: 'reports',
+  loadChildren: './modules/reports/reports.module#ReportsModule',
+  canActivate: [AuthGuard]
+
+},
 { path: '**', redirectTo: '' }
 ]
 

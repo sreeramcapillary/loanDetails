@@ -42,7 +42,7 @@ export class EmplistComponent implements OnInit {
       });
   }
   registerEmp(){
-    console.log("emp")
+    //console.log("emp")
     this.router.navigate(['emp-list','emp-registation']);
 
   }
@@ -61,6 +61,9 @@ export class EmplistComponent implements OnInit {
 
     }else if(val == 'repaymentdataupload'){
       this.router.navigate(['/repaymentupload']);
+
+    }else if(val == 'reports'){
+      this.router.navigate(['/reports']);
 
     }
   }

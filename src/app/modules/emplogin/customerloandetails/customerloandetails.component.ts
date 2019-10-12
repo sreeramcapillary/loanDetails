@@ -66,7 +66,7 @@ export class CustomerloandetailsComponent implements OnInit {
       });
   }
   onSelect({ selected }) {
-    console.log('Select Event', selected, this.selected);
+   // console.log('Select Event', selected, this.selected);
     this.old_status = selected[0].old_status;
     this.loan_id = selected[0].loan_id;
     this.selectForm.patchValue({    
@@ -83,7 +83,7 @@ export class CustomerloandetailsComponent implements OnInit {
     }
   }
   viewDeials(row){
-     console.log(row)
+    // console.log(row)
      localStorage.setItem('customerData',JSON.stringify(row))
      this.router.navigate(['/cutomerloandetails/viewdetails']);
    
@@ -98,7 +98,7 @@ export class CustomerloandetailsComponent implements OnInit {
     .subscribe(
       (data: any) => {
         if (data.status) { 
-           console.log(data.loanStatus)
+           //console.log(data.loanStatus)
            this.loanStatus = data.loanStatus
            
         }
@@ -119,7 +119,7 @@ export class CustomerloandetailsComponent implements OnInit {
     .subscribe(
       (data: any) => {
         if (data.status) { 
-           console.log(data.loanStatus)
+          // console.log(data.loanStatus)
             alert("Loan Details updated Successfully")
             this.router.navigate(['/cutomerloandetails']);
 

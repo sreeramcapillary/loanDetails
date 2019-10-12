@@ -8,7 +8,7 @@ var xlsxtojson = require("xlsx-to-json-lc");
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '',
+	password: 'Sree@1254.',
 	database: 'loandata',
 	multipleStatements: true
 });
@@ -109,8 +109,11 @@ router.post('/registerEmployee', function (request, response) {
 		response.end();
 	}
 });
+
+//SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,lt.state_name,u.bucket_id,bl.bucket,lt.name as language_name FROM userdetails u JOIN user_known_languages ukl ON ukl.userId = u.id JOIN language_table lt ON lt.id = ukl.languageId JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1
+
 router.get('/getAllEmpList', function (request, response) {
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,lt.state_name,u.bucket_id,bl.bucket,lt.name as language_name FROM userdetails u JOIN user_known_languages ukl ON ukl.userId = u.id JOIN language_table lt ON lt.id = ukl.languageId JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1', function (error, results, fields) {
+	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

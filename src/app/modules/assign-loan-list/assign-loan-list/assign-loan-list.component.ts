@@ -35,7 +35,7 @@ export class AssignLoanListComponent implements OnInit {
     this.getAllEmp();
 
     this.getAllLoanDetails();
-    this.getAssinedLoanDetails();
+    //this.getAssinedLoanDetails();
     this.selectForm = this.formBuilder.group({
       employee: ['', Validators.required], 
     });
@@ -89,6 +89,7 @@ export class AssignLoanListComponent implements OnInit {
           })
           
           this.rows = data.loanDetails;
+	  this.getAssinedLoanDetails();
         //  console.log(this.rows)
         }
       });

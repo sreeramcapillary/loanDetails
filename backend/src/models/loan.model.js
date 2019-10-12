@@ -48,20 +48,60 @@ router.post('/registerEmployee', function (request, response) {
 	var email = request.body.email;
 	var mobile = request.body.mobile;
 	var bucket = request.body.assignedbucket;
-	var language_id = request.body.language_id
-	if (name && username && password && email && mobile && language_id) {
-		connection.query(`INSERT INTO userdetails (client_id,name,username,email,password,mobile,language_id,bucket_id,usertype,active) VALUES ('1','${name}', '${username}','${email}','${password}','${mobile}','${language_id}','${bucket}','0','1')`, function (error, results, fields) {
+	var language = request.body.language
+	if (name && username && password && email && mobile ) {
+		var data = {
+			client_id:"1",
+			name: name,
+			username: username,
+			email:email,
+			password: password,
+			mobile:mobile,
+			bucket_id:bucket,
+			usertype: '0',
+			active:"1"
+		}
+		connection.query('INSERT INTO userdetails SET ?', data, function (error, results, fields) {
 			console.log(error)
-			if (!error) {
-				//	request.session.loggedin = true;
-				// request.session.username = username;
-				let responseData = { "status": true, "code": 200, "message": "Employee register successfully" }
-				response.json(responseData)
-			} else {
-				let responseData = { "status": false, "code": 401, "message": "Unable to register employee" }
-				response.json(responseData)
-			}
-			response.end();
+				var lastinserttedId = results.insertId;
+				let inserData = '';
+				let queryTest
+				let startQuery = "INSERT INTO `user_known_languages` (`userId`,`languageId`) VALUES";
+				// let duplicateColumn = "ON DUPLICATE KEY UPDATE `userId`=VALUES(`userId`),`languageId`=VALUES(`languageId`)"
+				let responseData;
+				//console.log(loanDetails)
+				language.map(item => {
+					currentRow = `('${lastinserttedId}','${item.id}'),`
+					currentRow = currentRow.replace(/\n|\r/g, "");
+					currentRow = currentRow.replace(/~+$/, '');
+					inserData = inserData + currentRow
+				});
+				inserData = inserData.replace(/,\s*$/, "");
+				queryTest = startQuery + inserData;
+				console.log(queryTest)
+				connection.query(queryTest, (err, results, fields) => {
+				//	console.log(results)
+					if (results) {
+						//	request.session.loggedin = true;
+						// request.session.username = username;
+						let responseData = { "status": true, "code": 200, "message": "Employee register successfully" }
+						response.json(responseData)
+					} else {
+						let responseData = { "status": false, "code": 401, "message": "Unable to register employee" }
+						response.json(responseData)
+					}
+					response.end();
+				});
+			// if (!error) {
+			// 	//	request.session.loggedin = true;
+			// 	// request.session.username = username;
+			// 	let responseData = { "status": true, "code": 200, "message": "Employee register successfully" }
+			// 	response.json(responseData)
+			// } else {
+			// 	let responseData = { "status": false, "code": 401, "message": "Unable to register employee" }
+			// 	response.json(responseData)
+			// }
+			// response.end();
 		});
 	} else {
 		let responseData = { "status": false, "code": 401, "message": "Please enter employee details" }
@@ -70,7 +110,7 @@ router.post('/registerEmployee', function (request, response) {
 	}
 });
 router.get('/getAllEmpList', function (request, response) {
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.language_id,lt.state_name,lt.name as language_name,u.bucket_id,bl.bucket FROM userdetails u JOIN language_table lt ON lt.id = u.language_id JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1', function (error, results, fields) {
+	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,lt.state_name,u.bucket_id,bl.bucket,lt.name as language_name FROM userdetails u JOIN user_known_languages ukl ON ukl.userId = u.id JOIN language_table lt ON lt.id = ukl.languageId JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -391,6 +431,61 @@ router.post('/insertExcel', function (request, response) {
 		}
 	}
 });
+router.post('/updateOldLoanDetails', function (request, response) {
+	var ldata = request.body.loanupdateData;
+	console.log(ldata)
+	// var emp_id = request.body.empid;
+	// var is_assigned = request.body.is_assigned;
+	//console.log("update")
+	if (ldata) {
+		var queries='';
+		ldata.map(item=>{
+			queries += mysql.format(`UPDATE loan_details SET Loan_Count = '${item.loan_count}',customer_Name= '${item.customer_name}',Gender= '${item.gender}',mobile= '${item.mobile}',email= '${item.email}',DOB= '${item.dob}',Age= '${item.age}',city= '${item.city}',pin_code= '${item.pin_code}' ,state= '${item.state}'  ,disbursal_amt= '${item.disbursal_amt}',disbursal_date= '${item.disbursal_date}'
+			,due_date= '${item.due_date}' ,principal_amt= '${item.principal_amt}' ,interest_amount= '${item.interest_amount}'
+			,penalty_amt= '${item.penalty_amt}',repayment_amt= '${item.repayment_amt}'  ,ref_type1= '${item.ref_type1}' ,ref_mobile_num1= '${item.ref_mobile_num1}'
+			,ref_type2= '${item.ref_type2}',ref_name2= '${item.ref_name2}',bucket= '${item.bucket}',overdue_days= '${item.overdue_days}'
+			,is_collected= '${item.is_collected}',ESIGN_MOBILE_NUMBER= '${item.esign_mobile_number}'
+			WHERE loan_id = '${item.loan_id}';`);
+			
+		})
+		console.log(queries)
+		connection.query(queries, function (error, results, fields) {
+			console.log(results)
+
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details" }
+				response.json(responseData)
+			}
+		});
+	}
+
+})
+router.post('/updateRepaymentStatus', function (request, response) {
+	var ldata = request.body.repymentData;
+	if (ldata) {
+		var queries='';
+		ldata.map(item=>{
+			queries += mysql.format(`UPDATE loan_details SET current_status = '${item.current_status}' WHERE loan_id = '${item.loan_id}';`);
+			
+		})
+		console.log(queries)
+		connection.query(queries, function (error, results, fields) {
+			console.log(results)
+
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details" }
+				response.json(responseData)
+			}
+		});
+	}
+
+})
 router.post('/updateLoanDetails', function (request, response) {
 	var ldata = request.body.loanupdateData;
 	// var emp_id = request.body.empid;
@@ -465,6 +560,7 @@ router.get('/getAllLanguage', function (request, response) {
 
 router.get('/getUsersWithKnownLanguages', function (request, response) {
 	connection.query('SELECT UKL.userId, UKL.languageId as language_id, LT.name as language_name, UD.email, UD.id, UD.mobile, UD.name, UD.bucket_id, LT.state_name, UD.client_id, BL.bucket as bucket, UD.username FROM user_known_languages UKL JOIN userdetails UD ON UKL.userId = UD.id JOIN language_table LT ON UKL.languageId = LT.id JOIN bucket_list BL ON BL.id = UD.bucket_id', function (error, results, fields) {
+		console.log(results)
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "languageList": results }
 			response.json(responseData)

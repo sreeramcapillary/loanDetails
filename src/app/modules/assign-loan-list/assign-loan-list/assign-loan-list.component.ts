@@ -50,6 +50,12 @@ export class AssignLoanListComponent implements OnInit {
     }else if(val == 'aloan'){
       this.router.navigate(['/assignLoanList']);
 
+    }else if(val == 'oldxlupload'){
+      this.router.navigate(['/oldxlupload']);
+
+    }else if(val == 'repaymentdataupload'){
+      this.router.navigate(['/repaymentupload']);
+
     }
   }
   getAllEmp(){

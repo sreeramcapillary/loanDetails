@@ -35,6 +35,18 @@ const routes: Routes = [{
   canActivate: [AuthGuard]
 
 },
+{
+  path: 'oldxlupload',
+  loadChildren: './modules/olddataupload/olddataupload.module#OlddatauploadModule',
+  canActivate: [AuthGuard]
+
+},
+{
+  path: 'repaymentupload',
+  loadChildren: './modules/repaymentdataupload/repaymentdataupload.module#RepaymentdatauploadModule',
+  canActivate: [AuthGuard]
+
+},
 { path: '**', redirectTo: '' }
 ]
 

@@ -3,6 +3,8 @@ import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms'
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
 import {Md5} from 'ts-md5/dist/md5';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+
 declare var $;
 
 @Component({
@@ -20,6 +22,8 @@ export class EmpregistationComponent implements OnInit {
   bList: any;
   bucketList: any;
   languageList: any;
+  dropdownSettings: IDropdownSettings = {} ;
+  dropdownList: any;
 
   
   constructor(public fb: FormBuilder, private router: Router,private appService: AppService) {
@@ -42,6 +46,15 @@ export class EmpregistationComponent implements OnInit {
     });
     this.getAllBucket();
     this.getAllLanguage();
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'language',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
   togglemenu(){
     $("#wrapper").toggleClass("toggled");
@@ -64,9 +77,10 @@ export class EmpregistationComponent implements OnInit {
       "email":this.f.email.value,
       "password": this.autoPassword,
       "mobile":this.f.mobile.value,
-      "language_id":this.f.language.value,
+      "language":this.f.language.value,
       "assignedbucket":this.f.assignedbucket.value
     }
+    console.log( data.language)
     this.loading = true;
       this.appService.registerEmployee(data)
         .subscribe(
@@ -92,6 +106,12 @@ export class EmpregistationComponent implements OnInit {
     }else if(val == 'aloan'){
       this.router.navigate(['/assignLoanList']);
 
+    }else if(val == 'oldxlupload'){
+      this.router.navigate(['/oldxlupload']);
+
+    }else if(val == 'repaymentdataupload'){
+      this.router.navigate(['/repaymentupload']);
+
     }
   }
   getAllBucket(){
@@ -108,6 +128,23 @@ export class EmpregistationComponent implements OnInit {
     (data:any) => {
       console.log(data)
       this.languageList= data.languageList
+      var lList;
+      this.dropdownList=[];
+      this.languageList.map(data=>{
+         lList = 
+          { "id": data.id, 
+            "language": data.state_name+"("+data.name+")" 
+          }
+        this.dropdownList.push(lList)
+      })
+      console.log(this.dropdownList)
     });
+  }
+  onItemSelect(item: any) {
+   //console.log( this.f.language.value)
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
   }
 }

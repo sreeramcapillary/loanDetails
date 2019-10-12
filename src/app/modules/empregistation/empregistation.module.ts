@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmpregistationRoutingModule } from './empregistation-routing.module';
 import { EmpregistationComponent } from './empregistation/empregistation.component';
 import { EmplistComponent } from './emplist/emplist.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 @NgModule({
@@ -13,7 +14,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     EmpregistationRoutingModule,
     NgxDatatableModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule.forRoot()
     
   ]
 })

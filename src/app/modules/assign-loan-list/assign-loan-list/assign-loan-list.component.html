@@ -5,8 +5,10 @@
     <div class="sidebar-heading">Loan Recovery </div>
     <div class="list-group list-group-flush">
       <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('elist')" *ngIf="userType == 1">Employee List</a>
-      <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('xlupload')" *ngIf="userType == 1">Excel Upload</a>
+      <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('xlupload')" *ngIf="userType == 1">New Data Upload</a>
+      <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('oldxlupload')">Old Data Upload</a>
       <a  class="list-group-item list-group-item-action bg-light" (click)="clickSide('aloan')" *ngIf="userType == 1">Assign Loan</a>
+      <a class="list-group-item list-group-item-action bg-light" (click)="clickSide('repaymentdataupload')">Repayment Data Upload</a>
 
     </div>
   </div>

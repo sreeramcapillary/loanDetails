@@ -128,4 +128,20 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
+    oldxlupload(data){
+      var ldata={
+        "loanupdateData":data
+      }
+      return this.http.post(BaseURL.url+'updateOldLoanDetails',ldata ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    repaymentupload(data){
+      var ldata={
+        "repymentData":data
+      }
+      return this.http.post(BaseURL.url+'updateRepaymentStatus',ldata ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
 }

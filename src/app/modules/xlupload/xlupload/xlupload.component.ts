@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 declare var $;
 // const URL = 'http://localhost:3000/uploadExcel'; // Local
-const URL = 'http://148.72.212.163/uploadExcel'; // Live
+const URL = 'http://148.72.212.163/backend/uploadExcel'; // Live
 
 @Component({
   selector: 'app-xlupload',

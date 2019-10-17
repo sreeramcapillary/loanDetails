@@ -62,6 +62,9 @@
             <div class="input-group">
               <input type="text" class="form-control" id="name" placeholder="name" formControlName="name">
             </div>
+            <div *ngIf="submitted && registerForm.get('name').errors" class="invalid-feedback-custom">
+              <div *ngIf="registerForm.get('name').errors.required">Name is required</div>
+            </div>
           </div>
 
           <div class="mb-3">
@@ -72,16 +75,26 @@
               </div>
               <input type="text" class="form-control" id="username" placeholder="Username" formControlName="username">
             </div>
+            <div *ngIf="submitted && registerForm.get('username').errors" class="invalid-feedback-custom">
+              <div *ngIf="registerForm.get('username').errors.required">Username is required</div>
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" placeholder="you@example.com" formControlName="email">
+            <div *ngIf="submitted && registerForm.get('email').errors" class="invalid-feedback-custom">
+                <div *ngIf="registerForm.get('email').errors.required">Email is required</div>
+                <div *ngIf="registerForm.get('email').errors.pattern">Email must be a valid email address</div>
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="address">Mobile Number</label>
             <input type="text" class="form-control" id="mobile" placeholder="918884757932" formControlName="mobile">
+            <div *ngIf="submitted && registerForm.get('mobile').errors" class="invalid-feedback-custom">
+              <div *ngIf="registerForm.get('mobile').errors.required">Mobile is required</div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5 mb-3">
@@ -95,6 +108,9 @@
                           <option>B5</option>
                           <option>B6</option> -->
               </select>
+              <div *ngIf="submitted && registerForm.get('assignedbucket').errors" class="invalid-feedback-custom">
+                <div *ngIf="registerForm.get('assignedbucket').errors.required">Bucket is required</div>
+              </div>
             </div>
           </div>
           <div class="row">
@@ -107,11 +123,13 @@
               <ng-multiselect-dropdown [placeholder]="'custom placeholder'" [data]="dropdownList"
               formControlName="language" [settings]="dropdownSettings">
               </ng-multiselect-dropdown>
+              <div *ngIf="submitted && registerForm.get('language').errors" class="invalid-feedback-custom">
+                <div *ngIf="registerForm.get('language').errors.required">Language is required</div>
+              </div>
             </div>
           </div>
           <hr class="mb-4">
-          <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="registerEmp()"
-            [disabled]="!registerForm.valid">Register</button>
+          <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="registerEmp()">Register</button>
         </form>
 
 

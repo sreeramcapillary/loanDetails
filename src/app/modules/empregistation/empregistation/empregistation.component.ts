@@ -15,13 +15,14 @@ declare var $;
 export class EmpregistationComponent implements OnInit {
   registerForm: FormGroup;
   emailPattern = '^[a-zA-Z]+[a-zA-Z0-9._]+@[a-zA-Z]+\\.[a-zA-Z.]{2,6}$';
-  submitted: boolean;
+  submitted = false;
   loading: boolean;
   autoPassword: string | Int32Array;
   userType: string;
   bList: any;
   bucketList: any;
   languageList: any;
+  languageListAltered: any;
   dropdownSettings: IDropdownSettings = {} ;
   dropdownList: any;
 
@@ -52,7 +53,7 @@ export class EmpregistationComponent implements OnInit {
       textField: 'language',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
+      itemsShowLimit: 5,
       allowSearchFilter: true
     };
   }
@@ -71,13 +72,22 @@ export class EmpregistationComponent implements OnInit {
         return;
     }
     this.autoPassword = Md5.hashStr(this.f.username.value+'@123')
+
+    //Geting list of rows based on selected languages
+    let finalLanguages = []
+    this.f.language.value.map((language) => {
+      this.languageListAltered[language.language].map(lang => {
+        finalLanguages.push(lang)
+      })
+      
+    })
     var data = {
       "name":this.f.name.value,
       "username":this.f.username.value,
       "email":this.f.email.value,
       "password": this.autoPassword,
       "mobile":this.f.mobile.value,
-      "language":this.f.language.value,
+      "language":finalLanguages,
       "assignedbucket":this.f.assignedbucket.value
     }
     //console.log( data.language)
@@ -129,18 +139,28 @@ export class EmpregistationComponent implements OnInit {
     this.appService.laguageList()
     .subscribe(
     (data:any) => {
-   //   console.log(data)
+    //  console.log(data)
+     this.languageListAltered = []
+     this.languageListAltered["languages"] = []
       this.languageList= data.languageList
       var lList;
       this.dropdownList=[];
       this.languageList.map(data=>{
-         lList = 
+        //altering the language list
+        if(typeof this.languageListAltered[data.name] === 'undefined') {
+          this.languageListAltered[data.name] = []
+          this.languageListAltered[data.name].push(data)
+          //Pushing only unique Languages
+          lList = 
           { "id": data.id, 
-            "language": data.state_name+"("+data.name+")" 
+            "language": data.name
           }
-        this.dropdownList.push(lList)
+         this.dropdownList.push(lList)
+        }else{
+          this.languageListAltered[data.name].push(data)
+        }
       })
-    //  console.log(this.dropdownList)
+     console.log("altered data list", this.languageListAltered)
     });
   }
   onItemSelect(item: any) {

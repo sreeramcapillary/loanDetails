@@ -67,5 +67,13 @@ export class EmplistComponent implements OnInit {
 
     }
   }
- 
+  editEmp(row){
+    console.log(row)
+    localStorage.setItem("editemp",JSON.stringify(row));
+    this.router.navigate(['emp-list','emp-registation']);
+
+  }
+  deleteEmp(row){
+
+  }
 }

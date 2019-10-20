@@ -25,6 +25,7 @@ export class EmpregistationComponent implements OnInit {
   languageListAltered: any;
   dropdownSettings: IDropdownSettings = {} ;
   dropdownList: any;
+  editEmpVal: string;
 
   
   constructor(public fb: FormBuilder, private router: Router,private appService: AppService) {
@@ -56,6 +57,17 @@ export class EmpregistationComponent implements OnInit {
       itemsShowLimit: 5,
       allowSearchFilter: true
     };
+    this.editEmpVal = JSON.parse(localStorage.getItem("editemp"));
+    console.log(this.editEmpVal)
+    if(this.editEmpVal){
+      this.registerForm.patchValue({
+        name: this.editEmpVal["name"],
+        username:this.editEmpVal["username"],
+        email:this.editEmpVal["email"],
+        mobile:this.editEmpVal["mobile"],
+        assignedbucket:this.editEmpVal["bucket_id"]
+      });
+    }
   }
   togglemenu(){
     $("#wrapper").toggleClass("toggled");

@@ -5,6 +5,7 @@ import { AssignLoanListRoutingModule } from './assign-loan-list-routing.module';
 import { AssignLoanListComponent } from './assign-loan-list/assign-loan-list.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [AssignLoanListComponent],
@@ -13,7 +14,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AssignLoanListRoutingModule,
     NgxDatatableModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class AssignLoanListModule { }

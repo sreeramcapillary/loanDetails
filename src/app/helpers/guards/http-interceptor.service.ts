@@ -3,20 +3,22 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } fr
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { NgxSpinnerService } from "ngx-spinner";
+
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
   growlData: { severity: string; summary: any; detail: string; };
-  constructor() { }
+  constructor(private spinner: NgxSpinnerService) { }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-  //  this.spinner.show();
+    this.spinner.show();
     return next.handle(request).pipe(
         tap(res => {
-          if (res instanceof HttpResponse) {
-        // this.spinner.hide();
+        if (res instanceof HttpResponse) {
+        this.spinner.hide();
         }
         }),
         catchError(err => {
-          //  this.spinner.hide();
+            this.spinner.hide();
             throw err;
         })
       );

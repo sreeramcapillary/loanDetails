@@ -32,6 +32,8 @@ export class AssignLoanListComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.appService.changeActiveTab("aloan")
+
     this.getAllEmp();
 
     this.getAllLoanDetails();
@@ -62,7 +64,7 @@ export class AssignLoanListComponent implements OnInit {
     }
   }
   getAllEmp(){
-    this.appService.getEmp()
+    this.appService.getActiveEmp()
     .subscribe(
       (data: any) => {
         if (data.status) {

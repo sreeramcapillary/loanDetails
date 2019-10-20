@@ -24,6 +24,8 @@ export class EmplistComponent implements OnInit {
 
 
   ngOnInit() {
+    this.appService.changeActiveTab("elist")
+
     this.getAllEmp();
   }
 
@@ -43,6 +45,8 @@ export class EmplistComponent implements OnInit {
   }
   registerEmp(){
     //console.log("emp")
+    localStorage.setItem("editemp",JSON.stringify(''));
+
     this.router.navigate(['emp-list','emp-registation']);
 
   }
@@ -73,7 +77,41 @@ export class EmplistComponent implements OnInit {
     this.router.navigate(['emp-list','emp-registation']);
 
   }
-  deleteEmp(row){
-
+  deactivateEmp(row){
+    var confirmation = confirm("Are you sure? You want to deactivate the employee!")
+    console.log(confirmation)
+    if(confirmation){
+      this.appService.deActivateEmployee(row.id)
+      .subscribe(
+      (data:any) => {
+      // console.log(data.status);
+        if(data.status == true){
+          alert(data.message)
+          this.getAllEmp();
+        }else{
+            alert(data.message)
+          
+        }
+      });
+    }
+   
+  }
+  activateEmp(row){
+    var confirmation = confirm("Are you sure? You want to activate the employee!")
+    console.log(confirmation)
+    if(confirmation){
+      this.appService.activateEmployee(row.id)
+      .subscribe(
+      (data:any) => {
+      // console.log(data.status);
+        if(data.status == true){
+          alert(data.message)
+          this.getAllEmp();
+        }else{
+            alert(data.message)
+          
+        }
+      });
+    }
   }
 }

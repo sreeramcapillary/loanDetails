@@ -26,6 +26,7 @@ export class EmpregistationComponent implements OnInit {
   dropdownSettings: IDropdownSettings = {} ;
   dropdownList: any;
   editEmpVal: string;
+  hideLanguage: boolean;
 
   
   constructor(public fb: FormBuilder, private router: Router,private appService: AppService) {
@@ -38,6 +39,8 @@ export class EmpregistationComponent implements OnInit {
 
 
   ngOnInit() {
+
+  //  this.editEmpVal ='';
     this.registerForm = this.fb.group({
       name: [null, Validators.required],
       username: [null, Validators.required],
@@ -59,14 +62,19 @@ export class EmpregistationComponent implements OnInit {
     };
     this.editEmpVal = JSON.parse(localStorage.getItem("editemp"));
     console.log(this.editEmpVal)
-    if(this.editEmpVal){
+    if(this.editEmpVal != ''){
+      this.hideLanguage = true;
       this.registerForm.patchValue({
         name: this.editEmpVal["name"],
         username:this.editEmpVal["username"],
         email:this.editEmpVal["email"],
         mobile:this.editEmpVal["mobile"],
-        assignedbucket:this.editEmpVal["bucket_id"]
+        assignedbucket:this.editEmpVal["bucket_id"],
+        language:['']
       });
+    }else{
+      this.hideLanguage = false;
+
     }
   }
   togglemenu(){
@@ -81,8 +89,44 @@ export class EmpregistationComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.registerForm.invalid) {
-        return;
-    }
+      return;
+  }
+    var data;
+    if(this.editEmpVal != ''){
+      data = {
+        "id":this.editEmpVal["id"],
+        "name":this.f.name.value,
+        "username":this.f.username.value,
+        "email":this.f.email.value,
+        "password": this.autoPassword,
+        "mobile":this.f.mobile.value,
+       // "language":finalLanguages,
+        "assignedbucket":this.f.assignedbucket.value
+      }
+      console.log( data)
+      this.loading = true;
+        this.appService.editEmployee(data)
+          .subscribe(
+        (data:any) => {
+          this.loading = false;
+        // console.log(data.status);
+          if(data.status == true){
+           // localStorage.setItem('current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
+          //  console.log(true)
+          alert(data.message)
+           this.router.navigateByUrl('/emp-list');
+
+          }else{
+            if(data.code = 402){
+              var  message = JSON.parse(data.message)
+              alert(message.sqlMessage);
+            }else{
+              alert(data.message)
+            }
+            }
+        });
+    }else{
+   
     this.autoPassword = Md5.hashStr(this.f.username.value+'@123')
 
     //Geting list of rows based on selected languages
@@ -93,7 +137,7 @@ export class EmpregistationComponent implements OnInit {
       })
       
     })
-    var data = {
+     data = {
       "name":this.f.name.value,
       "username":this.f.username.value,
       "email":this.f.email.value,
@@ -102,7 +146,7 @@ export class EmpregistationComponent implements OnInit {
       "language":finalLanguages,
       "assignedbucket":this.f.assignedbucket.value
     }
-    //console.log( data.language)
+    console.log( data)
     this.loading = true;
       this.appService.registerEmployee(data)
         .subscribe(
@@ -114,9 +158,16 @@ export class EmpregistationComponent implements OnInit {
         //  console.log(true)
          this.router.navigateByUrl('/emp-list');
         }else{
-          alert("Invalid Credentials");
-        }
+          if(data.code = 402){
+            var  message = JSON.parse(data.message)
+            alert(message.sqlMessage);
+          }else{
+            alert(data.message)
+          }
+          }
+       
       });
+    }
   }
   clickSide(val){
     if(val == 'elist'){

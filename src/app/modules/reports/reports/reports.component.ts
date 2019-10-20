@@ -15,6 +15,8 @@ export class ReportsComponent implements OnInit {
     private router: Router, private appService: AppService) { }
 
   ngOnInit() {
+    this.appService.changeActiveTab("reports")
+
     this.getAllReports()
   }
   clickSide(val) {

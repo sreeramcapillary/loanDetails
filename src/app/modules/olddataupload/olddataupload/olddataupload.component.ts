@@ -21,6 +21,8 @@ export class OlddatauploadComponent implements OnInit {
     private router: Router, private appService: AppService, public fb: FormBuilder) { }
 
   ngOnInit() {
+    this.appService.changeActiveTab("oldxlupload")
+
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
      // console.log(response)

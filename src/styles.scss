@@ -58,3 +58,6 @@ body {
 .ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
   color: unset !important;
 }
+.ngx-datatable.scroll-vertical {
+  height: 80vh;
+}

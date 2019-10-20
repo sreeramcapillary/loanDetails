@@ -33,6 +33,8 @@ export class XluploadComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.appService.changeActiveTab("xlupload")
+
     this.newDataForm = this.fb.group({
       newBatch : ["NO"]
     });

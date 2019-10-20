@@ -22,6 +22,8 @@ export class RepaymentdatauploadComponent implements OnInit {
     private router: Router, private appService: AppService, public fb: FormBuilder) { }
 
   ngOnInit() {
+    this.appService.changeActiveTab("repaymentdataupload")
+
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       if (response) {

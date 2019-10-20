@@ -10,9 +10,14 @@ import { map } from 'rxjs/operators';
 export class AppService {
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<any>;
+    private tab = new BehaviorSubject(localStorage.getItem('activeTab'));
+    activeTab = this.tab.asObservable();
   constructor(private http: HttpClient) { 
     this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
+  }
+  changeActiveTab(data) {
+    this.tab.next(data)
   }
   public get currentUserValue(): any {
     return this.currentUserSubject.value;
@@ -47,6 +52,11 @@ export class AppService {
     }
     getEmp(){
       return this.http.get(BaseURL.url+'getAllEmpList', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    getActiveEmp(){
+      return this.http.get(BaseURL.url+'getAllActiveEmpList', {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
@@ -146,6 +156,27 @@ export class AppService {
     }
     getReports(){
       return this.http.get(BaseURL.url+'getDayReport', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    editEmployee(data){
+      return this.http.post(BaseURL.url+'updateEmployee',data ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    deActivateEmployee(id){
+      var data={
+        "empid":id
+      }
+      return this.http.post(BaseURL.url+'deActivateEmployee',data ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    activateEmployee(id){
+      var data={
+        "empid":id
+      }
+      return this.http.post(BaseURL.url+'activateEmployee',data ,{
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }

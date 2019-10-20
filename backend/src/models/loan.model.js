@@ -8,7 +8,7 @@ var xlsxtojson = require("xlsx-to-json-lc");
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: 'Sree@1254.',
+	password: '',
 	database: 'loandata',
 	multipleStatements: true
 });
@@ -62,7 +62,12 @@ router.post('/registerEmployee', function (request, response) {
 			active:"1"
 		}
 		connection.query('INSERT INTO userdetails SET ?', data, function (error, results, fields) {
-			console.log(error)
+			console.log(JSON.stringify(error))
+			if(error){
+				let responseData = { "status": false, "code": 402, "message": JSON.stringify(error) }
+				response.json(responseData)
+				response.end();
+			}else{
 				var lastinserttedId = results.insertId;
 				let inserData = '';
 				let queryTest
@@ -92,17 +97,9 @@ router.post('/registerEmployee', function (request, response) {
 					}
 					response.end();
 				});
-			// if (!error) {
-			// 	//	request.session.loggedin = true;
-			// 	// request.session.username = username;
-			// 	let responseData = { "status": true, "code": 200, "message": "Employee register successfully" }
-			// 	response.json(responseData)
-			// } else {
-			// 	let responseData = { "status": false, "code": 401, "message": "Unable to register employee" }
-			// 	response.json(responseData)
-			// }
-			// response.end();
+			}
 		});
+	
 	} else {
 		let responseData = { "status": false, "code": 401, "message": "Please enter employee details" }
 		response.json(responseData)
@@ -110,10 +107,88 @@ router.post('/registerEmployee', function (request, response) {
 	}
 });
 
+router.post('/updateEmployee', function (request, response) {
+	console.log(request.body)
+	var id = request.body.id;
+	var name = request.body.name;
+	var username = request.body.username;
+	var password = request.body.password;
+	var email = request.body.email;
+	var mobile = request.body.mobile;
+	var bucket = request.body.assignedbucket;
+	//var language = request.body.language
+	if (id) {
+		connection.query(`update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}' where id = '${id}'`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Employee Details updated successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to update Employee Details", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	} else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+});
+
+router.post('/deActivateEmployee', function (request, response) {
+	var empid = request.body.empid;
+	if(empid){
+		connection.query(`update userdetails set active ='0' where id = '${empid}'`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Employee Deactivate successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to Deactivate Employee", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+})
+router.post('/activateEmployee', function (request, response) {
+	var empid = request.body.empid;
+	if(empid){
+		connection.query(`update userdetails set active ='1' where id = '${empid}'`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Employee activate successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to activate Employee", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+})
 //SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,lt.state_name,u.bucket_id,bl.bucket,lt.name as language_name FROM userdetails u JOIN user_known_languages ukl ON ukl.userId = u.id JOIN language_table lt ON lt.id = ukl.languageId JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1
 
 router.get('/getAllEmpList', function (request, response) {
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1', function (error, results, fields) {
+	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0', function (error, results, fields) {
+		if (results.length > 0) {
+			//	request.session.loggedin = true;
+			// request.session.username = username;
+			let responseData = { "status": true, "code": 200, "userDetails": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "userDetails": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+router.get('/getAllActiveEmpList', function (request, response) {
+	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active= "1"', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -668,7 +743,7 @@ router.get('/getUsersWithKnownLanguages', function (request, response) {
 });
 
 router.get('/getDayReport', function (request, response) {
-	connection.query('SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) as collectedAmout, COALESCE(((COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id', function (error, results, fields) {
+	connection.query('SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN LD.current_status = 1 THEN LD.current_status ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN LD.current_status = 2 THEN LD.current_status ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN LD.current_status = 3 THEN LD.current_status ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN LD.current_status = 4 THEN LD.current_status ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN LD.current_status = 5 THEN LD.current_status ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN LD.current_status = 5 THEN LD.current_status ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id', function (error, results, fields) {
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "reportData": results }
 			response.json(responseData)

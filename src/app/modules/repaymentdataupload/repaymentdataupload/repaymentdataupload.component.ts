@@ -60,4 +60,9 @@ export class RepaymentdatauploadComponent implements OnInit {
 
     }
   }
+
+  togglemenu(){
+    $("#wrapper").toggleClass("toggled");
+  }
+  
 }

@@ -62,4 +62,8 @@ export class OlddatauploadComponent implements OnInit {
 
     }
   }
+
+  togglemenu(){
+    $("#wrapper").toggleClass("toggled");
+  }
 }

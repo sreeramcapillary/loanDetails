@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
 import { HttpClient } from '@angular/common/http';
+declare var $;
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
@@ -49,5 +50,9 @@ export class ReportsComponent implements OnInit {
           this.rows = data.reportData;
         }
       });
+  }
+
+  togglemenu(){
+    $("#wrapper").toggleClass("toggled");
   }
 }

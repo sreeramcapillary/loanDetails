@@ -8,7 +8,7 @@ var xlsxtojson = require("xlsx-to-json-lc");
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '',
+	password: 'Sree@1254.',
 	database: 'loandata',
 	multipleStatements: true
 });
@@ -219,7 +219,7 @@ router.get('/getAllALoanDetailsList', function (request, response) {
 });
 router.post('/getLoanListByEmp', function (request, response) {
 	var empId = request.body.empId
-	connection.query(`SELECT * FROM loan_details ld JOIN userdetails u on  u.id = ld.assigned_emp_id where u.id ='${empId}' AND ld.batch_status = 1`, function (error, results, fields) {
+	connection.query(`SELECT ld.*, LS.status_type as status FROM loan_details ld JOIN userdetails u on  u.id = ld.assigned_emp_id LEFT JOIN Loan_status LS ON ld.current_status = LS.id where u.id ='${empId}' AND ld.batch_status = 1 GROUP BY ld.id ORDER BY ld.current_status DESC`, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

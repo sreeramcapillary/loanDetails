@@ -26,6 +26,8 @@ export class CustomerloandetailsComponent implements OnInit {
   selected = [];
   SelectionType = SelectionType;
   loan_id: any;
+  totalAssignedAmount = 0
+  totalRecoveredAmount = 0
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -62,6 +64,12 @@ export class CustomerloandetailsComponent implements OnInit {
         if (data.status) { 
           this.rows = data.assignedLoanToEmp;
           this.selected = [data[2]];
+          data.assignedLoanToEmp.map(row => {
+            this.totalAssignedAmount += row.repayment_amt
+            if(row.current_status == 5){
+              this.totalRecoveredAmount += row.repayment_amt
+            }
+          });
         }
       });
   }

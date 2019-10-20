@@ -49,7 +49,7 @@
   </div>
       <div class="col-md-12 order-md-1">
         <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-          [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]">
+          [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]" style="min-height: 600px;">
           <ngx-datatable-column name="Employee Name">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.employeeName}}
@@ -57,12 +57,37 @@
           </ngx-datatable-column>
           <ngx-datatable-column name="Assigned Amount">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.assignedAmount}}
+              {{row.assignedAmount}} ({{row.assignedAmount_COUNT}})
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="PTP Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.PTP_AMOUNT}} ({{row.PTP_AMOUNT_COUNT}})
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="RNR Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.RNR_AMOUNT}} ({{row.RNR_AMOUNT_COUNT}})
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Switchoff Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.SWITCH_OFF}} ({{row.SWITCH_OFF_COUNT}})
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Payment Expected at Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.PAYMENT_EXPECTED_AT}} ({{row.PAYMENT_EXPECTED_AT_COUNT}})
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="Collected Amout">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.collectedAmout}}
+              {{row.collectedAmout}} ({{row.collectedAmout_COUNT}})
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Remaining Amout">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.remainingAmount}} ({{row.remainingAmount_COUNT}})
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="Percentage">

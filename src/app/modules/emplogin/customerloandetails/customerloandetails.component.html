@@ -20,7 +20,10 @@
         <!-- <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars" aria-hidden="true"></i>
         </button>
    -->
-   <div class="sidebar-heading">Loan Recovery </div>
+        <div class="sidebar-heading"><b>LOAN RECOVERY</b></div>
+
+        <a class="nav-item nav-link" style="color: orange">Total Assigned Amount : {{totalAssignedAmount}}</a> | 
+        <a class="nav-item nav-link" style="color: green">Total Recovered Amount : {{totalRecoveredAmount}}</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,13 +67,13 @@
         </div> 
       </div>
       <div class="row">
-          <div class="col-md-9 order-md-1">
+          <div class="col-md-10 order-md-1">
             <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
               [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]"  [selected]="selected"
               [selectionType]="SelectionType.single"
               (select)="onSelect($event)">
              
-              <ngx-datatable-column name="Customer Name">
+              <ngx-datatable-column name="Name">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   {{row.customer_Name}}
                 </ng-template>
@@ -80,9 +83,29 @@
                   {{row.mobile}}
                 </ng-template>
               </ngx-datatable-column>
-              <ngx-datatable-column name="Email">
+              <ngx-datatable-column name="Loan Id">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{row.email}}
+                  {{row.loan_id}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Principal">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.principal_amt}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Interest">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.interest_amount}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Penalty">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.penalty_amt}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Repayment">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.repayment_amt}}
                 </ng-template>
               </ngx-datatable-column>
               <ngx-datatable-column name="City">
@@ -95,6 +118,11 @@
                   {{row.due_date}}
                 </ng-template>
               </ngx-datatable-column>
+              <ngx-datatable-column name="Due Date">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div [ngClass]="{'payment-done-style': row.current_status == '5', 'PTP-style' : row.current_status == '1', 'RNR-style' : row.current_status == '2', 'switch-off-style' : row.current_status == '3', 'payment-expected-style' : row.current_status == '4'}"> {{row.status}} </div>
+                </ng-template>
+              </ngx-datatable-column>
               <ngx-datatable-column name="Action">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                     <i class="fa fa-eye" (click)="viewDeials(row)"></i>
@@ -102,7 +130,7 @@
               </ngx-datatable-column>
             </ngx-datatable>
           </div>
-          <div class="col-md-3 order-md-1">
+          <div class="col-md-2 order-md-1">
             <div class="card row" style="margin: 1px;">
               <div class="card-body" style="height:80vh">
                  
@@ -119,7 +147,7 @@
                         <textarea row="2" type="text" class="form-control" id="comment" formControlName="comment"></textarea>
                       
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label for="uploadfile">Upload Document</label>
                       <div class="custom-file">
                           <input class="form-control" type="file" name="file" id ="uploadfile" ng2FileSelect [uploader]="uploader" />
@@ -130,7 +158,7 @@
                                 Upload
                           </button>
                         </div>
-                      </div>
+                      </div> -->
                      
            
                       <hr class="mb-4">

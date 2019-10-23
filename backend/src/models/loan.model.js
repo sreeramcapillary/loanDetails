@@ -630,18 +630,17 @@ router.post('/updateRepaymentStatus', function (request, response) {
 	if (ldata) {
 		var queries='';
 		ldata.map(item=>{
-			queries += mysql.format(`UPDATE loan_details SET current_status = '${item.current_status}' WHERE loan_id = '${item.loan_id}';`);
+			queries += mysql.format(`UPDATE loan_details SET current_status = '5' WHERE loan_id = '${item.loan_id}';`);
 			
 		})
-		console.log(queries)
+		// console.log(queries)
 		connection.query(queries, function (error, results, fields) {
-			console.log(results)
-
+			// console.log(results)
 			if (results) {
 				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
 				response.json(responseData)
 			} else {
-				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details" }
+				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" : error }
 				response.json(responseData)
 			}
 		});

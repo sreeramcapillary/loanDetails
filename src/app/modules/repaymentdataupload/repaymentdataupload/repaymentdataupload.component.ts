@@ -5,7 +5,8 @@ import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';
 declare var $;
-const URL = 'http://localhost:3000/uploadExcel';
+// const URL = 'http://localhost:3000/uploadExcel'; //Local
+const URL = 'http://148.72.212.163/backend/uploadExcel'; // Live
 @Component({
   selector: 'app-repaymentdataupload',
   templateUrl: './repaymentdataupload.component.html',

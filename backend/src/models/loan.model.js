@@ -669,15 +669,20 @@ router.post('/updateLoanDetails', function (request, response) {
 		endValues = endValues.slice(0, -1)
 		endQuery = endQuery+endValues+")"
 		updateQuery = startQuery+col1+","+col2+endQuery
-		connection.query(updateQuery, function (error, results, fields) {
-			if (results) {
-				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
-				response.json(responseData)
-			} else {
-				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" : error }
-				response.json(responseData)
-			}
-		});
+		if(endValues!=""){
+			connection.query(updateQuery, function (error, results, fields) {
+				if (results) {
+					let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+					response.json(responseData)
+				} else {
+					let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" : error }
+					response.json(responseData)
+				}
+			});
+		}else{
+			let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+			response.json(responseData)
+		}
 	}
 
 })

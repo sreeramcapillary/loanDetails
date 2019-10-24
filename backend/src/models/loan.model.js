@@ -188,7 +188,7 @@ router.get('/getAllEmpList', function (request, response) {
 
 });
 router.get('/getAllActiveEmpList', function (request, response) {
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active= "1"', function (error, results, fields) {
+	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active= "1"', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -362,7 +362,7 @@ router.get('/inactiveCurrentBatch', function (request, response) {
 });
 
 router.get('/getLoanStatus', function (request, response) {
-	connection.query('SELECT * FROM Loan_status ', function (error, results, fields) {
+	connection.query('SELECT * FROM Loan_status WHERE id!="6"', function (error, results, fields) {
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "loanStatus": results }
 			response.json(responseData)
@@ -630,7 +630,7 @@ router.post('/updateRepaymentStatus', function (request, response) {
 	if (ldata) {
 		var queries='';
 		ldata.map(item=>{
-			queries += mysql.format(`UPDATE loan_details SET current_status = '5' WHERE loan_id = '${item.loan_id}';`);
+			queries += mysql.format(`UPDATE loan_details SET current_status = '6' WHERE loan_id = '${item.loan_id}';`);
 			
 		})
 		// console.log(queries)
@@ -742,7 +742,7 @@ router.get('/getUsersWithKnownLanguages', function (request, response) {
 });
 
 router.get('/getDayReport', function (request, response) {
-	connection.query('SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN LD.current_status = 1 THEN LD.current_status ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN LD.current_status = 2 THEN LD.current_status ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN LD.current_status = 3 THEN LD.current_status ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN LD.current_status = 4 THEN LD.current_status ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN LD.current_status = 5 THEN LD.current_status ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN LD.current_status = 5 THEN LD.current_status ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id', function (error, results, fields) {
+	connection.query('SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN LD.current_status = 1 THEN LD.current_status ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN LD.current_status = 2 THEN LD.current_status ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN LD.current_status = 3 THEN LD.current_status ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN LD.current_status = 4 THEN LD.current_status ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN LD.current_status = 5 THEN LD.current_status ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN LD.current_status = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN LD.current_status = 6 THEN LD.current_status ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN LD.current_status = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN LD.current_status = 6 THEN LD.current_status ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN LD.current_status = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id', function (error, results, fields) {
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "reportData": results }
 			response.json(responseData)

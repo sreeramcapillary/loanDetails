@@ -28,6 +28,7 @@ export class CustomerloandetailsComponent implements OnInit {
   loan_id: any;
   totalAssignedAmount = 0
   totalRecoveredAmount = 0
+  totalPendingAmount = 0
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -66,8 +67,11 @@ export class CustomerloandetailsComponent implements OnInit {
           this.selected = [data[2]];
           data.assignedLoanToEmp.map(row => {
             this.totalAssignedAmount += row.repayment_amt
-            if(row.current_status == 5){
+            if(row.current_status == 6){
               this.totalRecoveredAmount += row.repayment_amt
+            }
+            if(row.current_status == 5){
+              this.totalPendingAmount += row.repayment_amt
             }
           });
         }
@@ -129,8 +133,9 @@ export class CustomerloandetailsComponent implements OnInit {
         if (data.status) { 
           // console.log(data.loanStatus)
             alert("Loan Details updated Successfully")
-            this.router.navigate(['/cutomerloandetails']);
-
+            location.reload()
+            // this.router.navigate(['/cutomerloandetails']);
+            // this.getAllLoanDetails()
           }
       });
   }

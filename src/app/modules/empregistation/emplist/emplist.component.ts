@@ -34,7 +34,7 @@ export class EmplistComponent implements OnInit {
 
   }
   getAllEmp(){
-    this.appService.getEmp()
+    this.appService.getActiveEmp()
     .subscribe(
       (data: any) => {
         if (data.status) {

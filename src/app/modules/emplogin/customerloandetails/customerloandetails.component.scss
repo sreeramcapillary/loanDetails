@@ -8,7 +8,7 @@
     margin: 0 auto;
 }
 .payment-done-style{
-    color: green;
+    color:grey;
     font-weight: bold;
 }
 .PTP-style{
@@ -25,5 +25,9 @@
 }
 .payment-expected-style{
     color: yellowgreen;
+    font-weight: bold;
+}
+.payment-completed-style{
+    color: green;
     font-weight: bold;
 }

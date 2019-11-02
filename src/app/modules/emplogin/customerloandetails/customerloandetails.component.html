@@ -69,6 +69,12 @@
       </div>
       <div class="row">
           <div class="col-md-10 order-md-1">
+              <input
+              type="text"
+              style="padding:8px;margin:15px auto;width:30%;"
+              placeholder="Type to filter the name column..."
+              (keyup)="updateFilter($event)"
+            />
             <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
               [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'Name', dir: 'desc'}]"  [selected]="selected"
               [selectionType]="SelectionType.single"

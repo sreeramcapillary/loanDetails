@@ -158,7 +158,7 @@ export class XluploadComponent implements OnInit {
                       this.loanDetails['bucket'][bucketKey]["language"][languageKey]["empdetails"].map(emp => {
                         let totalAmountAssigned = 0
                         this.loanDetails['bucket'][bucketKey]["language"][languageKey]["loanData"].map(data => {
-                          if (uniqueEmployeeList[emp.empid] <= 120 && totalAmountAssigned <= averageLoanValue && data.is_assigned == false){
+                          if (uniqueEmployeeList[emp.empid] <= 300 && totalAmountAssigned <= averageLoanValue && data.is_assigned == false){
                             totalAmountAssigned = (totalAmountAssigned+parseInt(data.repayment_amt, 10))
                             //Incrementing count of loans assigned to individual employee
                             uniqueEmployeeList[emp.empid] = (uniqueEmployeeList[emp.empid]+1) 

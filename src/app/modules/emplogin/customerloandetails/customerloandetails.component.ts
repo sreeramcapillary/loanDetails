@@ -16,6 +16,7 @@ declare var $;
 export class CustomerloandetailsComponent implements OnInit {
   userType: string;
   rows= [];
+  filteredRows= [];
   empId: string;
   cutomerDetials: any;
   selectForm: FormGroup;
@@ -64,6 +65,7 @@ export class CustomerloandetailsComponent implements OnInit {
       (data: any) => {
         if (data.status) { 
           this.rows = data.assignedLoanToEmp;
+          this.filteredRows = data.assignedLoanToEmp;
           this.selected = [data[2]];
           data.assignedLoanToEmp.map(row => {
             this.totalAssignedAmount += row.repayment_amt
@@ -139,4 +141,16 @@ export class CustomerloandetailsComponent implements OnInit {
           }
       });
   }
+
+  updateFilter(event) {
+    const val = event.target.value.toLowerCase();
+
+    // filter our data
+    const temp = this.filteredRows.filter(function(d) {
+      return d.loan_id.toString().toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    // update the rows
+    this.rows = temp;
+  }
+
 }

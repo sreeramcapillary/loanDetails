@@ -733,7 +733,7 @@ router.get('/getAllLanguage', function (request, response) {
 });
 
 router.get('/getUsersWithKnownLanguages', function (request, response) {
-	connection.query('SELECT UKL.userId, UKL.languageId as language_id, LT.name as language_name, UD.email, UD.id, UD.mobile, UD.name, UD.bucket_id, LT.state_name, UD.client_id, BL.bucket as bucket, UD.username FROM user_known_languages UKL JOIN userdetails UD ON UKL.userId = UD.id JOIN language_table LT ON UKL.languageId = LT.id JOIN bucket_list BL ON BL.id = UD.bucket_id', function (error, results, fields) {
+	connection.query('SELECT UKL.userId, UKL.languageId as language_id, LT.name as language_name, UD.email, UD.id, UD.mobile, UD.name, UD.bucket_id, LT.state_name, UD.client_id, BL.bucket as bucket, UD.username FROM user_known_languages UKL JOIN userdetails UD ON UKL.userId = UD.id JOIN language_table LT ON UKL.languageId = LT.id JOIN bucket_list BL ON BL.id = UD.bucket_id WHERE UD.active = 1', function (error, results, fields) {
 		// console.log(results)
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "languageList": results }

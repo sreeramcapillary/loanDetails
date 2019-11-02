@@ -11,6 +11,7 @@ import { HttpInterceptorService } from './helpers/guards/http-interceptor.servic
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
+
 @NgModule({
   declarations: [
     AppComponent,

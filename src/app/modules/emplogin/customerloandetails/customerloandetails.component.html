@@ -70,7 +70,7 @@
       <div class="row">
           <div class="col-md-10 order-md-1">
             <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-              [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]"  [selected]="selected"
+              [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'Name', dir: 'desc'}]"  [selected]="selected"
               [selectionType]="SelectionType.single"
               (select)="onSelect($event)">
              
@@ -81,7 +81,7 @@
               </ngx-datatable-column>
               <ngx-datatable-column name="Mobile">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{row.mobile}}
+                  <span title="{{row.ref_name1}} ({{row.ref_type1}}) : {{row.ref_mobile_num1}} &#013; {{row.ref_name2}} ({{row.ref_type2}}) : {{row.ref_mobile_num2}}" class="tooltipContainer">{{row.mobile}}</span>
                 </ng-template>
               </ngx-datatable-column>
               <ngx-datatable-column name="Loan Id">
@@ -119,7 +119,7 @@
                   {{row.due_date}}
                 </ng-template>
               </ngx-datatable-column>
-              <ngx-datatable-column name="Due Date">
+              <ngx-datatable-column name="Status">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <div [ngClass]="{'payment-done-style': row.current_status == '5', 'PTP-style' : row.current_status == '1', 'RNR-style' : row.current_status == '2', 'switch-off-style' : row.current_status == '3', 'payment-expected-style' : row.current_status == '4', 'payment-completed-style' : row.current_status == '6'}"> {{row.status}} </div>
                 </ng-template>

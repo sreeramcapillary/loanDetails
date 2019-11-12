@@ -5,6 +5,7 @@ let http = require('https');
 const multer = require('multer')
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
+var moment = require('moment')
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
@@ -116,12 +117,43 @@ router.post('/updateEmployee', function (request, response) {
 	var email = request.body.email;
 	var mobile = request.body.mobile;
 	var bucket = request.body.assignedbucket;
-	//var language = request.body.language
+	var language = request.body.language
 	if (id) {
 		connection.query(`update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}' where id = '${id}'`, function (error, results, fields) {
 			if (results) {
-				let responseData = { "status": true, "code": 200, "message": "Employee Details updated successfully" }
-				response.json(responseData)
+				//Deleting emp old languages
+				connection.query(`DELETE FROM user_known_languages where userId = '${id}'`, function (error, results, fields) {
+					if (results) {
+						let inserData = '';
+						let queryTest
+						let startQuery = "INSERT INTO `user_known_languages` (`userId`,`languageId`) VALUES";
+						// let duplicateColumn = "ON DUPLICATE KEY UPDATE `userId`=VALUES(`userId`),`languageId`=VALUES(`languageId`)"
+						let responseData;
+						//console.log(loanDetails)
+						language.map(item => {
+							currentRow = `('${id}','${item.id}'),`
+							currentRow = currentRow.replace(/\n|\r/g, "");
+							currentRow = currentRow.replace(/~+$/, '');
+							inserData = inserData + currentRow
+						});
+						inserData = inserData.replace(/,\s*$/, "");
+						queryTest = startQuery + inserData;
+						console.log(queryTest)
+						connection.query(queryTest, (err, results, fields) => {
+							if (results) {
+								let responseData = { "status": true, "code": 200, "message": "Employee Details updated successfully" }
+								response.json(responseData)
+							} else {
+								let responseData = { "status": false, "code": 401, "message": "Failed to update Employee Details", "err" :  error}
+								response.json(responseData)
+							}
+							response.end();
+						});
+					} else {
+						let responseData = { "status": false, "code": 401, "message": "Failed to update Employee Details", "err" :  error}
+						response.json(responseData)
+					}
+				});
 			} else {
 				let responseData = { "status": false, "code": 401, "message": "Failed to update Employee Details", "err" :  error}
 				response.json(responseData)
@@ -139,8 +171,15 @@ router.post('/deActivateEmployee', function (request, response) {
 	if(empid){
 		connection.query(`update userdetails set active ='0' where id = '${empid}'`, function (error, results, fields) {
 			if (results) {
-				let responseData = { "status": true, "code": 200, "message": "Employee Deactivate successfully" }
-				response.json(responseData)
+				connection.query(`update loan_details set assigned_emp_id = NULL, is_assigned = 0 where assigned_emp_id = '${empid}'`, function (error, results, fields) {
+					if (results) {
+						let responseData = { "status": true, "code": 200, "message": "Employee Deactivate successfully" }
+						response.json(responseData)
+					} else {
+						let responseData = { "status": false, "code": 401, "message": "Deactivated Employee Success. Failed to un assaign loans", "err" :  error}
+						response.json(responseData)
+					}
+				});
 			} else {
 				let responseData = { "status": false, "code": 401, "message": "Failed to Deactivate Employee", "err" :  error}
 				response.json(responseData)
@@ -188,7 +227,7 @@ router.get('/getAllEmpList', function (request, response) {
 
 });
 router.get('/getAllActiveEmpList', function (request, response) {
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active= "1"', function (error, results, fields) {
+	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= "1" GROUP BY u.id', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -324,7 +363,8 @@ router.post('/assignLoanList', function (request, response) {
 router.post('/updateLoan', function (request, response) {
 	// console.log(request.body)
 	if (request.body.loan_id && request.body.current_Status) {
-		connection.query(`update loan_details set current_status ='${request.body.current_Status}',old_status ='${request.body.old_Status}',document='${request.body.document}',comments='${request.body.comment}' where loan_id = '${request.body.loan_id}'`, function (error, results, fields) {
+		let currentDateTime = moment().format('YYYY-MM-DD hh:mm:ss')
+		connection.query(`update loan_details set current_status ='${request.body.current_Status}',old_status ='${request.body.old_Status}',document='${request.body.document}',comments='${request.body.comment}', statusUpdateDate='${currentDateTime}' where loan_id = '${request.body.loan_id}'`, function (error, results, fields) {
 			if (results) {
 				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
 				response.json(responseData)
@@ -340,6 +380,36 @@ router.post('/updateLoan', function (request, response) {
 });
 router.get('/getAllLoanDetailsList', function (request, response) {
 	connection.query('SELECT * FROM loan_details WHERE batch_status = 1 ORDER BY is_assigned ASC', function (error, results, fields) {
+		if (results.length > 0) {
+			//	request.session.loggedin = true;
+			// request.session.username = username;
+			let responseData = { "status": true, "code": 200, "loanDetails": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "loanDetails": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+router.get('/getAssignedLoanDetailsList', function (request, response) {
+	connection.query('SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 1', function (error, results, fields) {
+		if (results.length > 0) {
+			//	request.session.loggedin = true;
+			// request.session.username = username;
+			let responseData = { "status": true, "code": 200, "loanDetails": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "loanDetails": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+router.get('/getUnAssignedLoanDetailsList', function (request, response) {
+	connection.query('SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 0', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -593,6 +663,90 @@ router.post('/insertExcel', function (request, response) {
 	}
 });
 
+router.post('/uploadSingleEmployeeDetails', function (request, response) {
+	var loanDetails = request.body.loanDetails;
+	var filename = request.body.filename;
+	var employeeID = request.body.employeeId
+	if (loanDetails == null) {
+		let loanData = { "status": false, "code": 404, "message": "No Data" }
+		response.json(loanData)
+	} else {
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1;
+		var yyyy = today.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd
+
+		} if (mm < 10) {
+
+			mm = '0' + mm
+		}
+		var today = yyyy + '-' + mm + '-' + dd;
+
+		if (filename) {
+			var file = {
+				client_id: "1",
+				filename: filename,
+				date: today,
+				active: '1'
+			}
+			connection.query('INSERT INTO imported_files SET ?', file, (err, results, fields) => {
+				var lastinserttedId = results.insertId;
+				let inserData = [];
+				inserData[0] = ""
+				let queryTest
+				let startQuery = "INSERT INTO `loan_details` (`client_id`,`imported_file_id`,`Customer_id`, `Loan_Count`, `loanid`, `customer_Name`, `Gender`, `mobile`,`email`, `DOB`, `Age`, `city`, `pin_code`, `state`, `loan_id`, `disbursal_amt`, `disbursal_date`,`due_date`, `principal_amt`, `interest_amount`, `penalty_amt`, `repayment_amt`, `ref_type1`, `ref_name1`, `ref_mobile_num1`, `ref_type2`, `ref_name2`, `ref_mobile_num2`, `bucket`,`overdue_days`, `is_collected`, `ESIGN_MOBILE_NUMBER`, `repaid_date`,`is_assigned`,`date`, `assigned_emp_id`) VALUES";
+				let duplicateColumn = "ON DUPLICATE KEY UPDATE `client_id`=VALUES(`client_id`),`imported_file_id`=VALUES(`imported_file_id`),`assigned_emp_id`=VALUES(`assigned_emp_id`),`Customer_id`=VALUES(`customer_id`), `Loan_Count`=VALUES(`loan_count`), `loanid`=VALUES(`loan_id`),`customer_Name`=VALUES(`customer_name`),`Gender`=VALUES(`gender`),`mobile`=VALUES(`mobile`),`email`=VALUES(`email`),`DOB`=VALUES(`dob`),`Age`=VALUES(`age`),`city`=VALUES(`city`) ,`pin_code`=VALUES(`pin_code`),`state`=VALUES(`state`),`loan_id`=VALUES(`loan_id`),`disbursal_amt`=VALUES(`disbursal_amt`),`disbursal_date`=VALUES(`disbursal_date`),`due_date`=VALUES(`due_date`),`principal_amt`=VALUES(`principal_amt`),`interest_amount`=VALUES(`interest_amount`),`penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`ref_type1`=VALUES(`ref_type1`),`ref_name1`=VALUES(`ref_name1`),`ref_mobile_num1`=VALUES(`ref_mobile_num1`),`ref_type2`=VALUES(`ref_type2`),`ref_name2`=VALUES(`ref_name2`),`ref_mobile_num2`=VALUES(`ref_mobile_num2`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`),`is_collected`=VALUES(`is_collected`),`ESIGN_MOBILE_NUMBER`=VALUES(`esign_mobile_number`),`repaid_date`=VALUES(`repaid_date`),`is_assigned`=VALUES(`is_assigned`),`date`=VALUES(`date`)"
+				let responseData;
+				let currentBatch = 0
+				let rowCount = 0
+				let allBatchSuccess = true
+				loanDetails.map(item => {
+					currentRow = `("1","${lastinserttedId}","${item.customer_id}","${item.loan_count}" ,"${item.loan_id}" ,"${item.customer_name}" , "${item.gender}",  "${item.mobile}","${item.email}" ,
+					"${item.dob}" ,"${item.age}" ,"${item.city}" ,
+					"${item.pin_code}" ,"${item.state}" ,"${item.loan_id}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
+					"${item.interest_amount}" ,"${item.penalty_amt}" ,"${item.repayment_amt}" ,"${item.ref_type1}" , 
+					"${item.ref_name1}","${item.ref_mobile_num1}" , "${item.ref_type2}","${item.ref_name2}" ,"${item.ref_mobile_num2}" ,
+					"${item.bucket}" ,"${item.overdue_days}" , "${item.is_collected}",
+					"${item.esign_mobile_number}" , "${item.repaid_date}","1","${today}","${employeeID}"),`
+
+					currentRow = currentRow.replace(/\n|\r/g, "");
+					currentRow = currentRow.replace(/~+$/, '');
+					currentRow = currentRow.replace(/'/g, "''");
+					
+					inserData[currentBatch] = inserData[currentBatch] + currentRow
+
+					if(rowCount == 1000){
+						currentBatch = currentBatch + 1
+						rowCount = 0
+						inserData[currentBatch] = ""
+					}
+					rowCount = rowCount + 1
+				});
+				inserData.map( (batch, key) => {
+					inserData[key] = inserData[key].replace(/,\s*$/, "");
+					queryTest = startQuery + inserData[key] + duplicateColumn;
+					connection.query(queryTest, (err, results, fields) => {
+						if(!results){
+							allBatchSuccess = false
+						}
+					});
+				})
+				if(allBatchSuccess){
+					let responseData = { "status": true, "code": 200, "message": "Excel uploaded successfully" }
+					response.json(responseData)
+					response.end()
+				}else{
+					let responseData = { "status": true, "code": 401, "message": "something went wrong" }
+					response.json(responseData)
+					response.end()
+				}
+			});
+		}
+	}
+});
+
 router.post('/updateOldLoanDetails', function (request, response) {
 	var ldata = request.body.loanupdateData;
 	console.log(ldata)
@@ -757,5 +911,40 @@ router.get('/getDayReport', function (request, response) {
 		}
 		response.end();
 	});
+});
+
+router.get('/getCurrentDetailedReportsDataForExcel', function (request, response) {
+	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as loanStatus, LT.name as language FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN Loan_status LS ON LD.current_status = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE Ld.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
+		if (results.length > 0) {
+			//	request.session.loggedin = true;
+			// request.session.username = username;
+			let responseData = { "status": true, "code": 200, "loanDetails": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "loanDetails": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+
+router.post('/getEmployeeLanguages', function (request, response) {
+	var empid = request.body.empid;
+	if(empid){
+		connection.query(`SELECT UKL.languageId as id, LT.name as language FROM user_known_languages UKL JOIN language_table LT ON UKL.languageId = LT.id WHERE UKL.userId = '${empid}' GROUP BY LT.name`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "languages": results }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to Fetch Details Employee", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
 });
 module.exports = router

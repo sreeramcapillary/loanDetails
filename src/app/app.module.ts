@@ -10,6 +10,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './helpers/guards/http-interceptor.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ExcelService } from './helpers/services/excel.service';
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
       multi: true
-    }],
+    }, ExcelService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

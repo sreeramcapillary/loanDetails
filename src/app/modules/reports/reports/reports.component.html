@@ -46,6 +46,10 @@
      <div class="col-md-6">
        <h4 class="mb-3">Reports</h4>
     </div> 
+    <div class="col-md-6">
+      <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()">Export Detailed Data as Excel <i class="fa fa-file-excel-o"></i></button>
+      <button class="btn btn-primary" style="float: right; margin-right: 20px;" type="submit" (click)="exportReportData()">Export Only Report Data as Excel <i class="fa fa-file-excel-o"></i></button>
+    </div>
   </div>
       <div class="col-md-12 order-md-1">
         <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"

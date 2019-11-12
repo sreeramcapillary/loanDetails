@@ -30,6 +30,7 @@ export class CustomerloandetailsComponent implements OnInit {
   totalAssignedAmount = 0
   totalRecoveredAmount = 0
   totalPendingAmount = 0
+  showActionsContainer:boolean = false
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -81,12 +82,17 @@ export class CustomerloandetailsComponent implements OnInit {
   }
   onSelect({ selected }) {
    // console.log('Select Event', selected, this.selected);
+   if(selected[0].current_status!=6){
+    this.showActionsContainer = true
     this.old_status = selected[0].old_status;
     this.loan_id = selected[0].loan_id;
     this.selectForm.patchValue({    
       "status": selected[0].current_status,
       "comment":selected[0].comments
     });
+   }else{
+    this.showActionsContainer = false
+   }
   }
 
   

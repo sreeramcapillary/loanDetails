@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
+import {ExcelService} from '../../../helpers/services/excel.service';
 declare var $;
 
 @Component({
@@ -13,8 +14,9 @@ export class EmplistComponent implements OnInit {
   title = 'angular-datatables';
   rows = [];
   userType: string;
+  loansAssignedToEmployee: any = []
   constructor( private route: ActivatedRoute,
-    private router: Router,private appService: AppService) { 
+    private router: Router,private appService: AppService, private excelService:ExcelService) { 
      
       this.userType = localStorage.getItem("usertype");
       if(this.userType != '1'){
@@ -112,6 +114,19 @@ export class EmplistComponent implements OnInit {
           
         }
       });
+    }
+  }
+  downloadEmployeeData(row){
+    if(confirm("Are you sure? You want to Download loans assignedto employee!")){
+      this.appService.getAssignedLoanDetailsEmp(row.id)
+      .subscribe(
+        (data: any) => {
+          if (data.status) {
+            this.loansAssignedToEmployee = data.assignedLoanToEmp
+            // console.log(this.assignedLoanToEmp)
+            this.excelService.exportAsExcelFile(this.loansAssignedToEmployee, row.username+' Loans');
+          }
+        });
     }
   }
 }

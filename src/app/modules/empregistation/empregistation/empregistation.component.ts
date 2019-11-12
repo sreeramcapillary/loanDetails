@@ -27,6 +27,7 @@ export class EmpregistationComponent implements OnInit {
   dropdownList: any;
   editEmpVal: string;
   hideLanguage: boolean;
+  selectedItems = []
 
   
   constructor(public fb: FormBuilder, private router: Router,private appService: AppService) {
@@ -63,15 +64,27 @@ export class EmpregistationComponent implements OnInit {
     this.editEmpVal = JSON.parse(localStorage.getItem("editemp"));
     console.log(this.editEmpVal)
     if(this.editEmpVal != ''){
-      this.hideLanguage = true;
+      this.hideLanguage = false;
       this.registerForm.patchValue({
         name: this.editEmpVal["name"],
         username:this.editEmpVal["username"],
         email:this.editEmpVal["email"],
         mobile:this.editEmpVal["mobile"],
         assignedbucket:this.editEmpVal["bucket_id"],
-        language:['']
+        language:[]
       });
+      // this.selectedItems = [
+      //   { "id" : 1, "language": 'Telugu' }
+      // ];
+      this.appService.getEmployeeLanguages(this.editEmpVal["id"])
+          .subscribe(
+        (data:any) => {
+          this.loading = false;
+        console.log(data);
+          if(data.status == true){
+            this.selectedItems = data.languages
+          }
+        });
     }else{
       this.hideLanguage = false;
 
@@ -93,6 +106,13 @@ export class EmpregistationComponent implements OnInit {
   }
     var data;
     if(this.editEmpVal != ''){
+      //Geting list of rows based on selected languages
+      let finalLanguages = []
+      this.f.language.value.map((language) => {
+        this.languageListAltered[language.language].map(lang => {
+          finalLanguages.push(lang)
+        })
+      })
       data = {
         "id":this.editEmpVal["id"],
         "name":this.f.name.value,
@@ -100,7 +120,7 @@ export class EmpregistationComponent implements OnInit {
         "email":this.f.email.value,
         "password": this.autoPassword,
         "mobile":this.f.mobile.value,
-       // "language":finalLanguages,
+        "language":finalLanguages,
         "assignedbucket":this.f.assignedbucket.value
       }
       console.log( data)
@@ -135,7 +155,6 @@ export class EmpregistationComponent implements OnInit {
       this.languageListAltered[language.language].map(lang => {
         finalLanguages.push(lang)
       })
-      
     })
      data = {
       "name":this.f.name.value,
@@ -224,6 +243,7 @@ export class EmpregistationComponent implements OnInit {
         }
       })
      console.log("altered data list", this.languageListAltered)
+     console.log("dropdownlist", this.dropdownList)
     });
   }
   onItemSelect(item: any) {

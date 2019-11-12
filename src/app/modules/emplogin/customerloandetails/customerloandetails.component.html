@@ -82,7 +82,7 @@
              
               <ngx-datatable-column name="Name">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{row.customer_Name}}
+                  <span title="City : {{row.city}} &#013; Pincode : {{row.pin_code}} &#013; Customer Id : {{row.Customer_id}}" class="tooltipContainer">{{row.customer_Name}}</span>
                 </ng-template>
               </ngx-datatable-column>
               <ngx-datatable-column name="Mobile">
@@ -115,14 +115,14 @@
                   {{row.repayment_amt}}
                 </ng-template>
               </ngx-datatable-column>
-              <ngx-datatable-column name="City">
+              <ngx-datatable-column name="Disbursal Date">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{row.city}}
+                  {{row.disbursal_date}}
                 </ng-template>
               </ngx-datatable-column>
               <ngx-datatable-column name="Due Date">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{row.due_date}}
+                  {{row.due_date}} <b>({{row.overdue_days}})</b>
                 </ng-template>
               </ngx-datatable-column>
               <ngx-datatable-column name="Status">
@@ -138,7 +138,7 @@
             </ngx-datatable>
           </div>
           <div class="col-md-2 order-md-1">
-            <div class="card row" style="margin: 1px;">
+            <div class="card row" style="margin: 1px;" *ngIf="showActionsContainer">
               <div class="card-body" style="height:80vh">
                  
                   <form [formGroup]="selectForm">

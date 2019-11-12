@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {ExcelService} from '../../../helpers/services/excel.service';
 declare var $;
+
 @Component({
-  selector: 'app-assign-loan-list',
-  templateUrl: './assign-loan-list.component.html',
-  styleUrls: ['./assign-loan-list.component.scss']
+  selector: 'app-unassigned-loans',
+  templateUrl: './unassigned-loans.component.html',
+  styleUrls: ['./unassigned-loans.component.scss']
 })
-export class AssignLoanListComponent implements OnInit {
+export class UnassignedLoansComponent implements OnInit {
   rows = [];
   empList: any;
   userType: string;
@@ -24,7 +26,7 @@ export class AssignLoanListComponent implements OnInit {
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
-    private router: Router,private appService: AppService,private formBuilder: FormBuilder) {
+    private router: Router,private appService: AppService,private formBuilder: FormBuilder, private excelService:ExcelService) {
       this.userType = localStorage.getItem("usertype");
       if(this.userType != '1'){
         this.router.navigateByUrl('/login');
@@ -32,7 +34,7 @@ export class AssignLoanListComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.appService.changeActiveTab("aloan")
+    this.appService.changeActiveTab("ualoan")
 
     this.getAllEmp();
 
@@ -45,12 +47,14 @@ export class AssignLoanListComponent implements OnInit {
   clickSide(val){
     if(val == 'elist'){
       this.router.navigate(['/emp-list']);
-
     }else if(val == 'xlupload'){
       this.router.navigate(['/xl-upload']);
 
     }else if(val == 'aloan'){
       this.router.navigate(['/assignLoanList']);
+
+    }else if(val == 'ualoan'){
+      this.router.navigate(['/unassignedLoanList']);
 
     }else if(val == 'oldxlupload'){
       this.router.navigate(['/oldxlupload']);
@@ -77,7 +81,7 @@ export class AssignLoanListComponent implements OnInit {
 
   }
   getAllLoanDetails(){
-    this.appService.getAssignedLoanDetailsList()
+    this.appService.getUnAssignedLoanDetailsList()
     .subscribe(
       (data: any) => {
         if (data.status) {

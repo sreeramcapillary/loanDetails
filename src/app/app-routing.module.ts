@@ -30,6 +30,18 @@ const routes: Routes = [{
 
 },
 {
+  path: 'unassignedLoanList',
+  loadChildren: './modules/unassigned-loans/unassigned-loans.module#UnassignedLoansModule',
+  canActivate: [AuthGuard]
+
+},
+{
+  path: 'singleEmployeeDataUpload',
+  loadChildren: './modules/single-employee-data-upload/single-employee-data-upload.module#SingleEmployeeDataUploadModule',
+  canActivate: [AuthGuard]
+
+},
+{
   path: 'cutomerloandetails',
   loadChildren: './modules/emplogin/emplogin.module#EmploginModule',
   canActivate: [AuthGuard]

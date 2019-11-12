@@ -73,12 +73,32 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
+    getAssignedLoanDetailsList(){
+      return this.http.get(BaseURL.url+'getAssignedLoanDetailsList', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    getUnAssignedLoanDetailsList(){
+      return this.http.get(BaseURL.url+'getUnAssignedLoanDetailsList', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
     xlupload(loand){
       var loan = {
         loanDetails:loand.data,
         filename:loand.filename
       }
       return this.http.post(BaseURL.url+'insertExcel',loan, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    singleDataUpload(loand, empId){
+      var loan = {
+        loanDetails:loand.data,
+        filename:loand.filename,
+        employeeId:empId
+      }
+      return this.http.post(BaseURL.url+'uploadSingleEmployeeDetails',loan, {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
@@ -177,6 +197,19 @@ export class AppService {
         "empid":id
       }
       return this.http.post(BaseURL.url+'activateEmployee',data ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    getCurrentDetailedReportsDataForExcel(){
+      return this.http.get(BaseURL.url+'getCurrentDetailedReportsDataForExcel', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    getEmployeeLanguages(id){
+      var data={
+        "empid":id
+      }
+      return this.http.post(BaseURL.url+'getEmployeeLanguages',data ,{
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }

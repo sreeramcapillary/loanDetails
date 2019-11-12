@@ -1,0 +1,113 @@
+<div class="d-flex" id="wrapper">
+
+  <!-- Sidebar -->
+  <app-navigation></app-navigation>
+
+  <!-- /#sidebar-wrapper -->
+
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars" aria-hidden="true"></i>
+      </button>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <!-- <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li> -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-user"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <!-- <a class="dropdown-item" href="#">Profile</a> -->
+              <a class="dropdown-item" href="#">Logout</a>
+              <!-- <div class="dropdown-divider"></div> -->
+              <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid" style="padding-top: 20px;">
+      <div class="row">
+       <div class="col-md-6">
+         <h4 class="mb-3">Employee List</h4>
+         <form [formGroup]="selectForm">
+         <div class="col-md-12 mb-3">
+          <label for="language">Select Employee</label>
+          <select class="custom-select d-block w-100" id="emplist" formControlName="employee" (change)="selectedEmp()">
+            <option value="">Choose...</option>
+            <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
+          </select>
+        </div>
+      </form>
+      </div> 
+    </div>
+        <div class="col-md-12 order-md-1">
+          <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+            [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]">
+            <ngx-datatable-column name="Action">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" [(ngModel)]="row.theCheckbox" class="custom-control-input" data-md-icheck (change)="toggleVisibility($event,row)" id="{{row.id}}" name="example1">
+                        <label class="custom-control-label" for="{{row.id}}"></label>
+                      </div>              
+                  </ng-template>
+              </ngx-datatable-column>
+            <ngx-datatable-column name="Customer Name">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.customer_Name}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Mobile">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.mobile}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Email">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.email}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="City">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.city}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Due Date">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.due_date}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Assigned To">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.assignedToName}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Assigned Status">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <i class="fa fa-check assignedcheck" aria-hidden="true" *ngIf="row.assignedLoan"></i>
+                </ng-template>
+              </ngx-datatable-column>
+          </ngx-datatable>
+          <div class="col-md-12 order-md-1" style="    padding-bottom: 20px;">
+              <button class="btn btn-primary btn-lg btn-block" type="submit"
+                    [disabled]="" (click)="assignLoanDetails()">Assign</button>
+          </div>
+        </div>
+        
+      </div>
+  </div>
+</div>

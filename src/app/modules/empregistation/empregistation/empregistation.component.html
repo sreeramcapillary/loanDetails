@@ -110,7 +110,7 @@
                         <option value="{{langList.id}}" *ngFor="let langList of languageList">{{langList.state_name}}-{{langList.name}}</option>
                       </select> -->
               <ng-multiselect-dropdown [placeholder]="'custom placeholder'" [data]="dropdownList"
-              formControlName="language" [settings]="dropdownSettings">
+              formControlName="language" [settings]="dropdownSettings" [(ngModel)]="selectedItems">
               </ng-multiselect-dropdown>
               <div *ngIf="submitted && registerForm.get('language').errors" class="invalid-feedback-custom">
                 <div *ngIf="registerForm.get('language').errors.required">Language is required</div>

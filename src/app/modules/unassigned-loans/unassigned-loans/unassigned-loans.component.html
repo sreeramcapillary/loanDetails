@@ -54,6 +54,9 @@
         </div>
       </form>
       </div> 
+      <div class="col-md-6">
+        <button class="btn btn-primary" style="float: right; margin-right: 20px;" type="submit" (click)="exportUnassignedData()">Export Data <i class="fa fa-file-excel-o"></i></button>
+      </div>
     </div>
         <div class="col-md-12 order-md-1">
           <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"

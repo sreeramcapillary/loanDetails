@@ -23,6 +23,7 @@ export class UnassignedLoansComponent implements OnInit {
   assignedToId: any;
   assignedLoanId: any;
   selectedLoanId: any;
+  unassignedExportData: any = []
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -85,6 +86,7 @@ export class UnassignedLoansComponent implements OnInit {
     .subscribe(
       (data: any) => {
         if (data.status) {
+          this.unassignedExportData = data.loanDetails
           // console.log(data.loanDetails)
           this.theCheckbox = [];
           this.assignedLoan = [];
@@ -172,5 +174,9 @@ export class UnassignedLoansComponent implements OnInit {
          
         }
       });
+    }
+
+    exportUnassignedData():void{
+      this.excelService.exportAsExcelFile(this.unassignedExportData, 'UnAssignedData');
     }
 }

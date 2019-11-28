@@ -916,7 +916,7 @@ router.get('/getDayReport', function (request, response) {
 });
 
 router.get('/getCurrentDetailedReportsDataForExcel', function (request, response) {
-	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as loanStatus, LT.name as language FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN Loan_status LS ON LD.current_status = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE Ld.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
+	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as loanStatus, LT.name as language FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN Loan_status LS ON LD.current_status = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

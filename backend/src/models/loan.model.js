@@ -698,33 +698,35 @@ router.post('/uploadSingleEmployeeDetails', function (request, response) {
 				let inserData = [];
 				inserData[0] = ""
 				let queryTest
-				let startQuery = "INSERT INTO `loan_details` (`client_id`,`imported_file_id`,`Customer_id`, `Loan_Count`, `loanid`, `customer_Name`, `Gender`, `mobile`,`email`, `DOB`, `Age`, `city`, `pin_code`, `state`, `loan_id`, `disbursal_amt`, `disbursal_date`,`due_date`, `principal_amt`, `interest_amount`, `penalty_amt`, `repayment_amt`, `ref_type1`, `ref_name1`, `ref_mobile_num1`, `ref_type2`, `ref_name2`, `ref_mobile_num2`, `bucket`,`overdue_days`, `is_collected`, `ESIGN_MOBILE_NUMBER`, `repaid_date`,`is_assigned`,`date`, `assigned_emp_id`) VALUES";
-				let duplicateColumn = "ON DUPLICATE KEY UPDATE `client_id`=VALUES(`client_id`),`imported_file_id`=VALUES(`imported_file_id`),`assigned_emp_id`=VALUES(`assigned_emp_id`),`Customer_id`=VALUES(`customer_id`), `Loan_Count`=VALUES(`loan_count`), `loanid`=VALUES(`loan_id`),`customer_Name`=VALUES(`customer_name`),`Gender`=VALUES(`gender`),`mobile`=VALUES(`mobile`),`email`=VALUES(`email`),`DOB`=VALUES(`dob`),`Age`=VALUES(`age`),`city`=VALUES(`city`) ,`pin_code`=VALUES(`pin_code`),`state`=VALUES(`state`),`loan_id`=VALUES(`loan_id`),`disbursal_amt`=VALUES(`disbursal_amt`),`disbursal_date`=VALUES(`disbursal_date`),`due_date`=VALUES(`due_date`),`principal_amt`=VALUES(`principal_amt`),`interest_amount`=VALUES(`interest_amount`),`penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`ref_type1`=VALUES(`ref_type1`),`ref_name1`=VALUES(`ref_name1`),`ref_mobile_num1`=VALUES(`ref_mobile_num1`),`ref_type2`=VALUES(`ref_type2`),`ref_name2`=VALUES(`ref_name2`),`ref_mobile_num2`=VALUES(`ref_mobile_num2`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`),`is_collected`=VALUES(`is_collected`),`ESIGN_MOBILE_NUMBER`=VALUES(`esign_mobile_number`),`repaid_date`=VALUES(`repaid_date`),`is_assigned`=VALUES(`is_assigned`),`date`=VALUES(`date`)"
+				let startQuery = "INSERT INTO `loan_details` (`client_id`,`imported_file_id`,`Customer_id`, `Loan_Count`, `loanid`, `customer_Name`, `Gender`, `mobile`,`email`, `DOB`, `Age`, `city`, `pin_code`, `state`, `loan_id`, `disbursal_amt`, `disbursal_date`,`due_date`, `principal_amt`, `interest_amount`, `penalty_amt`, `repayment_amt`, `ref_type1`, `ref_name1`, `ref_mobile_num1`, `ref_type2`, `ref_name2`, `ref_mobile_num2`, `bucket`,`overdue_days`, `is_collected`, `ESIGN_MOBILE_NUMBER`, `repaid_date`,`is_assigned`,`date`, `assigned_emp_id`, `batch_status`) VALUES";
+				let duplicateColumn = "ON DUPLICATE KEY UPDATE `client_id`=VALUES(`client_id`),`imported_file_id`=VALUES(`imported_file_id`),`assigned_emp_id`=VALUES(`assigned_emp_id`),`Customer_id`=VALUES(`customer_id`), `Loan_Count`=VALUES(`loan_count`), `loanid`=VALUES(`loan_id`),`customer_Name`=VALUES(`customer_name`),`Gender`=VALUES(`gender`),`mobile`=VALUES(`mobile`),`email`=VALUES(`email`),`DOB`=VALUES(`dob`),`Age`=VALUES(`age`),`city`=VALUES(`city`) ,`pin_code`=VALUES(`pin_code`),`state`=VALUES(`state`),`loan_id`=VALUES(`loan_id`),`disbursal_amt`=VALUES(`disbursal_amt`),`disbursal_date`=VALUES(`disbursal_date`),`due_date`=VALUES(`due_date`),`principal_amt`=VALUES(`principal_amt`),`interest_amount`=VALUES(`interest_amount`),`penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`ref_type1`=VALUES(`ref_type1`),`ref_name1`=VALUES(`ref_name1`),`ref_mobile_num1`=VALUES(`ref_mobile_num1`),`ref_type2`=VALUES(`ref_type2`),`ref_name2`=VALUES(`ref_name2`),`ref_mobile_num2`=VALUES(`ref_mobile_num2`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`),`is_collected`=VALUES(`is_collected`),`ESIGN_MOBILE_NUMBER`=VALUES(`esign_mobile_number`),`repaid_date`=VALUES(`repaid_date`),`is_assigned`=VALUES(`is_assigned`),`date`=VALUES(`date`), `batch_status` =VALUES(`batch_status`)"
 				let responseData;
 				let currentBatch = 0
 				let rowCount = 0
 				let allBatchSuccess = true
 				loanDetails.map(item => {
-					currentRow = `("1","${lastinserttedId}","${item.customer_id}","${item.loan_count}" ,"${item.loan_id}" ,"${item.customer_name}" , "${item.gender}",  "${item.mobile}","${item.email}" ,
-					"${item.dob}" ,"${item.age}" ,"${item.city}" ,
-					"${item.pin_code}" ,"${item.state}" ,"${item.loan_id}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
-					"${item.interest_amount}" ,"${item.penalty_amt}" ,"${item.repayment_amt}" ,"${item.ref_type1}" , 
-					"${item.ref_name1}","${item.ref_mobile_num1}" , "${item.ref_type2}","${item.ref_name2}" ,"${item.ref_mobile_num2}" ,
-					"${item.bucket}" ,"${item.overdue_days}" , "${item.is_collected}",
-					"${item.esign_mobile_number}" , "${item.repaid_date}","1","${today}","${employeeID}"),`
+					if(item.loan_id !=""){
+						currentRow = `("1","${lastinserttedId}","${item.customer_id}","${item.loan_count}" ,"${item.loan_id}" ,"${item.customer_name}" , "${item.gender}",  "${item.mobile}","${item.email}" ,
+						"${item.dob}" ,"${item.age}" ,"${item.city}" ,
+						"${item.pin_code}" ,"${item.state}" ,"${item.loan_id}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
+						"${item.interest_amount}" ,"${item.penalty_amt}" ,"${item.repayment_amt}" ,"${item.ref_type1}" , 
+						"${item.ref_name1}","${item.ref_mobile_num1}" , "${item.ref_type2}","${item.ref_name2}" ,"${item.ref_mobile_num2}" ,
+						"${item.bucket}" ,"${item.overdue_days}" , "${item.is_collected}",
+						"${item.esign_mobile_number}" , "${item.repaid_date}","1","${today}","${employeeID}", "1"),`
 
-					currentRow = currentRow.replace(/\n|\r/g, "");
-					currentRow = currentRow.replace(/~+$/, '');
-					currentRow = currentRow.replace(/'/g, "''");
-					
-					inserData[currentBatch] = inserData[currentBatch] + currentRow
+						currentRow = currentRow.replace(/\n|\r/g, "");
+						currentRow = currentRow.replace(/~+$/, '');
+						currentRow = currentRow.replace(/'/g, "''");
+						
+						inserData[currentBatch] = inserData[currentBatch] + currentRow
 
-					if(rowCount == 1000){
-						currentBatch = currentBatch + 1
-						rowCount = 0
-						inserData[currentBatch] = ""
+						if(rowCount == 1000){
+							currentBatch = currentBatch + 1
+							rowCount = 0
+							inserData[currentBatch] = ""
+						}
+						rowCount = rowCount + 1
 					}
-					rowCount = rowCount + 1
 				});
 				inserData.map( (batch, key) => {
 					inserData[key] = inserData[key].replace(/,\s*$/, "");

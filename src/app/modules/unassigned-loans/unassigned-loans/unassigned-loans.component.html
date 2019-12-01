@@ -69,27 +69,27 @@
                       </div>              
                   </ng-template>
               </ngx-datatable-column>
-            <ngx-datatable-column name="Customer Name">
+            <ngx-datatable-column name="Loan Id">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.customer_Name}}
+                {{row.loan_id}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Mobile">
+            <ngx-datatable-column name="State">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.mobile}}
+                {{row.state}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Email">
+            <ngx-datatable-column name="Principal Amount">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.email}}
+                {{row.principal_amt}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="City">
+            <ngx-datatable-column name="Bucket">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.city}}
+                {{row.bucket}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Due Date">
+            <!-- <ngx-datatable-column name="Due Date">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{row.due_date}}
               </ng-template>
@@ -98,12 +98,12 @@
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{row.assignedToName}}
               </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Assigned Status">
+            </ngx-datatable-column> -->
+            <!-- <ngx-datatable-column name="Assigned Status">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <i class="fa fa-check assignedcheck" aria-hidden="true" *ngIf="row.assignedLoan"></i>
                 </ng-template>
-              </ngx-datatable-column>
+              </ngx-datatable-column> -->
           </ngx-datatable>
           <div class="col-md-12 order-md-1" style="    padding-bottom: 20px;">
               <button class="btn btn-primary btn-lg btn-block" type="submit"

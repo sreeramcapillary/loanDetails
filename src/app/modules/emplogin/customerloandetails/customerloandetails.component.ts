@@ -153,8 +153,11 @@ export class CustomerloandetailsComponent implements OnInit {
 
     // filter our data
     const temp = this.filteredRows.filter(function(d) {
+      // let x = d.loan_id.toString().toLowerCase().indexOf(val) !== -1 || !val;
+      // console.log(x)
       return d.loan_id.toString().toLowerCase().indexOf(val) !== -1 || !val;
     });
+    // console.log(temp)
     // update the rows
     this.rows = temp;
   }

@@ -54,52 +54,52 @@
       <div class="col-md-12 order-md-1">
         <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
           [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]" style="min-height: 600px;">
-          <ngx-datatable-column name="Employee Name">
+          <ngx-datatable-column name="EMP">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.employeeName}}
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Assigned Amount">
+          <ngx-datatable-column name="Assigned">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.assignedAmount}} ({{row.assignedAmount_COUNT}})
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="PTP Amount">
+          <ngx-datatable-column name="PTP">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.PTP_AMOUNT}} ({{row.PTP_AMOUNT_COUNT}})
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="RNR Amount">
+          <ngx-datatable-column name="RNR">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.RNR_AMOUNT}} ({{row.RNR_AMOUNT_COUNT}})
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Switchoff Amount">
+          <ngx-datatable-column name="S.A">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.SWITCH_OFF}} ({{row.SWITCH_OFF_COUNT}})
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Payment Expected at Amount">
+          <ngx-datatable-column name="PEA">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.PAYMENT_EXPECTED_AT}} ({{row.PAYMENT_EXPECTED_AT_COUNT}})
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Waiting for confirmation">
+          <ngx-datatable-column name="WFC">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.WAITING_FOR_CONFIRMATION}} ({{row.WAITING_FOR_CONFIRMATION_COUNT}})
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Collected Amout">
+          <ngx-datatable-column name="RPY">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.collectedAmout}} ({{row.collectedAmout_COUNT}})
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Remaining Amout">
+          <!-- <ngx-datatable-column name="Remaining Amout">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.remainingAmount}} ({{row.remainingAmount_COUNT}})
             </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Percentage">
+          </ngx-datatable-column> -->
+          <ngx-datatable-column name="%">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.inPercentage}}
             </ng-template>

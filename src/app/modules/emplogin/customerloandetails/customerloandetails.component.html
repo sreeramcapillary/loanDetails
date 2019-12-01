@@ -26,6 +26,8 @@
         <a class="nav-item nav-link" style="color: grey">Waiting For Confirmation : {{totalPendingAmount}}</a> |
         <a class="nav-item nav-link" style="color: green">Total Recovered Amount : {{totalRecoveredAmount}}</a>
 
+        <!-- <div style="position: absolute;right: 70px;">Sreeram</div> -->
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -69,10 +71,24 @@
       </div>
       <div class="row">
           <div class="col-md-10 order-md-1">
+              <!-- <div class="row">
+                  <div class="col-md-2">
+                  </div>
+                  <div class="col-md-4">
+                      <select>
+                        <option>Loan Id</option>
+                        <option>Mobile Number</option>
+                      </select>
+                  </div>
+                  <div class="col-md-4">
+                      <input type="text" placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
+                  </div>
+              </div> -->
+
               <input
               type="text"
               style="padding:8px;margin:15px auto;width:30%;"
-              placeholder="Type to filter the name column..."
+              placeholder="Type to filter"
               (keyup)="updateFilter($event)"
             />
             <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"

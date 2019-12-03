@@ -9,7 +9,8 @@
   <div id="page-content-wrapper">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-      <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars" aria-hidden="true"></i>
+      <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars"
+          aria-hidden="true"></i>
       </button>
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -42,15 +43,17 @@
     </nav>
 
     <div class="container-fluid" style="padding-top: 20px;">
-    <div class="row">
-     <div class="col-md-6">
-       <h4 class="mb-3">Reports</h4>
-    </div> 
-    <div class="col-md-6">
-      <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()">Export Detailed Data as Excel <i class="fa fa-file-excel-o"></i></button>
-      <button class="btn btn-primary" style="float: right; margin-right: 20px;" type="submit" (click)="exportReportData()">Export Only Report Data as Excel <i class="fa fa-file-excel-o"></i></button>
-    </div>
-  </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h4 class="mb-3">Reports</h4>
+        </div>
+        <div class="col-md-6">
+          <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()">Export
+            Detailed Data as Excel <i class="fa fa-file-excel-o"></i></button>
+          <button class="btn btn-primary" style="float: right; margin-right: 20px;" type="submit"
+            (click)="exportReportData()">Export Only Report Data as Excel <i class="fa fa-file-excel-o"></i></button>
+        </div>
+      </div>
       <div class="col-md-12 order-md-1">
         <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
           [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]" style="min-height: 600px;">
@@ -104,8 +107,18 @@
               {{row.inPercentage}}
             </ng-template>
           </ngx-datatable-column>
-          
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+              let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset">
+              <div style="padding: 5px 10px">
+                <div>
+                  <b> Rows: {{ rowCount }} | Assigned = {{consolidatedData.assigned}} ({{consolidatedData.assignedCount}}) | PTP = {{consolidatedData.ptp}} ({{consolidatedData.ptpCount}}) | RNR = {{consolidatedData.rnr}} ({{consolidatedData.rnrCount}}) | SA = {{consolidatedData.sa}} ({{consolidatedData.saCount}}) | PEA = {{consolidatedData.pea}} ({{consolidatedData.peaCount}}) | WFC = {{consolidatedData.wfc}} ({{consolidatedData.wfcCount}}) | RPY = {{consolidatedData.rpy}} ({{consolidatedData.rpyCount}}) </b>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-footer>
         </ngx-datatable>
+
       </div>
     </div>
   </div>

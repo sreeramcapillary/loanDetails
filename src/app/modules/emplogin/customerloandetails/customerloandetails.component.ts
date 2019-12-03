@@ -31,6 +31,9 @@ export class CustomerloandetailsComponent implements OnInit {
   totalRecoveredAmount = 0
   totalPendingAmount = 0
   showActionsContainer:boolean = false
+  empName = localStorage.getItem("empName")
+  empUsername = localStorage.getItem("empId")
+  empBucket = localStorage.getItem("bucket")
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -151,15 +154,28 @@ export class CustomerloandetailsComponent implements OnInit {
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
 
+    let filteredDataTemp = []
+    
     // filter our data
-    const temp = this.filteredRows.filter(function(d) {
+    filteredDataTemp = this.filteredRows.filter(function(d) {
       // let x = d.loan_id.toString().toLowerCase().indexOf(val) !== -1 || !val;
       // console.log(x)
-      return d.loan_id.toString().toLowerCase().indexOf(val) !== -1 || !val;
+      return d.loan_id.toString().toLowerCase().indexOf(val) !== -1 || d.mobile.toString().toLowerCase().indexOf(val) !== -1 || d.ref_mobile_num1.toString().toLowerCase().indexOf(val) !== -1 || d.ref_mobile_num2.toString().toLowerCase().indexOf(val) !== -1 || !val;
     });
-    // console.log(temp)
+
+    //searching for mobile
+    // if(filteredDataTemp.length == 0){
+    //   this.rows = this.filteredRows
+    //   filteredDataTemp = this.filteredRows.filter(function(d) {
+    //     return d.mobile.toString().toLowerCase().indexOf(val) !== -1 || !val;
+    //   });
+    // }
+
+
+    //ref_mobile_num1
+
     // update the rows
-    this.rows = temp;
+    this.rows = filteredDataTemp;
   }
 
 }

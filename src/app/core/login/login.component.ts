@@ -72,6 +72,9 @@ export class LoginComponent implements OnInit {
               this.router.navigateByUrl('/emp-list');
 
             }else{
+              localStorage.setItem("empName",data.userDetails[0].name);
+              localStorage.setItem("empId",data.userDetails[0].username);
+              localStorage.setItem("bucket",data.userDetails[0].bucket);
               this.router.navigateByUrl('/cutomerloandetails');
             }
           // })

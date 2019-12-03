@@ -21,18 +21,34 @@ router.post('/login', function (request, response) {
 	response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 	//request.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 	if (username && password) {
-		connection.query('SELECT * FROM userdetails WHERE username = ? AND password = ?', [username, password], function (error, results, fields) {
-			if (results.length > 0) {
-				//	request.session.loggedin = true;
-				// request.session.username = username;
-				let responseData = { "status": true, "code": 200, "userDetails": results }
-				response.json(responseData)
-			} else {
-				let responseData = { "status": false, "code": 401, "message": "Incorrect Username and/or Password!" }
-				response.json(responseData)
-			}
-			response.end();
-		});
+		if(username == "admin"){
+			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile FROM userdetails UD WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
+				if (results.length > 0) {
+					//	request.session.loggedin = true;
+					// request.session.username = username;
+					let responseData = { "status": true, "code": 200, "userDetails": results }
+					response.json(responseData)
+				} else {
+					let responseData = { "status": false, "code": 401, "message": "Incorrect Username and/or Password!" }
+					response.json(responseData)
+				}
+				response.end();
+			});
+		}else{
+			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, BL.bucket FROM userdetails UD JOIN bucket_list BL ON BL.id = UD.bucket_id WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
+				if (results.length > 0) {
+					//	request.session.loggedin = true;
+					// request.session.username = username;
+					let responseData = { "status": true, "code": 200, "userDetails": results }
+					response.json(responseData)
+				} else {
+					let responseData = { "status": false, "code": 401, "message": "Incorrect Username and/or Password!" }
+					response.json(responseData)
+				}
+				response.end();
+			});
+		}
+		
 	} else {
 		let responseData = { "status": false, "code": 401, "message": "Please enter Username and Password!" }
 		response.json(responseData)

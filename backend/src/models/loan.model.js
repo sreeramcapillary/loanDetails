@@ -22,7 +22,7 @@ router.post('/login', function (request, response) {
 	//request.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 	if (username && password) {
 		if(username == "admin"){
-			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile FROM userdetails UD WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
+			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, UD.usertype FROM userdetails UD WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
 				if (results.length > 0) {
 					//	request.session.loggedin = true;
 					// request.session.username = username;
@@ -35,7 +35,7 @@ router.post('/login', function (request, response) {
 				response.end();
 			});
 		}else{
-			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, BL.bucket FROM userdetails UD JOIN bucket_list BL ON BL.id = UD.bucket_id WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
+			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, BL.bucket, UD.usertype FROM userdetails UD JOIN bucket_list BL ON BL.id = UD.bucket_id WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
 				if (results.length > 0) {
 					//	request.session.loggedin = true;
 					// request.session.username = username;

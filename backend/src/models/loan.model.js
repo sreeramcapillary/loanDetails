@@ -274,7 +274,20 @@ router.get('/getAllALoanDetailsList', function (request, response) {
 });
 router.post('/getLoanListByEmp', function (request, response) {
 	var empId = request.body.empId
-	connection.query(`SELECT ld.*, LS.status_type as status FROM loan_details ld JOIN userdetails u on  u.id = ld.assigned_emp_id LEFT JOIN Loan_status LS ON ld.current_status = LS.id where u.id ='${empId}' AND ld.batch_status = 1 GROUP BY ld.id ORDER BY ld.current_status DESC`, function (error, results, fields) {
+	let today = moment().format('YYYY-MM-DD')
+	// connection.query(`SELECT ld.*, LS.status_type as status FROM loan_details ld JOIN userdetails u on  u.id = ld.assigned_emp_id LEFT JOIN Loan_status LS ON ld.current_status = LS.id where u.id ='${empId}' AND ld.batch_status = 1 GROUP BY ld.id ORDER BY ld.current_status DESC`, function (error, results, fields) {
+	// 	if (results.length > 0) {
+	// 		//	request.session.loggedin = true;
+	// 		// request.session.username = username;
+	// 		let responseData = { "status": true, "code": 200, "assignedLoanToEmp": results }
+	// 		response.json(responseData)
+	// 	} else {
+	// 		let responseData = { "status": false, "code": 401, "assignedLoanToEmp": [] }
+	// 		response.json(responseData)
+	// 	}
+	// 	response.end();
+	// });
+	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId FROM loan_details ld JOIN userdetails u on u.id = ld.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6) GROUP BY loanId) AS lsh ON ld.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id where u.id = ${empId} AND ld.batch_status = 1 GROUP BY ld.id ORDER BY lsh.statusId DESC`, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -286,8 +299,25 @@ router.post('/getLoanListByEmp', function (request, response) {
 		}
 		response.end();
 	});
-
 });
+
+router.post('/getLoanPastStatus', function (request, response) {
+	var loanId = request.body.loanId
+	let yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
+	connection.query(`SELECT lsh.comments as loan_comments, lsh.statusId, ls.status_type as status, lsh.dateTime FROM loans_status_history lsh JOIN Loan_status ls ON ls.id = lsh.statusId WHERE lsh.loanId = '${loanId}' AND lsh.dateTime LIKE '%${yesterday}%' ORDER BY lsh.id DESC`, function (error, results, fields) {
+		if (results.length > 0) {
+			//	request.session.loggedin = true;
+			// request.session.username = username;
+			let responseData = { "status": true, "code": 200, "loanPastStatus": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "loanPastStatus": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+});
+
 router.post('/assignLoanList', function (request, response) {
 	 var empid = request.body.empId;
 	 var loanid = request.body.loanId;
@@ -380,7 +410,19 @@ router.post('/updateLoan', function (request, response) {
 	// console.log(request.body)
 	if (request.body.loan_id && request.body.current_Status) {
 		let currentDateTime = moment().format('YYYY-MM-DD hh:mm:ss')
-		connection.query(`update loan_details set current_status ='${request.body.current_Status}',old_status ='${request.body.old_Status}',document='${request.body.document}',comments='${request.body.comment}', statusUpdateDate='${currentDateTime}' where loan_id = '${request.body.loan_id}'`, function (error, results, fields) {
+		// connection.query(`update loan_details set current_status ='${request.body.current_Status}',old_status ='${request.body.old_Status}',document='${request.body.document}',comments='${request.body.comment}', statusUpdateDate='${currentDateTime}' where loan_id = '${request.body.loan_id}'`, function (error, results, fields) {
+		// 	if (results) {
+		// 		let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+		// 		response.json(responseData)
+		// 	} else {
+		// 		let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" :  error}
+		// 		response.json(responseData)
+		// 	}
+		// });
+
+		connection.query(`update loans_status_history set active = 0 where loanId = '${request.body.loan_id}'`, function (error, results, fields) {});
+
+		connection.query(`INSERT INTO loans_status_history (loanId, statusId, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
 			if (results) {
 				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
 				response.json(responseData)
@@ -389,6 +431,7 @@ router.post('/updateLoan', function (request, response) {
 				response.json(responseData)
 			}
 		});
+
 	}else{
 		let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details" }
 		response.json(responseData)

@@ -42,6 +42,7 @@ export class CustomerloandetailsComponent implements OnInit {
   principalAmountUniqueList: any = []
   statusValuesList: any;
   statusValuesUniqueList: any = []
+  public dateTime1: Date;
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -53,8 +54,6 @@ export class CustomerloandetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.cutomerDetials = JSON.parse(localStorage.getItem("customerData"))
-    // console.log(this.cutomerDetials["current_status"])
     this.getLoanStatus()
     this.selectForm = this.formBuilder.group({
       status: ['', Validators.required], 
@@ -80,10 +79,17 @@ export class CustomerloandetailsComponent implements OnInit {
       itemsShowLimit: 5,
       allowSearchFilter: true
     };
-    this.getAllLoanDetails()
+
+    var today = new Date();
+    var dd = String(("0" + today.getDate()).slice(-2)).padStart(2, '0');
+    var mm = String(("0" + (today.getMonth() + 1)).slice(-2)).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    let todayDate = yyyy + '-' + mm + '-' + dd;
+    this.getAllLoanDetails(todayDate)
   }
-  getAllLoanDetails(){
-    this.appService.getAssignedLoanDetailsEmp(this.empId)
+  getAllLoanDetails(date){
+    this.appService.getAssignedLoanDetailsEmpByDate(this.empId, date)
     .subscribe(
       (data: any) => {
         if (data.status) { 
@@ -270,6 +276,15 @@ export class CustomerloandetailsComponent implements OnInit {
         }
     });
     return filteredDataTemp
+  }
+
+  updateDataByDate(){
+    var date = new Date(this.dateTime1);
+    var month = ("0" + (date.getMonth() + 1)).slice(-2)
+    var fulldate = ("0" + date.getDate()).slice(-2)
+    var year = date.getFullYear()
+    let selectedDate = year+"-"+month+"-"+fulldate
+    this.getAllLoanDetails(selectedDate)
   }
 
 }

@@ -301,6 +301,21 @@ router.post('/getLoanListByEmp', function (request, response) {
 	});
 });
 
+router.post('/getLoanListByEmpByDate', function (request, response) {
+	var empId = request.body.empId
+	let today = request.body.date
+	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId FROM loan_details ld JOIN userdetails u on u.id = ld.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6) GROUP BY loanId) AS lsh ON ld.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id where u.id = ${empId} AND ld.batch_status = 1 GROUP BY ld.id ORDER BY lsh.statusId DESC`, function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "assignedLoanToEmp": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "assignedLoanToEmp": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+});
+
 router.post('/getLoanPastStatus', function (request, response) {
 	var loanId = request.body.loanId
 	let yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
@@ -977,7 +992,7 @@ router.get('/getDayReport', function (request, response) {
 });
 
 router.get('/getCurrentDetailedReportsDataForExcel', function (request, response) {
-	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as loanStatus, LT.name as language FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN Loan_status LS ON LD.current_status = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
+	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as status, lsh.loan_comments, LT.name as language FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 GROUP BY loanId) AS lsh ON ld.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

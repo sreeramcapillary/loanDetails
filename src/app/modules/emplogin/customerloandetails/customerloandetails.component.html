@@ -71,20 +71,27 @@
       </div>
       <div class="row">
           <div class="col-md-10 order-md-1">
-              <!-- <div class="row">
-                  <div class="col-md-2">
-                  </div>
-                  <div class="col-md-4">
-                      <select>
-                        <option>Loan Id</option>
-                        <option>Mobile Number</option>
-                      </select>
-                  </div>
-                  <div class="col-md-4">
-                      <input type="text" placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
-                  </div>
-              </div> -->
-
+              <div class="row">
+                <div class="col-md-5">
+                  <form [formGroup]="selectForm">
+                    <!-- <label for="principalAmount">Principal Amount</label> -->
+                    <ng-multiselect-dropdown [placeholder]="'Select Principal Amount'" [data]="principalAmountList"
+                    formControlName="principalAmount" [settings]="dropdownSettings">
+                    </ng-multiselect-dropdown>
+                  </form>
+                </div>
+                <div class="col-md-5">
+                  <form [formGroup]="selectForm">
+                    <!-- <label for="principalAmount">Principal Amount</label> -->
+                    <ng-multiselect-dropdown [placeholder]="'Select Status'" [data]="statusValuesList"
+                    formControlName="statusValues" [settings]="dropdownSettings">
+                    </ng-multiselect-dropdown>
+                  </form>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="updateCustomFilters()">Filter</button>
+                </div>
+              </div>
               <input
               type="text"
               style="padding:8px;margin:15px auto;width:30%;"
@@ -143,7 +150,7 @@
               </ngx-datatable-column>
               <ngx-datatable-column name="Status">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <div [ngClass]="{'payment-done-style': row.current_status == '5', 'PTP-style' : row.current_status == '1', 'RNR-style' : row.current_status == '2', 'switch-off-style' : row.current_status == '3', 'payment-expected-style' : row.current_status == '4', 'payment-completed-style' : row.current_status == '6'}"> {{row.status}} </div>
+                  <div [ngClass]="{'payment-done-style': row.statusId == '5', 'PTP-style' : row.statusId == '1', 'RNR-style' : row.statusId == '2', 'switch-off-style' : row.statusId == '3', 'payment-expected-style' : row.statusId == '4', 'payment-completed-style' : row.statusId == '6'}"> {{row.status}} </div>
                 </ng-template>
               </ngx-datatable-column>
               <ngx-datatable-column name="Action">
@@ -188,6 +195,13 @@
                       <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="submitDetails()"
                      [disabled]="">Submit</button>
                     </form>
+                    <br>
+                    <div>
+                      <h6><u>Yesterday Comments</u></h6>
+                      <ul>
+                        <li *ngFor="let pastStatus of loanPastStatus"> * {{pastStatus.status}} ({{pastStatus.dateTime.substring(11,16)}})</li>
+                      </ul>
+                    </div>
             
               </div>
             </div>

@@ -4,6 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { ColumnMode, SelectionType  } from '@swimlane/ngx-datatable';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import {Md5} from 'ts-md5/dist/md5';
 
 const URL = 'http://localhost:3000/uploadFile';
 
@@ -34,6 +36,12 @@ export class CustomerloandetailsComponent implements OnInit {
   empName = localStorage.getItem("empName")
   empUsername = localStorage.getItem("empId")
   empBucket = localStorage.getItem("bucket")
+  loanPastStatus = []
+  dropdownSettings: IDropdownSettings = {} ;
+  principalAmountList: any;
+  principalAmountUniqueList: any = []
+  statusValuesList: any;
+  statusValuesUniqueList: any = []
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -41,7 +49,7 @@ export class CustomerloandetailsComponent implements OnInit {
     if(this.userType != '0'){
       this.router.navigateByUrl('/login');
     } 
-    this.getAllLoanDetails()
+    // this.getAllLoanDetails()
   }
 
   ngOnInit() {
@@ -50,7 +58,9 @@ export class CustomerloandetailsComponent implements OnInit {
     this.getLoanStatus()
     this.selectForm = this.formBuilder.group({
       status: ['', Validators.required], 
-      comment: ['']
+      comment: [''],
+      principalAmount:[''],
+      statusValues:['']
     });
 
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
@@ -61,23 +71,42 @@ export class CustomerloandetailsComponent implements OnInit {
          }
      };
 
-     
+     this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'value',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true
+    };
+    this.getAllLoanDetails()
   }
   getAllLoanDetails(){
     this.appService.getAssignedLoanDetailsEmp(this.empId)
     .subscribe(
       (data: any) => {
         if (data.status) { 
+          this.principalAmountList = []
           this.rows = data.assignedLoanToEmp;
           this.filteredRows = data.assignedLoanToEmp;
           this.selected = [data[2]];
           data.assignedLoanToEmp.map(row => {
             this.totalAssignedAmount += row.repayment_amt
-            if(row.current_status == 6){
+            if(row.statusId == 6){
               this.totalRecoveredAmount += row.repayment_amt
             }
-            if(row.current_status == 5){
+            if(row.statusId == 5){
               this.totalPendingAmount += row.repayment_amt
+            }
+            if(!this.principalAmountUniqueList.includes(row.principal_amt)){
+              this.principalAmountUniqueList.push(row.principal_amt)
+              var plist;
+              plist = 
+              { "id": row.principal_amt, 
+                "value": row.principal_amt
+              }
+              this.principalAmountList.push(plist)
             }
           });
         }
@@ -90,9 +119,18 @@ export class CustomerloandetailsComponent implements OnInit {
     this.old_status = selected[0].old_status;
     this.loan_id = selected[0].loan_id;
     this.selectForm.patchValue({    
-      "status": selected[0].current_status,
+      "status": selected[0].statusId,
       "comment":selected[0].comments
     });
+
+    this.loanPastStatus = []
+    this.appService.getLoanPastStatus(this.loan_id)
+    .subscribe(
+      (data: any) => {
+        if (data.status) { 
+          this.loanPastStatus = data.loanPastStatus
+        }
+      });
    }else{
     this.showActionsContainer = false
    }
@@ -120,10 +158,18 @@ export class CustomerloandetailsComponent implements OnInit {
     this.appService.loanStatus()
     .subscribe(
       (data: any) => {
+        this.statusValuesList = []
         if (data.status) { 
            //console.log(data.loanStatus)
            this.loanStatus = data.loanStatus
-           
+           this.loanStatus.map(status => {
+            var slist;
+            slist = 
+            { "id": status.id, 
+              "value": status.status_type
+            }
+            this.statusValuesList.push(slist)
+           })
         }
       });
   }
@@ -176,6 +222,54 @@ export class CustomerloandetailsComponent implements OnInit {
 
     // update the rows
     this.rows = filteredDataTemp;
+  }
+
+  updateCustomFilters(){
+    // console.log(this.f.principalAmount.value)
+    let finalData = []
+    if(this.f.principalAmount.value.length>0){
+      this.f.principalAmount.value.map(row => {
+        let filteredDataTemp = this.customFilteringForPrincipalAmount(row)
+        finalData.push(filteredDataTemp)
+      })
+    }
+
+    if(this.f.statusValues.value.length>0){
+      this.f.statusValues.value.map(row => {
+        let filteredDataTemp = this.customFilteringForStatusValues(row)
+        finalData.push(filteredDataTemp)
+      })
+    }
+    
+    var finalFilteredData = [];
+    for(var i = 0; i < finalData.length; i++)
+    {
+      finalFilteredData = finalFilteredData.concat(finalData[i]);
+    }
+    
+    this.rows = finalFilteredData;
+  }
+
+  customFilteringForPrincipalAmount(value){
+    const val = value
+    let filteredDataTemp = []
+    // filter our data
+    filteredDataTemp = this.filteredRows.filter(function(d) {
+        return d.principal_amt.toString().toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    return filteredDataTemp
+  }
+
+  customFilteringForStatusValues(value){
+    const val = value.id
+    let filteredDataTemp = []
+    // filter our data
+    filteredDataTemp = this.filteredRows.filter(function(d) {
+        if(d.statusId!=null){
+          return d.statusId.toString().toLowerCase().indexOf(val) !== -1 || !val;
+        }
+    });
+    return filteredDataTemp
   }
 
 }

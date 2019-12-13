@@ -120,6 +120,14 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
+    getLoanPastStatus(loanId){
+      var body = {
+        'loanId' : loanId
+      }
+      return this.http.post(BaseURL.url+'getLoanPastStatus', body,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+      });
+    }
     loanStatus(){
       return this.http.get(BaseURL.url+'getLoanStatus', {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")

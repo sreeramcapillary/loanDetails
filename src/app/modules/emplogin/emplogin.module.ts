@@ -6,6 +6,7 @@ import { CustomerloandetailsComponent } from './customerloandetails/customerloan
 import { ViewloandetailsComponent } from './viewloandetails/viewloandetails.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [CustomerloandetailsComponent, ViewloandetailsComponent],
@@ -14,6 +15,7 @@ import { SharedModule } from '../shared/shared.module';
     EmploginRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    NgMultiSelectDropDownModule.forRoot(),
     SharedModule
   ]
 })

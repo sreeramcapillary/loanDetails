@@ -861,7 +861,7 @@ router.post('/updateOldLoanDetails', function (request, response) {
 router.post('/updateRepaymentStatus', function (request, response) {
 	var ldata = request.body.repymentData;
 	if (ldata) {
-		var queriesStart = "INSERT INTO loans_status_history ('loanId', 'statusId', 'dateTime') VALUES"
+		var queriesStart = "INSERT INTO loans_status_history (loanId, statusId, dateTime) VALUES"
 		var queries='';
 		var updateQueries = ''
 		let today = moment().format('YYYY-MM-DD')

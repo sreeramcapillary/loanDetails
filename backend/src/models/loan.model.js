@@ -861,18 +861,21 @@ router.post('/updateOldLoanDetails', function (request, response) {
 router.post('/updateRepaymentStatus', function (request, response) {
 	var ldata = request.body.repymentData;
 	if (ldata) {
+		var queriesStart = "INSERT INTO loans_status_history ('loanId', 'statusId', 'dateTime') VALUES"
 		var queries='';
 		var updateQueries = ''
 		let today = moment().format('YYYY-MM-DD')
 		ldata.map(item=>{
-			queries += mysql.format(`INSERT INTO loans_status_history('loanId', 'statusId', 'dateTime') VALUES ('${item.loan_id}', '6', '${today}');`);
+			queries += mysql.format(`('${item.loan_id}', '6', '${today}'),`);
 			updateQueries += mysql.format(`UPDATE loan_details SET active = '0' WHERE loanId = '${item.loan_id}';`);
 			
 		})
 		// console.log(queries)
 		connection.query(updateQueries, function (error, results, fields) {
 			console.log(error)
-			connection.query(queries, function (error, results, fields) {
+			queries = queries.replace(/,\s*$/, "")
+			let query = queriesStart+queries
+			connection.query(query, function (error, results, fields) {
 				console.log(error)
 				if (results) {
 					let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }

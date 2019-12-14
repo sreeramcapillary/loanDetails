@@ -121,12 +121,13 @@ export class CustomerloandetailsComponent implements OnInit {
   onSelect({ selected }) {
    // console.log('Select Event', selected, this.selected);
    if(selected[0].current_status!=6){
+     console.log(selected[0])
     this.showActionsContainer = true
     this.old_status = selected[0].old_status;
     this.loan_id = selected[0].loan_id;
     this.selectForm.patchValue({    
       "status": selected[0].statusId,
-      "comment":selected[0].comments
+      "comment":selected[0].loan_comments
     });
 
     this.loanPastStatus = []
@@ -247,13 +248,17 @@ export class CustomerloandetailsComponent implements OnInit {
       })
     }
     
-    var finalFilteredData = [];
-    for(var i = 0; i < finalData.length; i++)
-    {
-      finalFilteredData = finalFilteredData.concat(finalData[i]);
+    if(this.f.principalAmount.value.length>0 || this.f.statusValues.value.length>0){
+      var finalFilteredData = [];
+      for(var i = 0; i < finalData.length; i++)
+      {
+        finalFilteredData = finalFilteredData.concat(finalData[i]);
+      }
+      
+      this.rows = finalFilteredData;
+    }else{
+      this.rows = this.filteredRows
     }
-    
-    this.rows = finalFilteredData;
   }
 
   customFilteringForPrincipalAmount(value){

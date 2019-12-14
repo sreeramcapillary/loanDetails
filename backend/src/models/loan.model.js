@@ -862,20 +862,26 @@ router.post('/updateRepaymentStatus', function (request, response) {
 	var ldata = request.body.repymentData;
 	if (ldata) {
 		var queries='';
+		var updateQueries = ''
+		let today = moment().format('YYYY-MM-DD')
 		ldata.map(item=>{
-			queries += mysql.format(`UPDATE loan_details SET current_status = '6' WHERE loan_id = '${item.loan_id}';`);
+			queries += mysql.format(`INSERT INTO loans_status_history('loanId', 'statusId', 'dateTime') VALUES ('${item.loan_id}', '6', '${today}');`);
+			updateQueries += mysql.format(`UPDATE loan_details SET active = '0' WHERE loanId = '${item.loan_id}';`);
 			
 		})
 		// console.log(queries)
-		connection.query(queries, function (error, results, fields) {
-			// console.log(results)
-			if (results) {
-				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
-				response.json(responseData)
-			} else {
-				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" : error }
-				response.json(responseData)
-			}
+		connection.query(updateQueries, function (error, results, fields) {
+			console.log(error)
+			connection.query(queries, function (error, results, fields) {
+				console.log(error)
+				if (results) {
+					let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+					response.json(responseData)
+				} else {
+					let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" : error }
+					response.json(responseData)
+				}
+			});
 		});
 	}
 

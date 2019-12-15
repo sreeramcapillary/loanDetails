@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {ExcelService} from '../../../helpers/services/excel.service';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 declare var $;
 
 @Component({
@@ -24,6 +25,9 @@ export class UnassignedLoansComponent implements OnInit {
   assignedLoanId: any;
   selectedLoanId: any;
   unassignedExportData: any = []
+  filteredRows= [];
+  dropdownSettings: IDropdownSettings = {} ;
+  bucketList: any;
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -43,7 +47,40 @@ export class UnassignedLoansComponent implements OnInit {
     //this.getAssinedLoanDetails();
     this.selectForm = this.formBuilder.group({
       employee: ['', Validators.required], 
+      selectedBucket: [''], 
+      noOfLoansSelected: [''], 
     });
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'value',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true
+    };
+    this.bucketList = [
+      { "id": "B1", 
+        "value":  "B1", 
+      },
+      { "id": "B2", 
+      "value":  "B2", 
+      },
+      { "id": "B3", 
+      "value":  "B3", 
+      },
+      { "id": "B4", 
+      "value":  "B4", 
+      },
+      { "id": "B5", 
+      "value":  "B5", 
+      },
+      { "id": "B5", 
+      "value":  "B6", 
+      }
+    ]
+
   }
   clickSide(val){
     if(val == 'elist'){
@@ -97,32 +134,63 @@ export class UnassignedLoansComponent implements OnInit {
           })
           
           this.rows = data.loanDetails;
-	  this.getAssinedLoanDetails();
+          this.filteredRows = data.loanDetails;
+	      // this.getAssinedLoanDetails();
         //  console.log(this.rows)
         }
       });
   }
-  getAssinedLoanDetails(){
-    this.appService.getAllAssinedLoanDetailsList()
-    .subscribe(
-      (data: any) => {
-        if (data.status) {  
-          this.assignedLoanData = data.assignedLoan;
-          this.rows.map((loanData,index) =>{
-            data.assignedLoan.map(aL => {
-              if(loanData.loan_id == aL.loan_id){
-                this.rows[index].assignedLoan = true;
-                this.rows[index].assignedToName = aL.name;
-               // this.rows[index].assignedToId = aL.assigned_emp_id;
-                this.rows[index].assignedLoanId = aL.loan_id;
 
-              }
-            })
-          })
-          console.log(this.rows)
+  checkLoans(){
+    this.customFilteringForBucket(this.f.selectedBucket.value)
+    this.loan_id = []
+    this.theCheckbox = [];
+    if(this.f.noOfLoansSelected.value>0){
+      this.rows.map((row, index) => {
+        if(index<this.f.noOfLoansSelected.value){
+          this.rows[index].theCheckbox = true
+          this.loan_id.push(row.loan_id)
+        }else{
+          this.rows[index].theCheckbox = false
         }
-      });
+      })
+    }else{
+      this.rows.map((row, index) => {
+        this.rows[index].theCheckbox = false
+      })
+    }
+    console.log(this.loan_id)
   }
+
+  customFilteringForBucket(bucket){
+    const val = bucket.toLowerCase();
+    let filteredDataTemp = []
+    filteredDataTemp = this.filteredRows.filter(function(d) {
+      return d.bucket.toString().toLowerCase().indexOf(val) !== -1 || !val;
+    });
+    this.rows = filteredDataTemp;
+  }
+
+  // getAssinedLoanDetails(){
+  //   this.appService.getAllAssinedLoanDetailsList()
+  //   .subscribe(
+  //     (data: any) => {
+  //       if (data.status) {  
+  //         this.assignedLoanData = data.assignedLoan;
+  //         this.rows.map((loanData,index) =>{
+  //           data.assignedLoan.map(aL => {
+  //             if(loanData.loan_id == aL.loan_id){
+  //               this.rows[index].assignedLoan = true;
+  //               this.rows[index].assignedToName = aL.name;
+  //              // this.rows[index].assignedToId = aL.assigned_emp_id;
+  //               this.rows[index].assignedLoanId = aL.loan_id;
+  //             }
+  //           })
+  //         })
+  //         // console.log(this.rows)
+  //       }
+  //     });
+  // }
   get f() { 
     return this.selectForm.controls;
    }
@@ -170,7 +238,7 @@ export class UnassignedLoansComponent implements OnInit {
           alert(data.message)
           this.loan_id=[];
           this.getAllLoanDetails();
-          this.getAssinedLoanDetails();
+          // this.getAssinedLoanDetails();
          
         }
       });

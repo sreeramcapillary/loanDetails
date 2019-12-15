@@ -5,6 +5,7 @@ import { UnassignedLoanListRoutingModule } from './unassigned-loans-routing.modu
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [UnassignedLoansComponent],
@@ -14,7 +15,8 @@ import { SharedModule } from '../shared/shared.module';
     NgxDatatableModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ]
 })
 export class UnassignedLoansModule { }

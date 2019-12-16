@@ -5,7 +5,7 @@ let http = require('https');
 const multer = require('multer')
 var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
-var moment = require('moment')
+var moment = require('moment-timezone');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
@@ -274,7 +274,7 @@ router.get('/getAllALoanDetailsList', function (request, response) {
 });
 router.post('/getLoanListByEmp', function (request, response) {
 	var empId = request.body.empId
-	let today = moment().format('YYYY-MM-DD')
+	let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 	// connection.query(`SELECT ld.*, LS.status_type as status FROM loan_details ld JOIN userdetails u on  u.id = ld.assigned_emp_id LEFT JOIN Loan_status LS ON ld.current_status = LS.id where u.id ='${empId}' AND ld.batch_status = 1 GROUP BY ld.id ORDER BY ld.current_status DESC`, function (error, results, fields) {
 	// 	if (results.length > 0) {
 	// 		//	request.session.loggedin = true;
@@ -318,8 +318,8 @@ router.post('/getLoanListByEmpByDate', function (request, response) {
 
 router.post('/getLoanPastStatus', function (request, response) {
 	var loanId = request.body.loanId
-	let yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
-	let today = moment().format('YYYY-MM-DD')
+	let yesterday = moment().tz("Asia/Kolkata").subtract(1, 'days').format('YYYY-MM-DD')
+	let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 	connection.query(`SELECT lsh.comments as loan_comments, lsh.statusId, ls.status_type as status, lsh.dateTime FROM loans_status_history lsh JOIN Loan_status ls ON ls.id = lsh.statusId WHERE lsh.loanId = '${loanId}' AND (lsh.dateTime LIKE '%${yesterday}%' OR lsh.dateTime LIKE '%${today}%') ORDER BY lsh.id DESC`, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
@@ -425,7 +425,7 @@ router.post('/assignLoanList', function (request, response) {
 router.post('/updateLoan', function (request, response) {
 	// console.log(request.body)
 	if (request.body.loan_id && request.body.current_Status) {
-		let currentDateTime = moment().format('YYYY-MM-DD hh:mm:ss')
+		let currentDateTime = moment().tz("Asia/Kolkata").format('YYYY-MM-DD hh:mm:ss')
 		// connection.query(`update loan_details set current_status ='${request.body.current_Status}',old_status ='${request.body.old_Status}',document='${request.body.document}',comments='${request.body.comment}', statusUpdateDate='${currentDateTime}' where loan_id = '${request.body.loan_id}'`, function (error, results, fields) {
 		// 	if (results) {
 		// 		let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
@@ -864,7 +864,7 @@ router.post('/updateRepaymentStatus', function (request, response) {
 		var queriesStart = "INSERT INTO loans_status_history (loanId, statusId, dateTime) VALUES"
 		var queries='';
 		var updateQueries = ''
-		let today = moment().format('YYYY-MM-DD')
+		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 		ldata.map(item=>{
 			queries += mysql.format(`('${item.loan_id}', '6', '${today}'),`);
 			updateQueries += mysql.format(`UPDATE loan_details SET active = '0' WHERE loanId = '${item.loan_id}';`);

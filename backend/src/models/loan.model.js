@@ -867,7 +867,7 @@ router.post('/updateRepaymentStatus', function (request, response) {
 		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 		ldata.map(item=>{
 			queries += mysql.format(`('${item.loan_id}', '6', '${today}'),`);
-			updateQueries += mysql.format(`UPDATE loan_details SET active = '0' WHERE loanId = '${item.loan_id}';`);
+			updateQueries += mysql.format(`UPDATE loans_status_history SET active = '0' WHERE loanId = '${item.loan_id}';`);
 			
 		})
 		// console.log(queries)

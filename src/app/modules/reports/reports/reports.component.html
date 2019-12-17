@@ -44,8 +44,15 @@
 
     <div class="container-fluid" style="padding-top: 20px;">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-2">
           <h4 class="mb-3">Reports</h4>
+        </div>
+        <div class="col-md-2">
+            <input type="text" style="padding:8px;margin:5px auto;width:100%;" placeholder="Select Date" [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" [(ngModel)]="dateTime1" />
+            <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary" style="float: left;" type="submit" (click)="reportsByDate()">Submit</button>
         </div>
         <div class="col-md-6">
           <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()">Export

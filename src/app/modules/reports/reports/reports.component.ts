@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
 import { HttpClient } from '@angular/common/http';
 import {ExcelService} from '../../../helpers/services/excel.service';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 declare var $;
 @Component({
   selector: 'app-reports',
@@ -29,6 +30,8 @@ export class ReportsComponent implements OnInit {
     rpy : 0,
     rpyCount : 0
   }
+  public dateTime1: Date;
+  selectForm: FormGroup;
   // exportdata: any = [{
   //   eid: 'e101',
   //   ename: 'ravi',
@@ -47,12 +50,18 @@ export class ReportsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router, private appService: AppService, private excelService:ExcelService) { }
+    private router: Router, private appService: AppService, private excelService:ExcelService,private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.appService.changeActiveTab("reports")
 
-    this.getAllReports()
+    var today = new Date();
+    var dd = String(("0" + today.getDate()).slice(-2)).padStart(2, '0');
+    var mm = String(("0" + (today.getMonth() + 1)).slice(-2)).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    let todayDate = yyyy + '-' + mm + '-' + dd;
+    this.getAllReports(todayDate)
   }
   clickSide(val) {
     if (val == 'elist') {
@@ -75,8 +84,8 @@ export class ReportsComponent implements OnInit {
 
     }
   }
-  getAllReports(){
-    this.appService.getReports()
+  getAllReports(date){
+    this.appService.getReports(date)
     .subscribe(
       (data: any) => {
         if (data.status) {
@@ -99,7 +108,6 @@ export class ReportsComponent implements OnInit {
             this.consolidatedData.rpy += row.collectedAmout
             this.consolidatedData.rpyCount += row.collectedAmout_COUNT
           })
-          console.log(this.consolidatedData)
         }
       });
   }
@@ -121,5 +129,31 @@ export class ReportsComponent implements OnInit {
   }
   exportReportData():void{
     this.excelService.exportAsExcelFile(this.onlyReportData, 'OnlyReports');
+  }
+
+  reportsByDate(){
+    var date = new Date(this.dateTime1);
+    var month = ("0" + (date.getMonth() + 1)).slice(-2)
+    var fulldate = ("0" + date.getDate()).slice(-2)
+    var year = date.getFullYear()
+    let selectedDate = year+"-"+month+"-"+fulldate
+
+    //Making consolidate data as 0
+    this.consolidatedData.assigned = 0
+    this.consolidatedData.assignedCount = 0
+    this.consolidatedData.ptp = 0
+    this.consolidatedData.ptpCount = 0
+    this.consolidatedData.rnr = 0
+    this.consolidatedData.rnrCount = 0
+    this.consolidatedData.sa = 0
+    this.consolidatedData.saCount = 0
+    this.consolidatedData.pea = 0
+    this.consolidatedData.peaCount = 0
+    this.consolidatedData.wfc = 0
+    this.consolidatedData.wfcCount = 0
+    this.consolidatedData.rpy = 0
+    this.consolidatedData.rpyCount = 0
+
+    this.getAllReports(selectedDate)
   }
 }

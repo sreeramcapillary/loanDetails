@@ -36,7 +36,8 @@ export class XluploadComponent implements OnInit {
     this.appService.changeActiveTab("xlupload")
 
     this.newDataForm = this.fb.group({
-      newBatch : ["NO"]
+      newBatch : ["NO"],
+      perEmployee : ['200']
     });
     // this.getAllEmp()
     // this.getAllBucket()
@@ -88,49 +89,6 @@ export class XluploadComponent implements OnInit {
                     }
                   })
                 })
-
-                // console.log("bucket array", this.loanDetails)
-                // this.loanDetails = [];
-                // this.loanDetails['bucket'] = [];
-                // for (var i = 0; i < this.xluploaddata.data.length; i++) {
-                //   var bucket = this.xluploaddata.data[i].bucket;
-                //   if (bucket in this.loanDetails == false) {
-                //     this.loanDetails['bucket'][bucket] = []; // must initialize the sub-object, otherwise will get 'undefined' errors
-                //   }
-                //   this.loanDetails['bucket'][bucket]['langauage'] = [];
-                //   for (var j = 0; j < this.xluploaddata.data.length; j++) {
-                //     if (this.xluploaddata.data[i].bucket == this.xluploaddata.data[j].bucket) {
-                //       var state = this.xluploaddata.data[j].state.toLowerCase();
-                //       if (state in this.loanDetails == false) {
-                //         this.loanDetails['bucket'][bucket]['langauage'][state] = []; // must initialize the sub-object, otherwise will get 'undefined' errors
-                //       }
-                //       var loandatadetails = []
-                //       var empdetails = []
-                //       var totalLoanDataValue = 0;
-                //       for (var k = 0; k < this.xluploaddata.data.length; k++) {
-                //         if (this.xluploaddata.data[j].bucket == this.xluploaddata.data[k].bucket && this.xluploaddata.data[j].state.toLowerCase() == this.xluploaddata.data[k].state.toLowerCase()) {
-                //           totalLoanDataValue = totalLoanDataValue + parseInt(this.xluploaddata.data[k].repayment_amt);
-                //           this.xluploaddata.data[k].is_assigned = false;
-                //           loandatadetails.push(this.xluploaddata.data[k])
-                //         }
-                //       }
-                //       this.emplist.map(elist => {
-                //         if (elist.state_name.toLowerCase() == this.xluploaddata.data[j].state.toLowerCase() && elist.bucket == this.xluploaddata.data[j].bucket) {
-                //           var empdata = {
-                //             "empid": elist.id,
-                //             "assigned" : false
-                //           }
-                //           empdetails.push(empdata);
-                //         }
-                //       })
-                //       this.loanDetails['bucket'][bucket]['langauage'][state]['loanData'] = loandatadetails;
-                //       this.loanDetails['bucket'][bucket]['langauage'][state]['empdetails'] = empdetails;
-                //       this.loanDetails['bucket'][bucket]['langauage'][state]['totalLoanDataValue'] = totalLoanDataValue;
-                //     }
-
-                //   }
-
-                // }
                console.log("Loan Details Filetered", this.loanDetails);
 
                 //Getting unique employee array and setting assigned loans count to 0 
@@ -158,7 +116,8 @@ export class XluploadComponent implements OnInit {
                       this.loanDetails['bucket'][bucketKey]["language"][languageKey]["empdetails"].map(emp => {
                         let totalAmountAssigned = 0
                         this.loanDetails['bucket'][bucketKey]["language"][languageKey]["loanData"].map(data => {
-                          if (uniqueEmployeeList[emp.empid] <= 300 && totalAmountAssigned <= averageLoanValue && data.is_assigned == false){
+                          let limit = parseInt(this.newDataForm.value.perEmployee, 10)
+                          if (uniqueEmployeeList[emp.empid] < limit && totalAmountAssigned <= averageLoanValue && data.is_assigned == false){
                             totalAmountAssigned = (totalAmountAssigned+parseInt(data.repayment_amt, 10))
                             //Incrementing count of loans assigned to individual employee
                             uniqueEmployeeList[emp.empid] = (uniqueEmployeeList[emp.empid]+1) 

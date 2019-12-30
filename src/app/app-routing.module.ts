@@ -18,6 +18,12 @@ const routes: Routes = [{
 
 },
 {
+  path: 'lead-list',
+  loadChildren: './modules/leadregistation/leadregistation.module#LeadregistationModule',
+  canActivate: [AuthGuard]
+
+},
+{
   path: 'xl-upload',
   loadChildren: './modules/xlupload/xlupload.module#XluploadModule',
   canActivate: [AuthGuard]

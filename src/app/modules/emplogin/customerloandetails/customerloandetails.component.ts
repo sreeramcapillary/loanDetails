@@ -119,8 +119,7 @@ export class CustomerloandetailsComponent implements OnInit {
       });
   }
   onSelect({ selected }) {
-   // console.log('Select Event', selected, this.selected);
-   if(selected[0].current_status!=6){
+   if(selected[0].statusId!=6){
      console.log(selected[0])
     this.showActionsContainer = true
     this.old_status = selected[0].old_status;
@@ -289,6 +288,9 @@ export class CustomerloandetailsComponent implements OnInit {
     var fulldate = ("0" + date.getDate()).slice(-2)
     var year = date.getFullYear()
     let selectedDate = year+"-"+month+"-"+fulldate
+    this.totalAssignedAmount = 0
+    this.totalPendingAmount = 0
+    this.totalRecoveredAmount = 0
     this.getAllLoanDetails(selectedDate)
   }
 

@@ -57,6 +57,9 @@ export class NavigationComponent implements OnInit {
     }else if(val == 'reports'){
       this.router.navigate(['/reports']);
 
+    }else if(val == 'leadlist'){
+      this.router.navigate(['/lead-list']);
+
     }
   }
 }

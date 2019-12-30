@@ -1,0 +1,131 @@
+<div class="d-flex" id="wrapper">
+
+  <!-- Sidebar -->
+  <app-navigation></app-navigation>
+
+  <!-- /#sidebar-wrapper -->
+
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <button class="btn btn-primary" id="menu-toggle" (click)="togglemenu()"><i class="fa fa-bars"
+          aria-hidden="true"></i>
+      </button>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <!-- <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li> -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-user"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <!-- <a class="dropdown-item" href="#">Profile</a> -->
+              <a class="dropdown-item" href="#">Logout</a>
+              <!-- <div class="dropdown-divider"></div> -->
+              <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid" style="padding-top: 20px;">
+      <h4 class="mb-3">Employee Registration</h4>
+      <div class="col-md-8 order-md-1">
+        <form class="needs-validation" [formGroup]="registerForm">
+          <div class="mb-3">
+            <label for="name">Name</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="name" placeholder="name" formControlName="name">
+            </div>
+            <div *ngIf="submitted && registerForm.get('name').errors" class="invalid-feedback-custom">
+              <div *ngIf="registerForm.get('name').errors.required">Name is required</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="username">Username</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">@</span>
+              </div>
+              <input type="text" class="form-control" id="username" placeholder="Username" formControlName="username">
+            </div>
+            <div *ngIf="submitted && registerForm.get('username').errors" class="invalid-feedback-custom">
+              <div *ngIf="registerForm.get('username').errors.required">Username is required</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="you@example.com" formControlName="email">
+            <div *ngIf="submitted && registerForm.get('email').errors" class="invalid-feedback-custom">
+                <div *ngIf="registerForm.get('email').errors.required">Email is required</div>
+                <div *ngIf="registerForm.get('email').errors.pattern">Email must be a valid email address</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="address">Mobile Number</label>
+            <input type="text" class="form-control" id="mobile" placeholder="918884757932" formControlName="mobile">
+            <div *ngIf="submitted && registerForm.get('mobile').errors" class="invalid-feedback-custom">
+              <div *ngIf="registerForm.get('mobile').errors.required">Mobile is required</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5 mb-3">
+              <label for="assignedbucket">Assignee Bucket</label>
+              <select class="custom-select d-block w-100" id="assignedbucket" formControlName="assignedbucket">
+                <option value="">Choose...</option>
+                <option value="{{blist.id}}" *ngFor="let blist of bucketList">{{blist.bucket}}</option>
+                <!-- <option>B2</option>
+                          <option>B3</option>
+                          <option>B4</option>
+                          <option>B5</option>
+                          <option>B6</option> -->
+              </select>
+              <div *ngIf="submitted && registerForm.get('assignedbucket').errors" class="invalid-feedback-custom">
+                <div *ngIf="registerForm.get('assignedbucket').errors.required">Bucket is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="!hideLanguage">
+            <div class="col-md-12">
+              <label for="language">Language</label>
+              <!-- <select class="custom-select d-block w-100" id="language"  formControlName="language">
+                        <option value="">Choose...</option>
+                        <option value="{{langList.id}}" *ngFor="let langList of languageList">{{langList.state_name}}-{{langList.name}}</option>
+                      </select> -->
+              <ng-multiselect-dropdown [placeholder]="'custom placeholder'" [data]="dropdownList"
+              formControlName="language" [settings]="dropdownSettings" [(ngModel)]="selectedItems">
+              </ng-multiselect-dropdown>
+              <div *ngIf="submitted && registerForm.get('language').errors" class="invalid-feedback-custom">
+                <div *ngIf="registerForm.get('language').errors.required">Language is required</div>
+              </div>
+            </div>
+          </div>
+          <hr class="mb-4">
+          <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="registerEmp()">Register</button>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+  <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->

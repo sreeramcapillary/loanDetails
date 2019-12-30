@@ -1,0 +1,12 @@
+.ngx-datatable.material {
+    background: #fff;
+    box-shadow: none !important;
+}
+.ngx-datatable, .info {
+    text-align: left;
+    width: 100% !important;
+    margin: 0 auto;
+}
+.ngx-datatable.scroll-vertical {
+    height: 80vh;
+}

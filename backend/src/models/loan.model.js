@@ -633,9 +633,9 @@ router.post('/insertExcelOld', function (request, response) {
 				let responseData;
 				//console.log(loanDetails)
 				loanDetails.map(item => {
-					currentRow = `('1','${lastinserttedId}','${item.Customer_id}','${item.Loan_Count}' ,'${item.loanid}' ,'${item.customer_Name}' , '${item.Gender}',  '${item.mobile}','${item.email}' ,
-					'NULL' ,'0' ,'${item.City}' ,
-					'NULL' ,'${item.State}' ,'${item.loanid}' ,'${item.disbursal_amt}','${item.disbursal_date}' ,'${item.due_date}' ,'${item.principal_amt}' ,
+					currentRow = `('1','${lastinserttedId}','${item.customer_id}','${item.loan_count}' ,'${item.loanid}' ,'${item.customer_name}' , '${item.gender}',  '${item.mobile}','${item.email}' ,
+					'NULL' ,'0' ,'${item.city}' ,
+					'NULL' ,'${item.state}' ,'${item.loanid}' ,'${item.disbursal_amt}','${item.disbursal_date}' ,'${item.due_date}' ,'${item.principal_amt}' ,
 					'${item.interest_amount}' ,'${item.penalty_amt}' ,'${item.repayment_amt}' ,'${item.ref_type1}' , 
 					'${item.ref_name1}','${item.ref_mobile_num1}' , '${item.ref_type2}','${item.ref_name2}' ,'${item.ref_mobile_num2}' ,
 					'${item.bucket}' ,'${item.overdue_days}' , 'NULL',
@@ -710,9 +710,9 @@ router.post('/insertExcel', function (request, response) {
 				let allBatchSuccess = true
 				loanDetails.map(item => {
 					if(item.loanid !=""){
-						currentRow = `("1","${lastinserttedId}","${item.Customer_id}","${item.Loan_Count}" ,"${item.loanid}" ,"${item.customer_Name}" , "${item.Gender}",  "${item.mobile}","${item.email}" ,
-						"NULL" ,"0" ,"${item.City}" ,
-						"NULL" ,"${item.State}" ,"${item.loanid}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
+						currentRow = `("1","${lastinserttedId}","${item.customer_id}","${item.loan_count}" ,"${item.loanid}" ,"${item.customer_name}" , "${item.gender}",  "${item.mobile}","${item.email}" ,
+						"NULL" ,"0" ,"${item.city}" ,
+						"NULL" ,"${item.state}" ,"${item.loanid}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
 						"${item.interest_amount}" ,"${item.penalty_amt}" ,"${item.repayment_amt}" ,"${item.ref_type1}" , 
 						"${item.ref_name1}","${item.ref_mobile_num1}" , "${item.ref_type2}","${item.ref_name2}" ,"${item.ref_mobile_num2}" ,
 						"${item.bucket}" ,"${item.overdue_days}" , "NULL",
@@ -796,9 +796,9 @@ router.post('/uploadSingleEmployeeDetails', function (request, response) {
 				let allBatchSuccess = true
 				loanDetails.map(item => {
 					if(item.loanid !=""){
-						currentRow = `("1","${lastinserttedId}","${item.Customer_id}","${item.Loan_Count}" ,"${item.loanid}" ,"${item.customer_Name}" , "${item.Gender}",  "${item.mobile}","${item.email}" ,
-						"NULL" ,"0" ,"${item.City}" ,
-						"NULL" ,"${item.State}" ,"${item.loanid}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
+						currentRow = `("1","${lastinserttedId}","${item.customer_id}","${item.loan_count}" ,"${item.loanid}" ,"${item.customer_name}" , "${item.gender}",  "${item.mobile}","${item.email}" ,
+						"NULL" ,"0" ,"${item.city}" ,
+						"NULL" ,"${item.state}" ,"${item.loanid}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
 						"${item.interest_amount}" ,"${item.penalty_amt}" ,"${item.repayment_amt}" ,"${item.ref_type1}" , 
 						"${item.ref_name1}","${item.ref_mobile_num1}" , "${item.ref_type2}","${item.ref_name2}" ,"${item.ref_mobile_num2}" ,
 						"${item.bucket}" ,"${item.overdue_days}" , "NULL",

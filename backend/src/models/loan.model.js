@@ -633,13 +633,13 @@ router.post('/insertExcelOld', function (request, response) {
 				let responseData;
 				//console.log(loanDetails)
 				loanDetails.map(item => {
-					currentRow = `('1','${lastinserttedId}','${item.customer_id}','${item.loan_count}' ,'${item.loan_id}' ,'${item.customer_name}' , '${item.gender}',  '${item.mobile}','${item.email}' ,
-					'${item.dob}' ,'${item.age}' ,'${item.city}' ,
-					'${item.pin_code}' ,'${item.state}' ,'${item.loan_id}' ,'${item.disbursal_amt}','${item.disbursal_date}' ,'${item.due_date}' ,'${item.principal_amt}' ,
+					currentRow = `('1','${lastinserttedId}','${item.Customer_id}','${item.Loan_Count}' ,'${item.loanid}' ,'${item.customer_Name}' , '${item.Gender}',  '${item.mobile}','${item.email}' ,
+					'NULL' ,'0' ,'${item.City}' ,
+					'NULL' ,'${item.State}' ,'${item.loanid}' ,'${item.disbursal_amt}','${item.disbursal_date}' ,'${item.due_date}' ,'${item.principal_amt}' ,
 					'${item.interest_amount}' ,'${item.penalty_amt}' ,'${item.repayment_amt}' ,'${item.ref_type1}' , 
 					'${item.ref_name1}','${item.ref_mobile_num1}' , '${item.ref_type2}','${item.ref_name2}' ,'${item.ref_mobile_num2}' ,
-					'${item.bucket}' ,'${item.overdue_days}' , '${item.is_collected}',
-					'${item.esign_mobile_number}' , '${item.repaid_date}','0','${today}'),`
+					'${item.bucket}' ,'${item.overdue_days}' , 'NULL',
+					'NULL' , '${item.repaid_date}','0','${today}'),`
 
 					currentRow = currentRow.replace(/\n|\r/g, "");
 					currentRow = currentRow.replace(/~+$/, '');
@@ -709,14 +709,14 @@ router.post('/insertExcel', function (request, response) {
 				let rowCount = 0
 				let allBatchSuccess = true
 				loanDetails.map(item => {
-					if(item.loan_id !=""){
-						currentRow = `("1","${lastinserttedId}","${item.customer_id}","${item.loan_count}" ,"${item.loan_id}" ,"${item.customer_name}" , "${item.gender}",  "${item.mobile}","${item.email}" ,
-						"${item.dob}" ,"${item.age}" ,"${item.city}" ,
-						"${item.pin_code}" ,"${item.state}" ,"${item.loan_id}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
+					if(item.loanid !=""){
+						currentRow = `("1","${lastinserttedId}","${item.Customer_id}","${item.Loan_Count}" ,"${item.loanid}" ,"${item.customer_Name}" , "${item.Gender}",  "${item.mobile}","${item.email}" ,
+						"NULL" ,"0" ,"${item.City}" ,
+						"NULL" ,"${item.State}" ,"${item.loanid}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
 						"${item.interest_amount}" ,"${item.penalty_amt}" ,"${item.repayment_amt}" ,"${item.ref_type1}" , 
 						"${item.ref_name1}","${item.ref_mobile_num1}" , "${item.ref_type2}","${item.ref_name2}" ,"${item.ref_mobile_num2}" ,
-						"${item.bucket}" ,"${item.overdue_days}" , "${item.is_collected}",
-						"${item.esign_mobile_number}" , "${item.repaid_date}","0","${today}", "1"),`
+						"${item.bucket}" ,"${item.overdue_days}" , "NULL",
+						"NULL" , "${item.repaid_date}","0","${today}", "1"),`
 
 						currentRow = currentRow.replace(/\n|\r/g, "");
 						currentRow = currentRow.replace(/~+$/, '');
@@ -795,14 +795,14 @@ router.post('/uploadSingleEmployeeDetails', function (request, response) {
 				let rowCount = 0
 				let allBatchSuccess = true
 				loanDetails.map(item => {
-					if(item.loan_id !=""){
-						currentRow = `("1","${lastinserttedId}","${item.customer_id}","${item.loan_count}" ,"${item.loan_id}" ,"${item.customer_name}" , "${item.gender}",  "${item.mobile}","${item.email}" ,
-						"${item.dob}" ,"${item.age}" ,"${item.city}" ,
-						"${item.pin_code}" ,"${item.state}" ,"${item.loan_id}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
+					if(item.loanid !=""){
+						currentRow = `("1","${lastinserttedId}","${item.Customer_id}","${item.Loan_Count}" ,"${item.loanid}" ,"${item.customer_Name}" , "${item.Gender}",  "${item.mobile}","${item.email}" ,
+						"NULL" ,"0" ,"${item.City}" ,
+						"NULL" ,"${item.State}" ,"${item.loanid}" ,"${item.disbursal_amt}","${item.disbursal_date}" ,"${item.due_date}" ,"${item.principal_amt}" ,
 						"${item.interest_amount}" ,"${item.penalty_amt}" ,"${item.repayment_amt}" ,"${item.ref_type1}" , 
 						"${item.ref_name1}","${item.ref_mobile_num1}" , "${item.ref_type2}","${item.ref_name2}" ,"${item.ref_mobile_num2}" ,
-						"${item.bucket}" ,"${item.overdue_days}" , "${item.is_collected}",
-						"${item.esign_mobile_number}" , "${item.repaid_date}","1","${today}","${employeeID}", "1"),`
+						"${item.bucket}" ,"${item.overdue_days}" , "NULL",
+						"NULL" , "${item.repaid_date}","1","${today}","${employeeID}", "1"),`
 
 						currentRow = currentRow.replace(/\n|\r/g, "");
 						currentRow = currentRow.replace(/~+$/, '');
@@ -850,13 +850,7 @@ router.post('/updateOldLoanDetails', function (request, response) {
 	if (ldata) {
 		var queries='';
 		ldata.map(item=>{
-			queries += mysql.format(`UPDATE loan_details SET Loan_Count = '${item.loan_count}',customer_Name= '${item.customer_name}',Gender= '${item.gender}',mobile= '${item.mobile}',email= '${item.email}',DOB= '${item.dob}',Age= '${item.age}',city= '${item.city}',pin_code= '${item.pin_code}' ,state= '${item.state}'  ,disbursal_amt= '${item.disbursal_amt}',disbursal_date= '${item.disbursal_date}'
-			,due_date= '${item.due_date}' ,principal_amt= '${item.principal_amt}' ,interest_amount= '${item.interest_amount}'
-			,penalty_amt= '${item.penalty_amt}',repayment_amt= '${item.repayment_amt}'  ,ref_type1= '${item.ref_type1}' ,ref_mobile_num1= '${item.ref_mobile_num1}'
-			,ref_type2= '${item.ref_type2}',ref_name2= '${item.ref_name2}',bucket= '${item.bucket}',overdue_days= '${item.overdue_days}'
-			,is_collected= '${item.is_collected}',ESIGN_MOBILE_NUMBER= '${item.esign_mobile_number}'
-			WHERE loan_id = '${item.loan_id}';`);
-			
+			queries += mysql.format(`UPDATE loan_details SET penalty_amt= '${item.penalty_amt}',repayment_amt= '${item.repayment_amt}'  ,bucket= '${item.bucket}',overdue_days= '${item.overdue_days}' WHERE loan_id = '${item.loanid}';`);
 		})
 		console.log(queries)
 		connection.query(queries, function (error, results, fields) {
@@ -881,8 +875,8 @@ router.post('/updateRepaymentStatus', function (request, response) {
 		var updateQueries = ''
 		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 		ldata.map(item=>{
-			queries += mysql.format(`('${item.loan_id}', '6', '${today}'),`);
-			updateQueries += mysql.format(`UPDATE loans_status_history SET active = '0' WHERE loanId = '${item.loan_id}';`);
+			queries += mysql.format(`('${item.loanid}', '6', '${today}'),`);
+			updateQueries += mysql.format(`UPDATE loans_status_history SET active = '0' WHERE loanId = '${item.loanid}';`);
 			
 		})
 		// console.log(queries)
@@ -917,9 +911,9 @@ router.post('/updateLoanDetails', function (request, response) {
 		let endQuery = "WHERE loan_id IN("
 		let endValues = ""
 		ldata.map(item => {
-			col1Values += `WHEN '${item.loan_id}' THEN '${item.assigned_emp_id}' `
-			col2Values += `WHEN '${item.loan_id}' THEN 1 `
-			endValues += `${item.loan_id},`
+			col1Values += `WHEN '${item.loanid}' THEN '${item.assigned_emp_id}' `
+			col2Values += `WHEN '${item.loanid}' THEN 1 `
+			endValues += `${item.loanid},`
 		})
 		let col1 = col1Start+col1Values+col1End
 		let col2 = col2Start+col2Values+col2End

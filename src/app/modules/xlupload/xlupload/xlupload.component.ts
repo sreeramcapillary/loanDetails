@@ -123,7 +123,7 @@ export class XluploadComponent implements OnInit {
                             uniqueEmployeeList[emp.empid] = (uniqueEmployeeList[emp.empid]+1) 
                             data["is_assigned"] = true;
                             ldata = {
-                              "loan_id": data.loan_id,
+                              "loan_id": data.loanid,
                               "assigned_emp_id": emp.empid,
                               "is_assigned": 1
                             }

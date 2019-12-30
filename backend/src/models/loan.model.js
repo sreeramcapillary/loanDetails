@@ -16,17 +16,6 @@ var connection = mysql.createConnection({
 });
 var callApi = require('request');
 
-//getting Date time
-// let currentDateTime = "";
-// let currentDate = "";
-// let currentTime = "";
-callApi('http://148.72.212.163/datetime.php', function (error, response, body) {
-	body = JSON.parse(body);
-	global.currentDateTime = body.dateTime;
-	global.currentDate = body.date;
-	global.currentTime = body.time;
-});
-
 //Login
 router.post('/login', function (request, response) {
 	var username = request.body.username;
@@ -439,28 +428,25 @@ router.post('/assignLoanList', function (request, response) {
 router.post('/updateLoan', function (request, response) {
 	// console.log(request.body)
 	if (request.body.loan_id && request.body.current_Status) {
-		let currentDateTime = global.currentDateTime
 		// let currentDateTime = moment().tz("Asia/Kolkata").format('YYYY-MM-DD hh:mm:ss')
-		// connection.query(`update loan_details set current_status ='${request.body.current_Status}',old_status ='${request.body.old_Status}',document='${request.body.document}',comments='${request.body.comment}', statusUpdateDate='${currentDateTime}' where loan_id = '${request.body.loan_id}'`, function (error, results, fields) {
-		// 	if (results) {
-		// 		let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
-		// 		response.json(responseData)
-		// 	} else {
-		// 		let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" :  error}
-		// 		response.json(responseData)
-		// 	}
-		// });
 
 		connection.query(`update loans_status_history set active = 0 where loanId = '${request.body.loan_id}'`, function (error, results, fields) {});
 
-		connection.query(`INSERT INTO loans_status_history (loanId, statusId, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
-			if (results) {
-				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
-				response.json(responseData)
-			} else {
-				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" :  error}
-				response.json(responseData)
-			}
+		callApi('http://148.72.212.163/datetime.php', function (dateTimeError, dateTimeResponse, dateTimeBody) {
+			dateTimeBody = JSON.parse(dateTimeBody);
+			let currentDateTime = dateTimeBody.dateTime;
+			// let currentDate = dateTimeBody.date;
+			// let currentTime = dateTimeBody.time;
+
+			connection.query(`INSERT INTO loans_status_history (loanId, statusId, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
+				if (results) {
+					let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+					response.json(responseData)
+				} else {
+					let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details", "err" :  error}
+					response.json(responseData)
+				}
+			});
 		});
 
 	}else{

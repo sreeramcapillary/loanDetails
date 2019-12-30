@@ -911,9 +911,9 @@ router.post('/updateLoanDetails', function (request, response) {
 		let endQuery = "WHERE loan_id IN("
 		let endValues = ""
 		ldata.map(item => {
-			col1Values += `WHEN '${item.loanid}' THEN '${item.assigned_emp_id}' `
-			col2Values += `WHEN '${item.loanid}' THEN 1 `
-			endValues += `${item.loanid},`
+			col1Values += `WHEN '${item.loan_id}' THEN '${item.assigned_emp_id}' `
+			col2Values += `WHEN '${item.loan_id}' THEN 1 `
+			endValues += `${item.loan_id},`
 		})
 		let col1 = col1Start+col1Values+col1End
 		let col2 = col2Start+col2Values+col2End

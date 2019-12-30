@@ -11,8 +11,22 @@ var connection = mysql.createConnection({
 	user: 'root',
 	password: 'Sree@1254.',
 	database: 'loandata',
-	multipleStatements: true
+	multipleStatements: true,
+	dateStrings : true
 });
+var callApi = require('request');
+
+//getting Date time
+// let currentDateTime = "";
+// let currentDate = "";
+// let currentTime = "";
+callApi('http://148.72.212.163/datetime.php', function (error, response, body) {
+	body = JSON.parse(body);
+	global.currentDateTime = body.dateTime;
+	global.currentDate = body.date;
+	global.currentTime = body.time;
+});
+
 //Login
 router.post('/login', function (request, response) {
 	var username = request.body.username;
@@ -425,7 +439,8 @@ router.post('/assignLoanList', function (request, response) {
 router.post('/updateLoan', function (request, response) {
 	// console.log(request.body)
 	if (request.body.loan_id && request.body.current_Status) {
-		let currentDateTime = moment().tz("Asia/Kolkata").format('YYYY-MM-DD hh:mm:ss')
+		let currentDateTime = global.currentDateTime
+		// let currentDateTime = moment().tz("Asia/Kolkata").format('YYYY-MM-DD hh:mm:ss')
 		// connection.query(`update loan_details set current_status ='${request.body.current_Status}',old_status ='${request.body.old_Status}',document='${request.body.document}',comments='${request.body.comment}', statusUpdateDate='${currentDateTime}' where loan_id = '${request.body.loan_id}'`, function (error, results, fields) {
 		// 	if (results) {
 		// 		let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }

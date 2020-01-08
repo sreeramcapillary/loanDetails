@@ -61,7 +61,7 @@ export class ReportsComponent implements OnInit {
     var yyyy = today.getFullYear();
 
     let todayDate = yyyy + '-' + mm + '-' + dd;
-    this.getAllReports(todayDate)
+    this.getAllReports(todayDate, 1)
   }
   clickSide(val) {
     if (val == 'elist') {
@@ -84,8 +84,8 @@ export class ReportsComponent implements OnInit {
 
     }
   }
-  getAllReports(date){
-    this.appService.getReports(date)
+  getAllReports(date, batch){
+    this.appService.getReports(date, batch)
     .subscribe(
       (data: any) => {
         if (data.status) {
@@ -154,6 +154,6 @@ export class ReportsComponent implements OnInit {
     this.consolidatedData.rpy = 0
     this.consolidatedData.rpyCount = 0
 
-    this.getAllReports(selectedDate)
+    this.getAllReports(selectedDate, 0)
   }
 }

@@ -191,9 +191,10 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
       });
     }
-    getReports(date){
+    getReports(date, batch){
       var body = {
-        'date' : date
+        'date' : date,
+        'batch' : batch
       }
       return this.http.post(BaseURL.url+'getDayReport', body, {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")

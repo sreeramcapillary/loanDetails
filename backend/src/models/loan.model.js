@@ -986,16 +986,29 @@ router.get('/getUsersWithKnownLanguages', function (request, response) {
 router.post('/getDayReport', function (request, response) {
 	var date = request.body.date;
 	var batch = request.body.batch
-	connection.query(`SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = ${batch} LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`, function (error, results, fields) {
-		if (results.length > 0) {
-			let responseData = { "status": true, "code": 200, "reportData": results }
-			response.json(responseData)
-		} else {
-			let responseData = { "status": false, "code": 401, "reportData": [] }
-			response.json(responseData)
-		}
-		response.end();
-	});
+	if(batch == 1){
+		connection.query(`SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`, function (error, results, fields) {
+			if (results.length > 0) {
+				let responseData = { "status": true, "code": 200, "reportData": results }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "reportData": [] }
+				response.json(responseData)
+			}
+			response.end();
+		});
+	}else{
+		connection.query(`SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`, function (error, results, fields) {
+			if (results.length > 0) {
+				let responseData = { "status": true, "code": 200, "reportData": results }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "reportData": [] }
+				response.json(responseData)
+			}
+			response.end();
+		});
+	}
 });
 
 router.get('/getCurrentDetailedReportsDataForExcel', function (request, response) {

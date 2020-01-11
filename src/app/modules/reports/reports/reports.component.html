@@ -54,7 +54,7 @@
         <div class="col-md-2">
             <button class="btn btn-primary" style="float: left;" type="submit" (click)="reportsByDate()">Submit</button>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="userType == 1">
           <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()">Export
             Detailed Data as Excel <i class="fa fa-file-excel-o"></i></button>
           <button class="btn btn-primary" style="float: right; margin-right: 20px;" type="submit"

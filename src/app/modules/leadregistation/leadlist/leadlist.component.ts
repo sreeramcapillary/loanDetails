@@ -27,7 +27,6 @@ export class LeadlistComponent implements OnInit {
 
   ngOnInit() {
     this.appService.changeActiveTab("leadlist")
-
     this.getAllLead();
   }
 
@@ -36,7 +35,7 @@ export class LeadlistComponent implements OnInit {
 
   }
   getAllLead(){
-    this.appService.getActiveEmp()
+    this.appService.getActiveLeads()
     .subscribe(
       (data: any) => {
         if (data.status) {
@@ -86,13 +85,14 @@ export class LeadlistComponent implements OnInit {
     var confirmation = confirm("Are you sure? You want to deactivate the Lead!")
     console.log(confirmation)
     if(confirmation){
-      this.appService.deActivateEmployee(row.id)
+      this.appService.deActivateLead(row.id)
       .subscribe(
       (data:any) => {
       // console.log(data.status);
         if(data.status == true){
           alert(data.message)
-          this.getAllLead();
+          // this.getAllLead();
+          location.reload()
         }else{
             alert(data.message)
           
@@ -105,7 +105,7 @@ export class LeadlistComponent implements OnInit {
     var confirmation = confirm("Are you sure? You want to activate the Lead!")
     console.log(confirmation)
     if(confirmation){
-      this.appService.activateEmployee(row.id)
+      this.appService.activateLead(row.id)
       .subscribe(
       (data:any) => {
       // console.log(data.status);

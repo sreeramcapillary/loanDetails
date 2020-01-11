@@ -88,14 +88,9 @@
           <div class="row">
             <div class="col-md-5 mb-3">
               <label for="assignedbucket">Assignee Bucket</label>
-              <select class="custom-select d-block w-100" id="assignedbucket" formControlName="assignedbucket">
+              <select class="custom-select d-block w-100" id="assignedbucket" formControlName="assignedbucket" (change)="getEmpListOfBucket()">
                 <option value="">Choose...</option>
                 <option value="{{blist.id}}" *ngFor="let blist of bucketList">{{blist.bucket}}</option>
-                <!-- <option>B2</option>
-                          <option>B3</option>
-                          <option>B4</option>
-                          <option>B5</option>
-                          <option>B6</option> -->
               </select>
               <div *ngIf="submitted && registerForm.get('assignedbucket').errors" class="invalid-feedback-custom">
                 <div *ngIf="registerForm.get('assignedbucket').errors.required">Bucket is required</div>
@@ -104,21 +99,21 @@
           </div>
           <div class="row" *ngIf="!hideLanguage">
             <div class="col-md-12">
-              <label for="language">Language</label>
+              <label for="language">Employees</label>
               <!-- <select class="custom-select d-block w-100" id="language"  formControlName="language">
                         <option value="">Choose...</option>
                         <option value="{{langList.id}}" *ngFor="let langList of languageList">{{langList.state_name}}-{{langList.name}}</option>
                       </select> -->
-              <ng-multiselect-dropdown [placeholder]="'custom placeholder'" [data]="dropdownList"
-              formControlName="language" [settings]="dropdownSettings" [(ngModel)]="selectedItems">
+              <ng-multiselect-dropdown [placeholder]="'select employees'" [data]="dropdownList"
+              formControlName="employees" [settings]="dropdownSettings" [(ngModel)]="selectedItems">
               </ng-multiselect-dropdown>
-              <div *ngIf="submitted && registerForm.get('language').errors" class="invalid-feedback-custom">
-                <div *ngIf="registerForm.get('language').errors.required">Language is required</div>
+              <div *ngIf="submitted && registerForm.get('employees').errors" class="invalid-feedback-custom">
+                <div *ngIf="registerForm.get('employees').errors.required">Select atleast one employee</div>
               </div>
             </div>
           </div>
           <hr class="mb-4">
-          <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="registerEmp()">Register</button>
+          <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="registerLead()">Register</button>
         </form>
 
 

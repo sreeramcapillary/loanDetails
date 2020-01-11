@@ -9,6 +9,7 @@ import { AppService } from '../../../helpers/services/app.service';
 })
 export class NavigationComponent implements OnInit {
   activeTab: any;
+  userRole : any
 
   constructor(private route: ActivatedRoute,
     private router: Router,private appService: AppService) { }
@@ -21,14 +22,8 @@ export class NavigationComponent implements OnInit {
       }else{   
          this.activeTab ='elist';
       }
-    
-    })   
-    //  var tab = localStorage.getItem('activeTab')
-    // if(tab){
-    //   this.activeTab =tab;
-    // }else{   
-    //    this.activeTab ='elist';
-    // }
+    })
+    this.userRole = localStorage.getItem("usertype")
   }
   clickSide(val){
     localStorage.setItem("activeTab",val)

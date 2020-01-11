@@ -14,6 +14,7 @@ export class ReportsComponent implements OnInit {
   rows: any;
   detailedData: any = []
   onlyReportData: any = []
+  userType : any
   consolidatedData: any = {
     assigned : 0,
     assignedCount : 0,
@@ -50,7 +51,12 @@ export class ReportsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router, private appService: AppService, private excelService:ExcelService,private formBuilder: FormBuilder) { }
+    private router: Router, private appService: AppService, private excelService:ExcelService,private formBuilder: FormBuilder) {
+        this.userType = localStorage.getItem("usertype");
+        if(this.userType != '1' && this.userType != '2'){
+          this.router.navigateByUrl('/login');
+        }
+     }
 
   ngOnInit() {
     this.appService.changeActiveTab("reports")

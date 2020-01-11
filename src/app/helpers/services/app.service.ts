@@ -47,40 +47,40 @@ export class AppService {
     }
     registerEmployee(data){
       return this.http.post(BaseURL.url+'registerEmployee',data, {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getEmp(){
       return this.http.get(BaseURL.url+'getAllEmpList', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getActiveEmp(){
       return this.http.get(BaseURL.url+'getAllActiveEmpList', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     postFile(file){
       const formData: FormData = new FormData();
      formData.append('uploads', file, file.name);
       return this.http.post(BaseURL.url+'upload',formData, {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/x-www-form-urlencoded")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/x-www-form-urlencoded")
       });
 
     }
     getAllLoanDetailsList(){
       return this.http.get(BaseURL.url+'getAllLoanDetailsList', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getAssignedLoanDetailsList(){
       return this.http.get(BaseURL.url+'getAssignedLoanDetailsList', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getUnAssignedLoanDetailsList(){
       return this.http.get(BaseURL.url+'getUnAssignedLoanDetailsList', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     xlupload(loand){
@@ -89,7 +89,7 @@ export class AppService {
         filename:loand.filename
       }
       return this.http.post(BaseURL.url+'insertExcel',loan, {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     singleDataUpload(loand, empId){
@@ -99,17 +99,17 @@ export class AppService {
         employeeId:empId
       }
       return this.http.post(BaseURL.url+'uploadSingleEmployeeDetails',loan, {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     assignLoan(data){
       return this.http.post(BaseURL.url+'assignLoanList',data, {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getAllAssinedLoanDetailsList(){
       return this.http.get(BaseURL.url+'getAllALoanDetailsList', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getAssignedLoanDetailsEmp(emp){
@@ -117,7 +117,7 @@ export class AppService {
         'empId' : emp
       }
       return this.http.post(BaseURL.url+'getLoanListByEmp', body,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getAssignedLoanDetailsEmpByDate(emp, date){
@@ -126,7 +126,7 @@ export class AppService {
         'date'  : date
       }
       return this.http.post(BaseURL.url+'getLoanListByEmpByDate', body,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getLoanPastStatus(loanId){
@@ -134,37 +134,37 @@ export class AppService {
         'loanId' : loanId
       }
       return this.http.post(BaseURL.url+'getLoanPastStatus', body,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     loanStatus(){
       return this.http.get(BaseURL.url+'getLoanStatus', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     updateLoanDetails(data){
       return this.http.post(BaseURL.url+'updateLoan', data,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     bucketList(){
       return this.http.get(BaseURL.url+'getBucketList', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     inactiveCurrentBatch(){
       return this.http.get(BaseURL.url+'inactiveCurrentBatch', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     laguageList(){
       return this.http.get(BaseURL.url+'getAllLanguage', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     usersWithKnownLanguages(){
       return this.http.get(BaseURL.url+'getUsersWithKnownLanguages', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     updateLoanData(data){
@@ -172,7 +172,7 @@ export class AppService {
         "loanupdateData":data
       }
       return this.http.post(BaseURL.url+'updateLoanDetails',ldata ,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     oldxlupload(data){
@@ -180,7 +180,7 @@ export class AppService {
         "loanupdateData":data
       }
       return this.http.post(BaseURL.url+'updateOldLoanDetails',ldata ,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     repaymentupload(data){
@@ -188,7 +188,7 @@ export class AppService {
         "repymentData":data
       }
       return this.http.post(BaseURL.url+'updateRepaymentStatus',ldata ,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getReports(date, batch){
@@ -197,12 +197,12 @@ export class AppService {
         'batch' : batch
       }
       return this.http.post(BaseURL.url+'getDayReport', body, {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     editEmployee(data){
       return this.http.post(BaseURL.url+'updateEmployee',data ,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     deActivateEmployee(id){
@@ -210,7 +210,7 @@ export class AppService {
         "empid":id
       }
       return this.http.post(BaseURL.url+'deActivateEmployee',data ,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     activateEmployee(id){
@@ -218,12 +218,12 @@ export class AppService {
         "empid":id
       }
       return this.http.post(BaseURL.url+'activateEmployee',data ,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getCurrentDetailedReportsDataForExcel(){
       return this.http.get(BaseURL.url+'getCurrentDetailedReportsDataForExcel', {
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
     getEmployeeLanguages(id){
@@ -231,7 +231,60 @@ export class AppService {
         "empid":id
       }
       return this.http.post(BaseURL.url+'getEmployeeLanguages',data ,{
-        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('store_current_user_token')).set('Content-Type', "application/json")
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    getEmpListByBucket(bucket){
+      var body = {
+        'bucketId' : bucket
+      }
+      return this.http.post(BaseURL.url+'getEmpListByBucket', body,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    registerTeamLead(data){
+      return this.http.post(BaseURL.url+'registerTeamLead',data, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    getActiveLeads(){
+      return this.http.get(BaseURL.url+'getAllActiveLeadsList', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    getLeadEmployees(id){
+      var data={
+        "leadId":id
+      }
+      return this.http.post(BaseURL.url+'getLeadEmployees',data ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    editLead(data){
+      return this.http.post(BaseURL.url+'updateLead',data ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    deActivateLead(id){
+      var data={
+        "leadId":id
+      }
+      return this.http.post(BaseURL.url+'deActivateLead',data ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    activateLead(id){
+      var data={
+        "leadId":id
+      }
+      return this.http.post(BaseURL.url+'activateLead',data ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
 }

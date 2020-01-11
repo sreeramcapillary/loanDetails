@@ -74,11 +74,11 @@
                 {{row.mobile}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Language">
+            <!-- <ngx-datatable-column name="Language">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{row.language_name}}
               </ng-template>
-            </ngx-datatable-column>
+            </ngx-datatable-column> -->
             <ngx-datatable-column name="Bucket">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   {{row.bucket}}
@@ -86,10 +86,10 @@
               </ngx-datatable-column>
               <ngx-datatable-column name="Action">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <span><i class="fa fa-pencil" (click)="editEmp(row)"></i></span>
-                 <span style="padding-left: 10px;" *ngIf="row.status == '1'"><button class="btn btn-danger"  (click)="deactivateEmp(row)"><i class="fa fa-times"></i></button></span>
-                 <span style="padding-left: 10px;" *ngIf="row.status == '0'"><i class="btn btn-primary" (click)="activateEmp(row)"><i class="fa fa-check"></i></i></span>
-                 <span style="padding-left: 10px;" *ngIf="row.status == '1'"><i class="btn btn-primary" (click)="downloadEmployeeData(row)"><i class="fa fa-file-excel-o"></i></i></span>
+                  <span><i class="fa fa-pencil" (click)="editLead(row)"></i></span>
+                 <span style="padding-left: 10px;" *ngIf="row.status == '1'"><button class="btn btn-danger"  (click)="deactivateLead(row)"><i class="fa fa-times"></i></button></span>
+                 <span style="padding-left: 10px;" *ngIf="row.status == '0'"><i class="btn btn-primary" (click)="activateLead(row)"><i class="fa fa-check"></i></i></span>
+                 <!-- <span style="padding-left: 10px;" *ngIf="row.status == '1'"><i class="btn btn-primary" (click)="downloadEmployeeData(row)"><i class="fa fa-file-excel-o"></i></i></span> -->
                 </ng-template>
               </ngx-datatable-column>
              

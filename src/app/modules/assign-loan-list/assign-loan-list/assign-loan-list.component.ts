@@ -26,7 +26,7 @@ export class AssignLoanListComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,private appService: AppService,private formBuilder: FormBuilder) {
       this.userType = localStorage.getItem("usertype");
-      if(this.userType != '1'){
+      if(this.userType != '1' && this.userType != '2'){
         this.router.navigateByUrl('/login');
       } 
     }

@@ -46,9 +46,8 @@
        <div class="col-md-6">
          <h4 class="mb-3">Employee List</h4>
       </div> 
-      <div class="col-md-6">
+      <div class="col-md-6" *ngIf="userType == 1">
           <button class="btn btn-primary" style="float: right;" type="submit" (click)="registerEmp()">Register Employee</button>
-
       </div>
     </div>
         <div class="col-md-12 order-md-1">
@@ -84,7 +83,7 @@
                   {{row.bucket}}
                 </ng-template>
               </ngx-datatable-column>
-              <ngx-datatable-column name="Action">
+              <ngx-datatable-column name="Action" *ngIf="userType == 1">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <span><i class="fa fa-pencil" (click)="editEmp(row)"></i></span>
                  <span style="padding-left: 10px;" *ngIf="row.status == '1'"><button class="btn btn-danger"  (click)="deactivateEmp(row)"><i class="fa fa-times"></i></button></span>

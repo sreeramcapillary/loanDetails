@@ -33,7 +33,7 @@ export class UnassignedLoansComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,private appService: AppService,private formBuilder: FormBuilder, private excelService:ExcelService) {
       this.userType = localStorage.getItem("usertype");
-      if(this.userType != '1'){
+      if(this.userType != '1' && this.userType != '2'){
         this.router.navigateByUrl('/login');
       } 
     }

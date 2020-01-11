@@ -245,8 +245,27 @@ router.get('/getAllEmpList', function (request, response) {
 	});
 
 });
-router.get('/getAllActiveEmpList', function (request, response) {
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= "1" GROUP BY u.id', function (error, results, fields) {
+const getRoleByCreds = (creds) => {
+	let credentials = creds.split(':');
+    return new Promise((resolve) => {
+        connection.query(`SELECT ud.usertype, ud.id, bl.bucket FROM userdetails ud LEFT JOIN bucket_list bl ON ud.bucket_id = bl.id WHERE username = '${credentials[0]}' AND password = md5('${credentials[1]}')`, (err, rows, fields) => {
+			resolve(rows)  
+        })
+    })
+}
+
+router.get("/getAllActiveEmpList", async(request, response) => {
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = 'SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= "1" GROUP BY u.id'
+	}
+	if(role[0].usertype == 2){
+		queryString = `SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= "1" AND u.parentId = ${role[0].id} GROUP BY u.id`
+	}
+	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -469,11 +488,19 @@ router.get('/getAllLoanDetailsList', function (request, response) {
 	});
 
 });
-router.get('/getAssignedLoanDetailsList', function (request, response) {
-	connection.query('SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 1', function (error, results, fields) {
+router.get('/getAssignedLoanDetailsList', async(request, response) => {
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = 'SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 1'
+	}
+	if(role[0].usertype == 2){
+		queryString = `SELECT ld.* FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned = 1 AND ud.parentId = ${role[0].id}`
+	}
+	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
-			//	request.session.loggedin = true;
-			// request.session.username = username;
 			let responseData = { "status": true, "code": 200, "loanDetails": results }
 			response.json(responseData)
 		} else {
@@ -484,11 +511,19 @@ router.get('/getAssignedLoanDetailsList', function (request, response) {
 	});
 
 });
-router.get('/getUnAssignedLoanDetailsList', function (request, response) {
-	connection.query('SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 0', function (error, results, fields) {
+router.get('/getUnAssignedLoanDetailsList', async(request, response) => {
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = 'SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 0'
+	}
+	if(role[0].usertype == 2){
+		queryString = `SELECT ld.* FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
+	}
+	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
-			//	request.session.loggedin = true;
-			// request.session.username = username;
 			let responseData = { "status": true, "code": 200, "loanDetails": results }
 			response.json(responseData)
 		} else {
@@ -983,11 +1018,21 @@ router.get('/getUsersWithKnownLanguages', function (request, response) {
 	});
 });
 
-router.post('/getDayReport', function (request, response) {
+router.post('/getDayReport', async(request, response) => {
 	var date = request.body.date;
 	var batch = request.body.batch
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
 	if(batch == 1){
-		connection.query(`SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`, function (error, results, fields) {
+		let queryString = ""
+		if(role[0].usertype == 1){
+			queryString = `SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`
+		}
+		if(role[0].usertype == 2){
+			queryString = `SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 AND UD.parentId = ${role[0].id} GROUP BY UD.id`
+		}
+		connection.query(queryString, function (error, results, fields) {
 			if (results.length > 0) {
 				let responseData = { "status": true, "code": 200, "reportData": results }
 				response.json(responseData)
@@ -998,7 +1043,14 @@ router.post('/getDayReport', function (request, response) {
 			response.end();
 		});
 	}else{
-		connection.query(`SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`, function (error, results, fields) {
+		let queryString = ""
+		if(role[0].usertype == 1){
+			queryString = `SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`
+		}
+		if(role[0].usertype == 2){
+			queryString = `SELECT UD.id, UD.name as employeeName, UD.username as employeeID, COALESCE(SUM(LD.repayment_amt), 0) as assignedAmount, COUNT(LD.repayment_amt) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(COALESCE(SUM(LD.repayment_amt), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(LD.repayment_amt) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(LD.repayment_amt), 0)) * 100), 0) as inPercentage FROM userdetails UD LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime LIKE '%${date}%' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 AND UD.parentId = ${role[0].id} GROUP BY UD.id`
+		}
+		connection.query(queryString, function (error, results, fields) {
 			if (results.length > 0) {
 				let responseData = { "status": true, "code": 200, "reportData": results }
 				response.json(responseData)
@@ -1045,4 +1097,194 @@ router.post('/getEmployeeLanguages', function (request, response) {
 		response.end();
 	}
 });
+
+router.post('/getEmpListByBucket', function (request, response) {
+	var bucketId = request.body.bucketId;
+	if(bucketId){
+		connection.query(`SELECT * FROM userdetails WHERE bucket_id = ${bucketId}`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "employees": results }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to Fetch employee list of bucket", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+});
+
+router.post('/registerTeamLead', function (request, response) {
+	console.log(request.body)
+	var name = request.body.name;
+	var username = request.body.username;
+	var password = request.body.password;
+	var email = request.body.email;
+	var mobile = request.body.mobile;
+	var bucket = request.body.assignedbucket;
+	var employees = request.body.employees
+	employees = employees.join()
+	if (name && username && password && email && mobile ) {
+		var data = {
+			client_id:"1",
+			name: name,
+			username: username,
+			email:email,
+			password: password,
+			mobile:mobile,
+			bucket_id:bucket,
+			usertype: '2',
+			active:"1"
+		}
+		connection.query('INSERT INTO userdetails SET ?', data, function (error, results, fields) {
+			console.log(JSON.stringify(error))
+			if(error){
+				let responseData = { "status": false, "code": 402, "message": JSON.stringify(error) }
+				response.json(responseData)
+				response.end();
+			}else{
+				var lastinserttedId = results.insertId;
+				let query = `UPDATE userdetails SET parentId = ${lastinserttedId} WHERE id IN (${employees})`
+				connection.query(query, (err, results, fields) => {
+					console.log(err)
+					if (results) {
+						let responseData = { "status": true, "code": 200, "message": "Team Lead register successfully" }
+						response.json(responseData)
+					} else {
+						let responseData = { "status": false, "code": 401, "message": "Unable to register Team Lead" }
+						response.json(responseData)
+					}
+					response.end();
+				});
+			}
+		});
+	
+	} else {
+		let responseData = { "status": false, "code": 401, "message": "Please enter Team Lead details" }
+		response.json(responseData)
+		response.end();
+	}
+});
+
+router.get('/getAllActiveLeadsList', function (request, response) {
+	
+	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 2 AND u.active= "1" GROUP BY u.id', function (error, results, fields) {
+		if (results.length > 0) {
+			//	request.session.loggedin = true;
+			// request.session.username = username;
+			let responseData = { "status": true, "code": 200, "userDetails": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "userDetails": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+
+router.post('/getLeadEmployees', function (request, response) {
+	var leadId = request.body.leadId;
+	if(leadId){
+		connection.query(`SELECT id, name as employee FROM userdetails WHERE parentId = ${leadId}`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "employees": results }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to Fetch Details Employee", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+});
+
+router.post('/updateLead', function (request, response) {
+	console.log(request.body)
+	var id = request.body.id;
+	var name = request.body.name;
+	var username = request.body.username;
+	var password = request.body.password;
+	var email = request.body.email;
+	var mobile = request.body.mobile;
+	var bucket = request.body.assignedbucket;
+	var employees = request.body.employees
+	employees = employees.join()
+	if (id) {
+		connection.query(`update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}' where id = '${id}'`, function (error, results, fields) {
+			if (results) {
+				//Deleting emp old languages
+				connection.query(`update userdetails set parentId = 'NULL' WHERE parentId = ${id}`, function (error, results, fields) {
+					if (results) {
+						let query = `UPDATE userdetails SET parentId = ${id} WHERE id IN (${employees})`
+						connection.query(query, (err, results, fields) => {
+							if (results) {
+								let responseData = { "status": true, "code": 200, "message": "Lead Details updated successfully" }
+								response.json(responseData)
+							} else {
+								let responseData = { "status": false, "code": 401, "message": "Failed to update Lead Details", "err" :  error}
+								response.json(responseData)
+							}
+							response.end();
+						});
+					} else {
+						let responseData = { "status": false, "code": 401, "message": "Failed to update Employee Details", "err" :  error}
+						response.json(responseData)
+					}
+				});
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to update Lead Details", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	} else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+});
+
+router.post('/deActivateLead', function (request, response) {
+	var leadId = request.body.leadId;
+	if(leadId){
+		connection.query(`update userdetails set active ='0' where id = '${leadId}'`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Lead Deactivate successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to Deactivate Lead", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+})
+router.post('/activateLead', function (request, response) {
+	var leadId = request.body.leadId;
+	if(leadId){
+		connection.query(`update userdetails set active ='1' where id = '${leadId}'`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Lead activate successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to activate Lead", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+})
+
 module.exports = router

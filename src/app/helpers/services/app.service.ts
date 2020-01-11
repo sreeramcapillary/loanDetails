@@ -191,9 +191,10 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
-    getReports(date, batch){
+    getReports(fromDate, toDate, batch){
       var body = {
-        'date' : date,
+        'fromDate' : fromDate,
+        'toDate' : toDate,
         'batch' : batch
       }
       return this.http.post(BaseURL.url+'getDayReport', body, {

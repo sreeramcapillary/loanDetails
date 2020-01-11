@@ -32,6 +32,7 @@ export class ReportsComponent implements OnInit {
     rpyCount : 0
   }
   public dateTime1: Date;
+  public dateTime2: Date;
   selectForm: FormGroup;
   // exportdata: any = [{
   //   eid: 'e101',
@@ -67,7 +68,7 @@ export class ReportsComponent implements OnInit {
     var yyyy = today.getFullYear();
 
     let todayDate = yyyy + '-' + mm + '-' + dd;
-    this.getAllReports(todayDate, 1)
+    this.getAllReports(todayDate, todayDate, 1)
   }
   clickSide(val) {
     if (val == 'elist') {
@@ -90,8 +91,8 @@ export class ReportsComponent implements OnInit {
 
     }
   }
-  getAllReports(date, batch){
-    this.appService.getReports(date, batch)
+  getAllReports(fromDate, toDate, batch){
+    this.appService.getReports(fromDate, toDate, batch)
     .subscribe(
       (data: any) => {
         if (data.status) {
@@ -142,7 +143,16 @@ export class ReportsComponent implements OnInit {
     var month = ("0" + (date.getMonth() + 1)).slice(-2)
     var fulldate = ("0" + date.getDate()).slice(-2)
     var year = date.getFullYear()
-    let selectedDate = year+"-"+month+"-"+fulldate
+    let selectedFromDate = year+"-"+month+"-"+fulldate
+
+    var date = new Date(this.dateTime2);
+    var month = ("0" + (date.getMonth() + 1)).slice(-2)
+    var fulldate = ("0" + date.getDate()).slice(-2)
+    var year = date.getFullYear()
+    let selectedToDate = year+"-"+month+"-"+fulldate
+    if(selectedToDate == "NaN-aN-aN"){
+      selectedToDate = selectedFromDate
+    }
 
     //Making consolidate data as 0
     this.consolidatedData.assigned = 0
@@ -160,6 +170,6 @@ export class ReportsComponent implements OnInit {
     this.consolidatedData.rpy = 0
     this.consolidatedData.rpyCount = 0
 
-    this.getAllReports(selectedDate, 0)
+    this.getAllReports(selectedFromDate, selectedToDate, 0)
   }
 }

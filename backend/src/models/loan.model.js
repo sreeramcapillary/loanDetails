@@ -1104,7 +1104,7 @@ router.post('/getEmployeeLanguages', function (request, response) {
 router.post('/getEmpListByBucket', function (request, response) {
 	var bucketId = request.body.bucketId;
 	if(bucketId){
-		connection.query(`SELECT * FROM userdetails WHERE bucket_id = ${bucketId}`, function (error, results, fields) {
+		connection.query(`SELECT * FROM userdetails WHERE bucket_id = ${bucketId} AND usertype = 0 AND active = 1`, function (error, results, fields) {
 			if (results) {
 				let responseData = { "status": true, "code": 200, "employees": results }
 				response.json(responseData)

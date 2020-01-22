@@ -48,7 +48,7 @@ export class UnassignedLoansComponent implements OnInit {
     this.selectForm = this.formBuilder.group({
       employee: ['', Validators.required], 
       selectedBucket: [''], 
-      noOfLoansSelected: [''], 
+      noOfLoansSelected: [''],
     });
 
     this.dropdownSettings = {
@@ -159,7 +159,7 @@ export class UnassignedLoansComponent implements OnInit {
         this.rows[index].theCheckbox = false
       })
     }
-    console.log(this.loan_id)
+    // console.log(this.loan_id)
   }
 
   customFilteringForBucket(bucket){

@@ -57,6 +57,7 @@ export class CustomerloandetailsComponent implements OnInit {
     this.getLoanStatus()
     this.selectForm = this.formBuilder.group({
       status: ['', Validators.required], 
+      callType : ['Customer'],
       comment: [''],
       principalAmount:[''],
       statusValues:['']
@@ -186,6 +187,7 @@ export class CustomerloandetailsComponent implements OnInit {
     var data={
       loan_id:this.loan_id,
       current_Status : this.f.status.value,
+      callType : this.f.callType.value,
       old_Status : this.old_status,
       document : this.filename,
       comment : this.f.comment.value,

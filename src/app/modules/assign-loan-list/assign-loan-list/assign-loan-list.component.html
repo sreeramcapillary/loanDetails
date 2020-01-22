@@ -42,16 +42,38 @@
     </nav>
     <div class="container-fluid" style="padding-top: 20px;">
       <div class="row">
-       <div class="col-md-6">
+       <div class="col-md-12">
          <h4 class="mb-3">Employee List</h4>
          <form [formGroup]="selectForm">
-         <div class="col-md-12 mb-3">
+            <div class="row">
+                  <div class="col-md-3 mb-3">
+                    <label for="employeeToFilter">Select Employee For Filter</label>
+                    <select class="custom-select d-block w-100" id="employeeToFilter" formControlName="employeeToFilter">
+                      <option value="ALL">--------- All ---------</option>
+                      <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                      <input type="text" style="padding:8px;margin:30px auto;width:100%;" placeholder="Enter Loan Id / Overdue Days" formControlName="employeeFilterValue" />
+                  </div>
+                  <div class="col-md-2 mb-3">
+                      <button class="btn btn-primary" style="float: left; margin-right: 20px;margin-top: 30px;" type="submit" (click)="filterLoansByEmp()">Filter</button>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                      <label for="language">Select Employee To Assign</label>
+                      <select class="custom-select d-block w-100" id="emplist" formControlName="employee" (change)="selectedEmp()">
+                        <option value="">Choose...</option>
+                        <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
+                      </select>
+                  </div>
+            </div>
+         <!-- <div class="col-md-12 mb-3">
           <label for="language">Select Employee</label>
           <select class="custom-select d-block w-100" id="emplist" formControlName="employee" (change)="selectedEmp()">
             <option value="">Choose...</option>
             <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
           </select>
-        </div>
+        </div> -->
       </form>
       </div> 
     </div>
@@ -66,7 +88,7 @@
                       </div>              
                   </ng-template>
               </ngx-datatable-column>
-            <ngx-datatable-column name="Customer Name">
+            <!-- <ngx-datatable-column name="Customer Name">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{row.customer_Name}}
               </ng-template>
@@ -100,11 +122,47 @@
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <i class="fa fa-check assignedcheck" aria-hidden="true" *ngIf="row.assignedLoan"></i>
                 </ng-template>
-              </ngx-datatable-column>
+              </ngx-datatable-column> -->
+              <ngx-datatable-column name="Loan Id">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.loan_id}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Due Date">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{row.due_date}} <b>({{row.overdue_days}})</b>
+                    </ng-template>
+                  </ngx-datatable-column>
+                <ngx-datatable-column name="State">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.state}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Principal Amount">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.principal_amt}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Bucket">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.bucket}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Assigned To">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{row.assignedToName}}
+                    </ng-template>
+                  </ngx-datatable-column>
           </ngx-datatable>
           <div class="col-md-12 order-md-1" style="    padding-bottom: 20px;">
-              <button class="btn btn-primary btn-lg btn-block" type="submit"
-                    [disabled]="" (click)="assignLoanDetails()">Assign</button>
+              <div class="row">
+                  <div class="col-md-6">
+                      <button class="btn btn-danger btn-lg btn-block" type="submit" [disabled]="" (click)="unassignLoanDetails()">Un - Assign</button>
+                  </div>
+                  <div class="col-md-6">
+                      <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="" (click)="assignLoanDetails()">Assign</button>
+                  </div>
+              </div>
           </div>
         </div>
         

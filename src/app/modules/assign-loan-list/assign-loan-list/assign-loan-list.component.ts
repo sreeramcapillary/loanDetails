@@ -21,6 +21,7 @@ export class AssignLoanListComponent implements OnInit {
   assignedToId: any;
   assignedLoanId: any;
   selectedLoanId: any;
+  filteredRows= [];
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -39,7 +40,9 @@ export class AssignLoanListComponent implements OnInit {
     this.getAllLoanDetails();
     //this.getAssinedLoanDetails();
     this.selectForm = this.formBuilder.group({
-      employee: ['', Validators.required], 
+      employee: ['', Validators.required],
+      employeeToFilter: ['ALL'],
+      employeeFilterValue: [''],
     });
   }
   clickSide(val){
@@ -91,7 +94,8 @@ export class AssignLoanListComponent implements OnInit {
           })
           
           this.rows = data.loanDetails;
-	  this.getAssinedLoanDetails();
+          this.filteredRows = data.loanDetails;
+	        this.getAssinedLoanDetails();
         //  console.log(this.rows)
         }
       });
@@ -168,5 +172,43 @@ export class AssignLoanListComponent implements OnInit {
          
         }
       });
+    }
+
+    unassignLoanDetails(){
+      var data ={
+        'loanId': this.loan_id
+      }
+      this.appService.unassignLoan(data)
+      .subscribe(
+        (data: any) => {
+         // console.log(data)
+          if(data.status){
+            alert(data.message)
+            location.reload()
+            // this.loan_id=[];
+            // this.getAllLoanDetails();
+            // this.getAssinedLoanDetails();
+           
+          }
+        });
+      }
+
+    filterLoansByEmp(){
+      const employeeFilterValue = this.f.employeeFilterValue.value.toLowerCase()
+      if(this.f.employeeToFilter.value == "ALL"){
+        const val = ""
+        let filteredDataTemp = []
+        filteredDataTemp = this.filteredRows.filter(function(d) {
+          return d.assigned_emp_id.toString().toLowerCase().indexOf(val) !== -1 || !val;
+        });
+        this.rows = filteredDataTemp;
+      }else{
+        const val = this.f.employeeToFilter.value.toLowerCase();
+        let filteredDataTemp = []
+        filteredDataTemp = this.filteredRows.filter(function(d) {
+          return d.assigned_emp_id.toString().toLowerCase().indexOf(val) !== -1 && (d.loan_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1 || d.overdue_days.toString().toLowerCase().indexOf(employeeFilterValue) !== -1 || !employeeFilterValue);
+        });
+        this.rows = filteredDataTemp;
+      }
     }
 }

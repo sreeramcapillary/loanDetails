@@ -342,7 +342,7 @@ router.post('/getLoanPastStatus', function (request, response) {
 	var loanId = request.body.loanId
 	let yesterday = moment().tz("Asia/Kolkata").subtract(1, 'days').format('YYYY-MM-DD')
 	let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
-	connection.query(`SELECT lsh.comments as loan_comments, lsh.statusId, ls.status_type as status, lsh.dateTime FROM loans_status_history lsh JOIN Loan_status ls ON ls.id = lsh.statusId WHERE lsh.loanId = '${loanId}' AND (lsh.dateTime LIKE '%${yesterday}%' OR lsh.dateTime LIKE '%${today}%') ORDER BY lsh.id DESC`, function (error, results, fields) {
+	connection.query(`SELECT lsh.comments as loan_comments, lsh.callType as callType, lsh.statusId, ls.status_type as status, lsh.dateTime FROM loans_status_history lsh JOIN Loan_status ls ON ls.id = lsh.statusId WHERE lsh.loanId = '${loanId}' AND (lsh.dateTime LIKE '%${yesterday}%' OR lsh.dateTime LIKE '%${today}%') ORDER BY lsh.id DESC`, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -359,25 +359,10 @@ router.post('/getLoanPastStatus', function (request, response) {
 router.post('/assignLoanList', function (request, response) {
 	 var empid = request.body.empId;
 	 var loanid = request.body.loanId;
-	// var selectedEmpid = request.body.assignedEmpId
-	console.log(request.body)
-	// var today = new Date();
-	// var dd = today.getDate();
-	// var mm = today.getMonth() + 1;
-	// var yyyy = today.getFullYear();
-	// if (dd < 10) {
-	// 	dd = '0' + dd
-
-	// } if (mm < 10) {
-
-	// 	mm = '0' + mm
-	// }
-	// var today = yyyy + '-' + mm + '-' + dd;
 	var queries='';
 	loanid.map(lId => {
 			queries += mysql.format(`UPDATE loan_details SET assigned_emp_id = '${empid}',is_assigned= '1' WHERE loan_id = '${lId}';`);
 	});
-	console.log(queries)
 	connection.query(queries, (err, results, fields) => {
 		if (results) {
 			let responseData = { "status": true, "code": 200, "message": "Loan assigned successfully" }
@@ -391,6 +376,25 @@ router.post('/assignLoanList', function (request, response) {
 
 
 });
+
+router.post('/unassignLoanList', function (request, response) {
+	var loanid = request.body.loanId;
+   var queries='';
+   loanid.map(lId => {
+		   queries += mysql.format(`UPDATE loan_details SET assigned_emp_id = NULL,is_assigned= '0' WHERE loan_id = '${lId}';`);
+   });
+   connection.query(queries, (err, results, fields) => {
+	   if (results) {
+		   let responseData = { "status": true, "code": 200, "message": "Loan Unassigned successfully" }
+		   response.json(responseData)
+	   } else {
+		   let responseData = { "status": false, "code": 401, "message": "" }
+		   response.json(responseData)
+	   }
+	   response.end();
+   });
+});
+
 // router.post('/assignLoanList', function (request, response) {
 // 	var empid = request.body.empId;
 // 	var loanid = request.body.loanId;
@@ -457,7 +461,7 @@ router.post('/updateLoan', function (request, response) {
 			// let currentDate = dateTimeBody.date;
 			// let currentTime = dateTimeBody.time;
 
-			connection.query(`INSERT INTO loans_status_history (loanId, statusId, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
+			connection.query(`INSERT INTO loans_status_history (loanId, statusId, callType, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.callType}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
 				if (results) {
 					let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
 					response.json(responseData)

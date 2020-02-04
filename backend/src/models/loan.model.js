@@ -280,7 +280,7 @@ router.get("/getAllActiveEmpList", async(request, response) => {
 
 });
 router.get('/getAllALoanDetailsList', function (request, response) {
-	connection.query('SELECT * FROM `loan_details` ld JOIN userdetails u Where u.id = ld.assigned_emp_id', function (error, results, fields) {
+	connection.query('SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, u.name FROM `loan_details` ld JOIN userdetails u Where u.id = ld.assigned_emp_id', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -498,10 +498,10 @@ router.get('/getAssignedLoanDetailsList', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = 'SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 1'
+		queryString = 'SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 1'
 	}
 	if(role[0].usertype == 2){
-		queryString = `SELECT ld.* FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned = 1 AND ud.parentId = ${role[0].id}`
+		queryString = `SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned = 1 AND ud.parentId = ${role[0].id}`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
@@ -521,10 +521,10 @@ router.get('/getUnAssignedLoanDetailsList', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = 'SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 0'
+		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0'
 	}
 	if(role[0].usertype == 2){
-		queryString = `SELECT ld.* FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
+		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {

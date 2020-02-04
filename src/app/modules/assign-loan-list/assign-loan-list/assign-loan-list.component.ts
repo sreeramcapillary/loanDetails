@@ -88,11 +88,11 @@ export class AssignLoanListComponent implements OnInit {
           // console.log(data.loanDetails)
           this.theCheckbox = [];
           this.assignedLoan = [];
-          data.loanDetails.map((loan,index) => {
-            //this.theCheckbox.push(false)
-            data.loanDetails[index].theCheckbox = false;
-            data.loanDetails[index].assignedLoan = false;
-          })
+          // data.loanDetails.map((loan,index) => {
+          //   //this.theCheckbox.push(false)
+          //   data.loanDetails[index].theCheckbox = false;
+          //   data.loanDetails[index].assignedLoan = false;
+          // })
           
           this.rows = data.loanDetails;
           this.filteredRows = data.loanDetails;

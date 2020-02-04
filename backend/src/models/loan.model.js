@@ -38,7 +38,7 @@ router.post('/login', function (request, response) {
 				response.end();
 			});
 		}else{
-			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, BL.bucket, UD.usertype FROM userdetails UD JOIN bucket_list BL ON BL.id = UD.bucket_id WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
+			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, BL.bucket, UD.usertype FROM userdetails UD JOIN bucket_list BL ON BL.id = UD.bucket_id WHERE UD.username = ? AND UD.password = ? AND UD.active = 1', [username, password, 1], function (error, results, fields) {
 				if (results.length > 0) {
 					//	request.session.loggedin = true;
 					// request.session.username = username;
@@ -524,7 +524,7 @@ router.get('/getUnAssignedLoanDetailsList', async(request, response) => {
 		queryString = 'SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 0'
 	}
 	if(role[0].usertype == 2){
-		queryString = `SELECT ld.* FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
+		queryString = `SELECT ld.* FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {

@@ -868,27 +868,68 @@ router.post('/uploadSingleEmployeeDetails', function (request, response) {
 
 router.post('/updateOldLoanDetails', function (request, response) {
 	var ldata = request.body.loanupdateData;
-	console.log(ldata)
-	// var emp_id = request.body.empid;
-	// var is_assigned = request.body.is_assigned;
-	//console.log("update")
 	if (ldata) {
-		var queries='';
+		let inserData = [];
+		inserData[0] = ""
+		let queryTest
+		let startQuery = "INSERT INTO `loan_details` (`penalty_amt`, `repayment_amt`, `bucket`, `overdue_days`, `loanid`) VALUES";
+		let duplicateColumn = "ON DUPLICATE KEY UPDATE `penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`)"
+		let responseData;
+		let currentBatch = 0
+		let rowCount = 0
+		let allBatchSuccess = true
 		ldata.map(item=>{
-			queries += mysql.format(`UPDATE loan_details SET penalty_amt= '${item.penalty_amt}',repayment_amt= '${item.repayment_amt}'  ,bucket= '${item.bucket}',overdue_days= '${item.overdue_days}' WHERE loan_id = '${item.loanid}';`);
-		})
-		console.log(queries)
-		connection.query(queries, function (error, results, fields) {
-			console.log(results)
+			currentRow = `("${item.penalty_amt}", "${item.repayment_amt}", "${item.bucket}", "${item.overdue_days}", "${item.loanid}"),`
 
-			if (results) {
-				let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
-				response.json(responseData)
-			} else {
-				let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details" }
-				response.json(responseData)
+			currentRow = currentRow.replace(/\n|\r/g, "");
+			currentRow = currentRow.replace(/~+$/, '');
+			currentRow = currentRow.replace(/'/g, "''");
+			
+			inserData[currentBatch] = inserData[currentBatch] + currentRow
+
+			if(rowCount == 1000){
+				currentBatch = currentBatch + 1
+				rowCount = 0
+				inserData[currentBatch] = ""
 			}
+			rowCount = rowCount + 1
 		});
+		inserData.map( (batch, key) => {
+			inserData[key] = inserData[key].replace(/,\s*$/, "");
+			queryTest = startQuery + inserData[key] + duplicateColumn;
+			connection.query(queryTest, (err, results, fields) => {
+				// console.log(err)
+				// return false
+				if(!results){
+					allBatchSuccess = false
+				}
+			});
+		})
+		if(allBatchSuccess){
+			let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+			response.json(responseData)
+			response.end()
+		}else{
+			let responseData = { "status": true, "code": 401, "message": "Failed to update loan Details" }
+			response.json(responseData)
+			response.end()
+		}
+		// var queries='';
+		// ldata.map(item=>{
+		// 	queries += mysql.format(`UPDATE loan_details SET penalty_amt= '${item.penalty_amt}',repayment_amt= '${item.repayment_amt}'  ,bucket= '${item.bucket}',overdue_days= '${item.overdue_days}' WHERE loan_id = '${item.loanid}';`);
+		// })
+		// console.log(queries)
+		// connection.query(queries, function (error, results, fields) {
+		// 	console.log(results)
+
+		// 	if (results) {
+		// 		let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
+		// 		response.json(responseData)
+		// 	} else {
+		// 		let responseData = { "status": false, "code": 401, "message": "Failed to update loan Details" }
+		// 		response.json(responseData)
+		// 	}
+		// });
 	}
 
 })

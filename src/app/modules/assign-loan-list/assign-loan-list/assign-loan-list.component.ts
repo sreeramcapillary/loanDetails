@@ -22,6 +22,7 @@ export class AssignLoanListComponent implements OnInit {
   assignedLoanId: any;
   selectedLoanId: any;
   filteredRows= [];
+  statusValuesList: any;
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -117,7 +118,7 @@ export class AssignLoanListComponent implements OnInit {
               }
             })
           })
-          console.log(this.rows)
+          // console.log(this.rows)
         }
       });
   }

@@ -20,7 +20,7 @@ var callApi = require('request');
 router.post('/login', function (request, response) {
 	var username = request.body.username;
 	var password = request.body.password;
-	console.log(request.body)
+	// console.log(request.body)
 	response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 	//request.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 	if (username && password) {
@@ -40,8 +40,14 @@ router.post('/login', function (request, response) {
 		}else{
 			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, BL.bucket, UD.usertype FROM userdetails UD JOIN bucket_list BL ON BL.id = UD.bucket_id WHERE UD.username = ? AND UD.password = ? AND UD.active = 1', [username, password, 1], function (error, results, fields) {
 				if (results.length > 0) {
-					//	request.session.loggedin = true;
-					// request.session.username = username;
+					callApi('http://148.72.212.163/datetime.php', function (dateTimeError, dateTimeResponse, dateTimeBody) {
+						dateTimeBody = JSON.parse(dateTimeBody);
+						let currentDate = dateTimeBody.date;
+						let currentTime = dateTimeBody.time;
+
+						connection.query(`INSERT INTO loginLogs (empId, date, time) VALUES ('${results[0].id}', '${currentDate}', '${currentTime}')`, function (error, results, fields) {
+						});
+					});
 					let responseData = { "status": true, "code": 200, "userDetails": results }
 					response.json(responseData)
 				} else {
@@ -1111,8 +1117,74 @@ router.post('/getDayReport', async(request, response) => {
 	}
 });
 
+router.post('/getDayAttendance', async(request, response) => {
+	var date = request.body.date;
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = `SELECT COUNT(UD.id) as totalEMP, COUNT(LL.id) as present, COALESCE(COUNT(UD.id) - COUNT(LL.id)) as absent FROM userdetails UD LEFT JOIN loginLogs LL ON (LL.empId = UD.id AND LL.date = '${date}' AND time BETWEEN '08:00:00' AND '15:00:00') WHERE UD.usertype = 0 AND UD.active = 1`
+	}
+	// console.log(queryString)
+	connection.query(queryString, function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "attendanceData": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "attendanceData": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+});
+
+router.post('/getAttendancePresentData', async(request, response) => {
+	var date = request.body.date;
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '15:00:00'`
+	}
+	// console.log(queryString)
+	connection.query(queryString, function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "attendancePresentData": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "attendancePresentData": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+});
+
+router.post('/getAttendanceAbsentData', async(request, response) => {
+	var date = request.body.date;
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '15:00:00'`
+	}
+	// console.log(queryString)
+	connection.query(queryString, function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "attendanceAbsentData": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "attendanceAbsentData": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+});
+
 router.get('/getCurrentDetailedReportsDataForExcel', function (request, response) {
-	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as status, lsh.loan_comments, LT.name as language FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
+	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as status, lsh.loan_comments, lsh.dateTime as status_updated_date, LT.name as language, UDP.name as team_lead FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN userdetails UDP ON UD.parentId = UDP.id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId, dateTime FROM loans_status_history WHERE active = 1 GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

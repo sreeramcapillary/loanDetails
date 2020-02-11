@@ -34,21 +34,12 @@ export class ReportsComponent implements OnInit {
   public dateTime1: Date;
   public dateTime2: Date;
   selectForm: FormGroup;
-  // exportdata: any = [{
-  //   eid: 'e101',
-  //   ename: 'ravi',
-  //   esal: 1000
-  // },
-  // {
-  //   eid: 'e102',
-  //   ename: 'ram',
-  //   esal: 2000
-  // },
-  // {
-  //   eid: 'e103',
-  //   ename: 'rajesh',
-  //   esal: 3000
-  // }];
+  attendanceData : any = []
+  showPresentData : boolean = false
+  attendancePresentData : any = []
+  showAbsentData : boolean = false
+  attendanceAbsentData : any = []
+  attendancePresentDataTemp : any = []
 
   constructor(private route: ActivatedRoute,
     private http: HttpClient,
@@ -69,6 +60,7 @@ export class ReportsComponent implements OnInit {
 
     let todayDate = yyyy + '-' + mm + '-' + dd;
     this.getAllReports(todayDate, todayDate, 1)
+    this.getAttendanceData(todayDate)
   }
   clickSide(val) {
     if (val == 'elist') {
@@ -115,6 +107,16 @@ export class ReportsComponent implements OnInit {
             this.consolidatedData.rpy += row.collectedAmout
             this.consolidatedData.rpyCount += row.collectedAmout_COUNT
           })
+        }
+      });
+  }
+
+  getAttendanceData(date){
+    this.appService.getAttendance(date)
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+         this.attendanceData = data.attendanceData
         }
       });
   }
@@ -171,5 +173,64 @@ export class ReportsComponent implements OnInit {
     this.consolidatedData.rpyCount = 0
 
     this.getAllReports(selectedFromDate, selectedToDate, 0)
+  }
+
+  getAttendancePresentData(){
+    var today = new Date();
+    var dd = String(("0" + today.getDate()).slice(-2)).padStart(2, '0');
+    var mm = String(("0" + (today.getMonth() + 1)).slice(-2)).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    let todayDate = yyyy + '-' + mm + '-' + dd;
+
+    this.appService.getAttendancePresentData(todayDate)
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+         this.attendancePresentData = data.attendancePresentData
+        }
+      });
+    this.showPresentData = true
+  }
+
+  getAttendanceAbsentData(){
+    var today = new Date();
+    var dd = String(("0" + today.getDate()).slice(-2)).padStart(2, '0');
+    var mm = String(("0" + (today.getMonth() + 1)).slice(-2)).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    let todayDate = yyyy + '-' + mm + '-' + dd;
+
+    this.appService.getAttendancePresentData(todayDate)
+    .subscribe(
+      (data: any) => {
+      if (data.status) {
+        data.attendancePresentData.map(item =>{
+          this.attendancePresentDataTemp.push(item.id)
+        })
+      }
+    });
+
+    this.appService.getActiveEmp()
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+        data.userDetails.map(emp => {
+          if(!this.attendancePresentDataTemp.includes(emp.id)){
+            let empData = {
+              "id"  : emp.id,
+              "name"  : emp.name
+            }
+            this.attendanceAbsentData.push(empData)
+          }
+        })
+        }
+      });
+    this.showAbsentData = true
+  }
+
+  closeModal(){
+    this.showPresentData = false
+    this.showAbsentData = false
   }
 }

@@ -56,8 +56,8 @@
         <div class="col-md-2">
             <button class="btn btn-primary" style="float: left;" type="submit" (click)="reportsByDate()">Submit</button>
         </div>
-        <div class="col-md-6" *ngIf="userType == 1">
-          <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()">Export
+        <div class="col-md-6">
+          <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()" *ngIf="userType == 1">Export
             Detailed Data as Excel <i class="fa fa-file-excel-o"></i></button>
           <button class="btn btn-primary" style="float: right; margin-right: 20px;" type="submit"
             (click)="exportReportData()">Export Only Report Data as Excel <i class="fa fa-file-excel-o"></i></button>
@@ -132,9 +132,67 @@
             </ng-template>
           </ngx-datatable-footer>
         </ngx-datatable>
-
+      </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-2">
+        <h4 class="mb-3">Attendance</h4>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ngx-datatable class="material" [rows]="attendanceData" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+          [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]" style="max-height: 150px;">
+          <ngx-datatable-column name="Total Employees">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.totalEMP}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Prensent">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span style="color: blue;text-decoration: underline; cursor: pointer;" (click)="getAttendancePresentData()">{{row.present}}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Absent">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span style="color: blue;text-decoration: underline; cursor: pointer;" (click)="getAttendanceAbsentData()">{{row.absent}}</span>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+
+
+    <div id="myModal" class="modal" *ngIf="showPresentData">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <ul type="disc">
+          <li *ngFor="let item of attendancePresentData">
+            {{item.name}}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="myModal" class="modal" *ngIf="showAbsentData">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <ul type="disc">
+          <li *ngFor="let item of attendanceAbsentData">
+            {{item.name}}
+          </li>
+        </ul>
+      </div>
+    
+    </div>
+
+
+
+  </div>
   </div>
 </div>
 <!-- /#wrapper -->

@@ -206,6 +206,34 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
+
+    getAttendance(date){
+      var body = {
+        'date' : date
+      }
+      return this.http.post(BaseURL.url+'getDayAttendance', body, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    getAttendancePresentData(date){
+      var body = {
+        'date' : date
+      }
+      return this.http.post(BaseURL.url+'getAttendancePresentData', body, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    getAttendanceAbsentData(date){
+      var body = {
+        'date' : date
+      }
+      return this.http.post(BaseURL.url+'getAttendanceAbsentData', body, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
     editEmployee(data){
       return this.http.post(BaseURL.url+'updateEmployee',data ,{
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")

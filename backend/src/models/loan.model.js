@@ -1124,7 +1124,7 @@ router.post('/getDayAttendance', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = `SELECT COUNT(UD.id) as totalEMP, COUNT(LL.id) as present, COALESCE(COUNT(UD.id) - COUNT(LL.id)) as absent FROM userdetails UD LEFT JOIN loginLogs LL ON (LL.empId = UD.id AND LL.date = '${date}' AND time BETWEEN '08:00:00' AND '15:00:00') WHERE UD.usertype = 0 AND UD.active = 1`
+		queryString = `SELECT COUNT(UD.id) as totalEMP, COUNT(LL.id) as present, COALESCE(COUNT(UD.id) - COUNT(LL.id)) as absent FROM userdetails UD LEFT JOIN loginLogs LL ON (LL.empId = UD.id AND LL.date = '${date}' AND time BETWEEN '08:00:00' AND '11:00:00') WHERE UD.usertype = 0 AND UD.active = 1`
 	}
 	// console.log(queryString)
 	connection.query(queryString, function (error, results, fields) {
@@ -1146,7 +1146,7 @@ router.post('/getAttendancePresentData', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '15:00:00'`
+		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '11:00:00'`
 	}
 	// console.log(queryString)
 	connection.query(queryString, function (error, results, fields) {
@@ -1168,7 +1168,7 @@ router.post('/getAttendanceAbsentData', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '15:00:00'`
+		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '11:00:00'`
 	}
 	// console.log(queryString)
 	connection.query(queryString, function (error, results, fields) {

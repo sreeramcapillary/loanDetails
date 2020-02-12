@@ -83,6 +83,11 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
+    getFilteredLoanDetailsList(){
+      return this.http.get(BaseURL.url+'getFilteredLoanDetailsList', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
     xlupload(loand){
       var loan = {
         loanDetails:loand.data,

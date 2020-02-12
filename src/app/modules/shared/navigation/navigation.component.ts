@@ -39,6 +39,8 @@ export class NavigationComponent implements OnInit {
 
     }else if(val == 'ualoan'){
       this.router.navigate(['/unassignedLoanList']);
+    }else if(val == 'filteredloan'){
+      this.router.navigate(['/filteredLoanList']);
 
     }else if(val == 'oldxlupload'){
       this.router.navigate(['/oldxlupload']);

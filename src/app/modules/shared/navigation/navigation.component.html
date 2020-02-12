@@ -9,6 +9,7 @@
         <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='singleempdataupload'}" (click)="clickSide('singleempdataupload')" *ngIf="userRole == 1">Single Employee Data Upload</a>
         <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='aloan'}" (click)="clickSide('aloan')" >Assigned Loans</a>
         <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='ualoan'}" (click)="clickSide('ualoan')" >Un-assigned Loans</a>
+        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='filteredloan'}" (click)="clickSide('filteredloan')" >Filtered Loans</a>
         <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='repaymentdataupload'}" (click)="clickSide('repaymentdataupload')" *ngIf="userRole == 1">Repayment Data Upload</a>
         <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='reports'}" (click)="clickSide('reports')">Reports</a>
   

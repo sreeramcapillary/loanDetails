@@ -42,6 +42,12 @@ const routes: Routes = [{
 
 },
 {
+  path: 'filteredLoanList',
+  loadChildren: './modules/filtered-loans/filtered-loans.module#FilteredLoansModule',
+  canActivate: [AuthGuard]
+
+},
+{
   path: 'singleEmployeeDataUpload',
   loadChildren: './modules/single-employee-data-upload/single-employee-data-upload.module#SingleEmployeeDataUploadModule',
   canActivate: [AuthGuard]

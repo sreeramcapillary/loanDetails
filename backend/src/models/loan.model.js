@@ -332,7 +332,7 @@ router.post('/getLoanListByEmp', function (request, response) {
 router.post('/getLoanListByEmpByDate', function (request, response) {
 	var empId = request.body.empId
 	let today = request.body.date
-	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId FROM loan_details ld JOIN userdetails u on u.id = ld.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6) GROUP BY loanId) AS lsh ON ld.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id where u.id = ${empId} AND ld.batch_status = 1 GROUP BY ld.id ORDER BY lsh.statusId DESC`, function (error, results, fields) {
+	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId FROM loan_details ld JOIN userdetails u on u.id = ld.assigned_emp_id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6) GROUP BY loanId) AS lsh ON ld.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id where u.id = ${empId} AND ld.batch_status = 1 AND ld.is_assigned = 1 GROUP BY ld.id ORDER BY lsh.statusId DESC`, function (error, results, fields) {
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "assignedLoanToEmp": results }
 			response.json(responseData)
@@ -469,6 +469,11 @@ router.post('/updateLoan', function (request, response) {
 
 			connection.query(`INSERT INTO loans_status_history (loanId, statusId, callType, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.callType}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
 				if (results) {
+					if(request.body.callType == "Customer"){
+						connection.query(`UPDATE loan_details JOIN (SELECT COUNT(id) as comments_count FROM loans_status_history WHERE loanId = "${request.body.loan_id}" AND callType = "Customer" AND statusID = 3) AS lsh SET is_assigned = 2 WHERE lsh.comments_count >= 2 AND loanid = "${request.body.loan_id}"`, function (error, results, fields) {
+							console.log(error);
+						});	
+					}
 					let responseData = { "status": true, "code": 200, "message": "Loan Details updated successfully" }
 					response.json(responseData)
 				} else {
@@ -531,6 +536,29 @@ router.get('/getUnAssignedLoanDetailsList', async(request, response) => {
 	}
 	if(role[0].usertype == 2){
 		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
+	}
+	connection.query(queryString, function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "loanDetails": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "loanDetails": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+router.get('/getFilteredLoanDetailsList', async(request, response) => {
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id WHERE batch_status = 1 AND is_assigned = 2'
+	}
+	if(role[0].usertype == 2){
+		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id WHERE batch_status = 1 AND is_assigned = 2 AND ld.bucket = '${role[0].bucket}'`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
@@ -1406,5 +1434,27 @@ router.post('/activateLead', function (request, response) {
 		response.end();
 	}
 })
+
+router.get('/updateSwitchedOffData', function (request, response) {
+
+	callApi('http://148.72.212.163/datetime.php', function (dateTimeError, dateTimeResponse, dateTimeBody) {
+		dateTimeBody = JSON.parse(dateTimeBody);
+		let dateTime = dateTimeBody.dateTime;
+
+		connection.query(`SELECT LSH.loanId FROM loans_status_history LSH JOIN loan_details LD ON (LD.loanid = LSH.loanId AND LD.is_assigned = 1 AND LD.batch_status = 1) WHERE LSH.callType = "Customer" AND LSH.statusId = 3 AND LSH.active = 1 AND TIMESTAMPDIFF(HOUR, LSH.dateTime, '${dateTime}') >= 48`, function (error, results, fields) {
+			if (results.length > 0) {
+				let ids = []
+				results.map(loan =>{
+					ids.push(loan.loanId)
+				})
+				let joinedIds = ids.join()
+				connection.query(`UPDATE loan_details SET is_assigned = 2 WHERE loanId in (${joinedIds})`, function (error, results, fields) {
+					console.log(error)
+					response.end();
+				});
+			}
+		});
+	});
+});
 
 module.exports = router

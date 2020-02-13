@@ -469,8 +469,8 @@ router.post('/updateLoan', function (request, response) {
 
 			connection.query(`INSERT INTO loans_status_history (loanId, statusId, callType, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.callType}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
 				if (results) {
-					if(request.body.callType == "Customer"){
-						connection.query(`UPDATE loan_details JOIN (SELECT COUNT(id) as comments_count FROM loans_status_history WHERE loanId = "${request.body.loan_id}" AND callType = "Customer" AND statusID = 3) AS lsh SET is_assigned = 2 WHERE lsh.comments_count >= 2 AND loanid = "${request.body.loan_id}"`, function (error, results, fields) {
+					if(request.body.callType == "Customer" && request.body.current_Status == "3"){
+						connection.query(`UPDATE loan_details JOIN (SELECT statusId FROM loans_status_history WHERE loanId = "${request.body.loan_id}" AND callType = "Customer" ORDER BY id DESC LIMIT 1,1) AS lsh SET is_assigned = 2 WHERE lsh.statusId = 3 AND loanid = "${request.body.loan_id}"`, function (error, results, fields) {
 							console.log(error);
 						});	
 					}

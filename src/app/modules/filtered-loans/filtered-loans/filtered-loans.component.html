@@ -62,12 +62,7 @@
                   <label for="language">Select Bucket</label>
                   <select class="custom-select d-block" id="emplist" formControlName="selectedBucket">
                     <option value="">Choose...</option>
-                    <option value="B1">B1</option>
-                    <option value="B2">B2</option>
-                    <option value="B3">B3</option>
-                    <option value="B4">B4</option>
-                    <option value="B5">B5</option>
-                    <option value="B6">B6</option>
+                    <option value="{{bucket.bucket}}" *ngFor="let bucket of bucketList">{{bucket.bucket}}</option>
                   </select>
               </div>
               <div class="col-md-3">

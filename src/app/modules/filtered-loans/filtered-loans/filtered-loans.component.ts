@@ -27,7 +27,7 @@ export class FilteredLoansComponent implements OnInit {
   filteredExportData: any = []
   filteredRows= [];
   dropdownSettings: IDropdownSettings = {} ;
-  bucketList: any;
+  bucketList: any = [];
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -60,26 +60,29 @@ export class FilteredLoansComponent implements OnInit {
       itemsShowLimit: 5,
       allowSearchFilter: true
     };
-    this.bucketList = [
-      { "id": "B1", 
-        "value":  "B1", 
-      },
-      { "id": "B2", 
-      "value":  "B2", 
-      },
-      { "id": "B3", 
-      "value":  "B3", 
-      },
-      { "id": "B4", 
-      "value":  "B4", 
-      },
-      { "id": "B5", 
-      "value":  "B5", 
-      },
-      { "id": "B5", 
-      "value":  "B6", 
-      }
-    ]
+
+    this.getBucketList();
+
+    // this.bucketList = [
+    //   { "id": "B1", 
+    //     "value":  "B1", 
+    //   },
+    //   { "id": "B2", 
+    //   "value":  "B2", 
+    //   },
+    //   { "id": "B3", 
+    //   "value":  "B3", 
+    //   },
+    //   { "id": "B4", 
+    //   "value":  "B4", 
+    //   },
+    //   { "id": "B5", 
+    //   "value":  "B5", 
+    //   },
+    //   { "id": "B5", 
+    //   "value":  "B6", 
+    //   }
+    // ]
 
   }
   clickSide(val){
@@ -117,6 +120,17 @@ export class FilteredLoansComponent implements OnInit {
         }
       });
   }
+
+  getBucketList(){
+    this.appService.bucketList()
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+          this.bucketList=data.bucketList;
+        }
+      });
+  }
+  
   togglemenu(){
     $("#wrapper").toggleClass("toggled");
 

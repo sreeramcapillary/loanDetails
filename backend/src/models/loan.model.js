@@ -509,10 +509,10 @@ router.get('/getAssignedLoanDetailsList', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = 'SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 1'
+		queryString = 'SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id, ld.Customer_id, ld.mobile, ld.ref_type1, ld.ref_name1, ld.ref_mobile_num1, ld.ref_type2, ld.ref_name2, ld.ref_mobile_num2, ld.repayment_amt, ld.customer_Name FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 1'
 	}
 	if(role[0].usertype == 2){
-		queryString = `SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned = 1 AND ud.parentId = ${role[0].id}`
+		queryString = `SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id, ld.Customer_id, ld.mobile, ld.ref_type1, ld.ref_name1, ld.ref_mobile_num1, ld.ref_type2, ld.ref_name2, ld.ref_mobile_num2, ld.repayment_amt, ld.customer_Name FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned = 1 AND ud.parentId = ${role[0].id}`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
@@ -536,6 +536,29 @@ router.get('/getUnAssignedLoanDetailsList', async(request, response) => {
 	}
 	if(role[0].usertype == 2){
 		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
+	}
+	connection.query(queryString, function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "loanDetails": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "loanDetails": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+router.get('/getUnAssignedLoanDetailsListForExport', async(request, response) => {
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		queryString = 'SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 0'
+	}
+	if(role[0].usertype == 2){
+		queryString = `SELECT ld.* FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
@@ -1069,6 +1092,20 @@ router.get('/getBucketList', function (request, response) {
 
 });
 
+router.get('/getStateList', function (request, response) {
+	connection.query('SELECT * FROM language_table ', function (error, results, fields) {
+		if (results.length > 0) {
+			let responseData = { "status": true, "code": 200, "stateList": results }
+			response.json(responseData)
+		} else {
+			let responseData = { "status": false, "code": 401, "stateList": [] }
+			response.json(responseData)
+		}
+		response.end();
+	});
+
+});
+
 router.get('/getAllLanguage', function (request, response) {
 	connection.query('SELECT * FROM language_table ', function (error, results, fields) {
 		if (results.length > 0) {
@@ -1212,7 +1249,7 @@ router.post('/getAttendanceAbsentData', async(request, response) => {
 });
 
 router.get('/getCurrentDetailedReportsDataForExcel', function (request, response) {
-	connection.query('SELECT LD.*,UD.username as employeeName, LS.status_type as status, lsh.loan_comments, lsh.dateTime as status_updated_date, LT.name as language, UDP.name as team_lead FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN userdetails UDP ON UD.parentId = UDP.id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId, dateTime FROM loans_status_history WHERE active = 1 GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
+	connection.query('SELECT LD.*,UD.username as employeeUserName, UD.name as employeeName, LS.status_type as status, lsh.loan_comments, lsh.dateTime as status_updated_date, LT.name as language, UDP.name as team_lead FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN userdetails UDP ON UD.parentId = UDP.id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId, dateTime FROM loans_status_history WHERE active = 1 GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id', function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

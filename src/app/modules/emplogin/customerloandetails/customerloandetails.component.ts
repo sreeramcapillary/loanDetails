@@ -43,6 +43,7 @@ export class CustomerloandetailsComponent implements OnInit {
   statusValuesList: any;
   statusValuesUniqueList: any = []
   public dateTime1: Date;
+  currentSelectedRow: any
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -121,7 +122,7 @@ export class CustomerloandetailsComponent implements OnInit {
   }
   onSelect({ selected }) {
    if(selected[0].statusId!=6){
-     console.log(selected[0])
+    this.currentSelectedRow = selected[0]
     this.showActionsContainer = true
     this.old_status = selected[0].old_status;
     this.loan_id = selected[0].loan_id;
@@ -192,15 +193,27 @@ export class CustomerloandetailsComponent implements OnInit {
       document : this.filename,
       comment : this.f.comment.value,
     }
+    // console.log(this.currentSelectedRow)
+    // this.selectForm.reset()
+    
     this.appService.updateLoanDetails(data)
     .subscribe(
       (data: any) => {
         if (data.status) { 
           // console.log(data.loanStatus)
             alert("Loan Details updated Successfully")
-            location.reload()
-            // this.router.navigate(['/cutomerloandetails']);
-            // this.getAllLoanDetails()
+            // location.reload()
+            this.rows.map((row, index) => {
+              if(row.id == this.currentSelectedRow.id){
+                this.rows[index].statusId = this.f.status.value
+                this.rows[index].loan_comments = this.f.comment.value
+                this.loanStatus.map((status, statusIndex) =>{
+                  if(status.id == this.f.status.value){
+                    this.rows[index].status = this.loanStatus[statusIndex].status_type
+                  }
+                })
+              }
+            })
           }
       });
   }

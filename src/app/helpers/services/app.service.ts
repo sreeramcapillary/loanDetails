@@ -83,6 +83,11 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
+    getUnAssignedLoanDetailsListForExport(){
+      return this.http.get(BaseURL.url+'getUnAssignedLoanDetailsListForExport', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
     getFilteredLoanDetailsList(){
       return this.http.get(BaseURL.url+'getFilteredLoanDetailsList', {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
@@ -159,6 +164,11 @@ export class AppService {
     }
     bucketList(){
       return this.http.get(BaseURL.url+'getBucketList', {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+    stateList(){
+      return this.http.get(BaseURL.url+'getStateList', {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }

@@ -28,6 +28,8 @@ export class UnassignedLoansComponent implements OnInit {
   filteredRows= [];
   dropdownSettings: IDropdownSettings = {} ;
   bucketList: any = [];
+  stateList: any = [];
+  detailedData: any = [];
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -49,6 +51,7 @@ export class UnassignedLoansComponent implements OnInit {
       employee: ['', Validators.required], 
       selectedBucket: [''], 
       noOfLoansSelected: [''],
+      stateSelected: [''],
     });
 
     this.dropdownSettings = {
@@ -61,6 +64,7 @@ export class UnassignedLoansComponent implements OnInit {
       allowSearchFilter: true
     };
     this.getBucketList();
+    this.getStateList();
 
     // this.bucketList = [
     //   { "id": "B1", 
@@ -128,6 +132,16 @@ export class UnassignedLoansComponent implements OnInit {
       });
   }
 
+  getStateList(){
+    this.appService.stateList()
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+          this.stateList=data.stateList;
+        }
+      });
+  }
+
   togglemenu(){
     $("#wrapper").toggleClass("toggled");
 
@@ -156,7 +170,7 @@ export class UnassignedLoansComponent implements OnInit {
   }
 
   checkLoans(){
-    this.customFilteringForBucket(this.f.selectedBucket.value)
+    this.customFilteringForBucketAndState(this.f.selectedBucket.value, this.f.stateSelected.value)
     this.loan_id = []
     this.theCheckbox = [];
     if(this.f.noOfLoansSelected.value>0){
@@ -176,11 +190,12 @@ export class UnassignedLoansComponent implements OnInit {
     // console.log(this.loan_id)
   }
 
-  customFilteringForBucket(bucket){
+  customFilteringForBucketAndState(bucket, state){
     const val = bucket.toLowerCase();
+    const stateval = state.toLowerCase();
     let filteredDataTemp = []
     filteredDataTemp = this.filteredRows.filter(function(d) {
-      return d.bucket.toString().toLowerCase().indexOf(val) !== -1 || !val;
+      return (d.bucket.toString().toLowerCase().indexOf(val) !== -1 && d.state.toString().toLowerCase().indexOf(stateval) !== -1) || !val;
     });
     this.rows = filteredDataTemp;
   }
@@ -258,7 +273,14 @@ export class UnassignedLoansComponent implements OnInit {
       });
     }
 
-    exportUnassignedData():void{
-      this.excelService.exportAsExcelFile(this.unassignedExportData, 'UnAssignedData');
+    exportUnassignedData():void {
+      this.appService.getUnAssignedLoanDetailsListForExport()
+      .subscribe(
+        (data: any) => {
+          if (data.status) {
+            this.detailedData = data.loanDetails
+            this.excelService.exportAsExcelFile(this.detailedData, 'UnAssignedDetailedReports');
+          }
+        });
     }
 }

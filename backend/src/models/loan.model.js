@@ -929,14 +929,14 @@ router.post('/updateOldLoanDetails', function (request, response) {
 		let inserData = [];
 		inserData[0] = ""
 		let queryTest
-		let startQuery = "INSERT INTO `loan_details` (`penalty_amt`, `repayment_amt`, `bucket`, `overdue_days`, `loanid`) VALUES";
-		let duplicateColumn = "ON DUPLICATE KEY UPDATE `penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`)"
+		let startQuery = "INSERT INTO `loan_details` (`penalty_amt`, `repayment_amt`, `bucket`, `overdue_days`, `loanid`, `disbursal_date`, `due_date`) VALUES";
+		let duplicateColumn = "ON DUPLICATE KEY UPDATE `penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`),`disbursal_date`=VALUES(`disbursal_date`),`due_date`=VALUES(`due_date`)"
 		let responseData;
 		let currentBatch = 0
 		let rowCount = 0
 		let allBatchSuccess = true
 		ldata.map(item=>{
-			currentRow = `("${item.penalty_amt}", "${item.repayment_amt}", "${item.bucket}", "${item.overdue_days}", "${item.loanid}"),`
+			currentRow = `("${item.penalty_amt}", "${item.repayment_amt}", "${item.bucket}", "${item.overdue_days}", "${item.loanid}", "${item.disbursal_date}", "${item.due_date}"),`
 
 			currentRow = currentRow.replace(/\n|\r/g, "");
 			currentRow = currentRow.replace(/~+$/, '');

@@ -44,6 +44,7 @@ export class CustomerloandetailsComponent implements OnInit {
   statusValuesUniqueList: any = []
   public dateTime1: Date;
   currentSelectedRow: any
+  mobileView : boolean = false
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -55,6 +56,10 @@ export class CustomerloandetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(window.innerWidth <= 678){
+      this.mobileView = true
+    }
+    
     this.getLoanStatus()
     this.selectForm = this.formBuilder.group({
       status: ['', Validators.required], 

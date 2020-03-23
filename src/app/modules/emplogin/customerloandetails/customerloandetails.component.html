@@ -112,7 +112,7 @@
             <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
               [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'Name', dir: 'desc'}]"  [selected]="selected"
               [selectionType]="SelectionType.single"
-              (select)="onSelect($event)">
+              (select)="onSelect($event)" *ngIf="!mobileView">
              
               <ngx-datatable-column name="Name">
                 <ng-template let-row="row" ngx-datatable-cell-template>
@@ -170,6 +170,39 @@
                 </ng-template>
               </ngx-datatable-column>
             </ngx-datatable>
+
+            <div *ngIf="mobileView">
+              <div *ngFor="let row of rows" style="border-bottom: 1px solid black; margin-top:5px; padding-bottom: 5px; float: left;">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <strong>Customer Details : </strong> {{row.customer_Name}} ({{row.mobile}})
+                      </div>
+                      <div class="col-md-12">
+                        <strong>Ref 1 : </strong>{{row.ref_name1}} ({{row.ref_type1}}) ({{row.ref_mobile_num1}})
+                      </div>
+                      <div class="col-md-12">
+                        <strong>Ref 2 : </strong> {{row.ref_name2}} ({{row.ref_type2}}) ({{row.ref_mobile_num2}})
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <strong>Principal Amount : </strong> {{row.principal_amt}}
+                      </div>
+                      <div class="col-md-12">
+                        <strong>Repayment Amount : </strong> {{row.repayment_amt}} ({{row.interest_amount}})
+                      </div>
+                      <div class="col-md-12">
+                        <strong>Penalty Amount : </strong> {{row.penalty_amt}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="col-md-2 order-md-1">
             <div class="card row" style="margin: 1px;" *ngIf="showActionsContainer">

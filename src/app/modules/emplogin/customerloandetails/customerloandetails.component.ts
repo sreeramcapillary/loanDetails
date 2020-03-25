@@ -149,6 +149,30 @@ export class CustomerloandetailsComponent implements OnInit {
    }
   }
 
+  editStatus(selectedLoan) {
+    this.currentSelectedRow = selectedLoan
+    this.showActionsContainer = true
+    this.old_status = selectedLoan.old_status;
+    this.loan_id = selectedLoan.loan_id;
+    this.selectForm.patchValue({    
+      "status": selectedLoan.statusId,
+      "comment":selectedLoan.loan_comments
+    });
+
+    this.loanPastStatus = []
+    this.appService.getLoanPastStatus(this.loan_id)
+    .subscribe(
+      (data: any) => {
+        if (data.status) { 
+          this.loanPastStatus = data.loanPastStatus
+        }
+      });
+   }
+
+   cancelStatusUpdate(){
+    this.showActionsContainer = false
+   }
+
   
   clickSide(val){
     if(val == 'cdetails'){
@@ -207,6 +231,7 @@ export class CustomerloandetailsComponent implements OnInit {
         if (data.status) { 
           // console.log(data.loanStatus)
             alert("Loan Details updated Successfully")
+            this.showActionsContainer = false
             // location.reload()
             this.rows.map((row, index) => {
               if(row.id == this.currentSelectedRow.id){

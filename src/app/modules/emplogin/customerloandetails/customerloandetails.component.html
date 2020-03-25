@@ -171,7 +171,7 @@
               </ngx-datatable-column>
             </ngx-datatable>
 
-            <div *ngIf="mobileView">
+            <div *ngIf="mobileView" [ngClass]="{'opacity-0-1': showActionsContainer}">
               <div *ngFor="let row of rows" style="border-bottom: 1px solid black; margin-top:5px; padding-bottom: 5px; float: left;">
                 <div class="row">
                   <div class="col-md-6">
@@ -201,10 +201,15 @@
                     </div>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    Status : <span [ngClass]="{'payment-done-style': row.statusId == '5', 'PTP-style' : row.statusId == '1', 'RNR-style' : row.statusId == '2', 'switch-off-style' : row.statusId == '3', 'payment-expected-style' : row.statusId == '4', 'payment-completed-style' : row.statusId == '6'}"> {{row.status}} </span>    <button class="btn btn-primary"  (click)="editStatus(row)" style="margin-left: 10px;" *ngIf="row.statusId != 6"> <span><i class="fa fa-pencil"></i></span></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-2 order-md-1">
+          <div class="col-md-2 order-md-1" [ngClass]="{'fixed-status-container': mobileView}">
             <div class="card row" style="margin: 1px;" *ngIf="showActionsContainer">
               <div class="card-body" style="height:80vh">
                  
@@ -244,6 +249,8 @@
                      
            
                       <hr class="mb-4">
+                      <button class="btn btn-danger btn-lg btn-block" type="submit" (click)="cancelStatusUpdate()"
+                     [disabled]="" *ngIf="mobileView">Cancel</button>
                       <button class="btn btn-primary btn-lg btn-block" type="submit" (click)="submitDetails()"
                      [disabled]="">Submit</button>
                     </form>

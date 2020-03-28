@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../../helpers/services/app.service';
 import {ExcelService} from '../../../helpers/services/excel.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 declare var $;
 
 @Component({
@@ -12,11 +13,13 @@ declare var $;
 export class EmplistComponent implements OnInit {
 
   title = 'angular-datatables';
-  rows = [];
+  rows= [];
+  filteredRows= [];
+  empListForm: FormGroup;
   userType: string;
   loansAssignedToEmployee: any = []
   constructor( private route: ActivatedRoute,
-    private router: Router,private appService: AppService, private excelService:ExcelService) { 
+    private router: Router,private appService: AppService, private excelService:ExcelService,private formBuilder: FormBuilder) {
      
       this.userType = localStorage.getItem("usertype");
       if(this.userType != '1' && this.userType != '2'){
@@ -29,6 +32,10 @@ export class EmplistComponent implements OnInit {
     this.appService.changeActiveTab("elist")
 
     this.getAllEmp();
+
+    this.empListForm = this.formBuilder.group({
+      employeeFilterValue: [''],
+    });
   }
 
   togglemenu(){
@@ -42,6 +49,7 @@ export class EmplistComponent implements OnInit {
         if (data.status) {
           //.log(data.userDetails)
           this.rows = data.userDetails;
+          this.filteredRows = data.userDetails;
         }
       });
   }
@@ -128,5 +136,18 @@ export class EmplistComponent implements OnInit {
           }
         });
     }
+  }
+
+  get f() { 
+    return this.empListForm.controls;
+   }
+
+  filterEmp(){
+    const employeeFilterValue = this.f.employeeFilterValue.value.toLowerCase()
+    let filteredDataTemp = []
+    filteredDataTemp = this.filteredRows.filter(function(d) {
+      return (d.name.toString().toLowerCase().indexOf(employeeFilterValue) !== -1 || d.bucket.toString().toLowerCase().indexOf(employeeFilterValue) !== -1) || !employeeFilterValue;
+    });
+    this.rows = filteredDataTemp;
   }
 }

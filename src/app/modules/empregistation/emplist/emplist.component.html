@@ -50,6 +50,16 @@
           <button class="btn btn-primary" style="float: right;" type="submit" (click)="registerEmp()">Register Employee</button>
       </div>
     </div>
+    <form [formGroup]="empListForm">
+      <div class="row">
+        <div class="col-md-3">
+            <input type="text" style="padding:8px;margin:30px auto;width:100%;" placeholder="Enter Emp Name / Bucket" formControlName="employeeFilterValue" />
+        </div>
+        <div class="col-md-2 mb-3">
+            <button class="btn btn-primary" style="float: left; margin-right: 20px;margin-top: 30px;" type="submit" (click)="filterEmp()">Filter</button>
+        </div>
+      </div>
+    </form>
         <div class="col-md-12 order-md-1">
           <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
             [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]">

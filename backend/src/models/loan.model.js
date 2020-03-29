@@ -280,7 +280,8 @@ router.get("/getAllActiveEmpList", async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = 'SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name, (SELECT COUNT(id) FROM loginLogs WHERE empId = u.id AND type = 1) AS loginCount FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= "1" GROUP BY u.id'
+		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
+		queryString = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name, (SELECT COUNT(id) FROM loginLogs WHERE empId = u.id AND type = 1 AND date = '"+today+"') AS loginCount FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= '1' GROUP BY u.id"
 	}
 	if(role[0].usertype == 2){
 		queryString = `SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= "1" AND u.parentId = ${role[0].id} GROUP BY u.id`

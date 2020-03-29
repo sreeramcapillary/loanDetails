@@ -45,7 +45,7 @@ router.post('/login', function (request, response) {
 						let currentDate = dateTimeBody.date;
 						let currentTime = dateTimeBody.time;
 
-						connection.query(`INSERT INTO loginLogs (empId, date, time) VALUES ('${results[0].id}', '${currentDate}', '${currentTime}')`, function (error, results, fields) {
+						connection.query(`INSERT INTO loginLogs (empId, type, date, time) VALUES ('${results[0].id}', '1', '${currentDate}', '${currentTime}')`, function (error, results, fields) {
 						});
 					});
 					let responseData = { "status": true, "code": 200, "userDetails": results }
@@ -63,6 +63,18 @@ router.post('/login', function (request, response) {
 		response.json(responseData)
 		response.end();
 	}
+});
+
+router.post('/logoutAction', function (request, response) {
+	var id = request.body.id;
+	callApi('http://148.72.212.163/datetime.php', function (dateTimeError, dateTimeResponse, dateTimeBody) {
+		dateTimeBody = JSON.parse(dateTimeBody);
+		let currentDate = dateTimeBody.date;
+		let currentTime = dateTimeBody.time;
+
+		connection.query(`INSERT INTO loginLogs (empId, type, date, time) VALUES ('${results[0].id}', '0', '${currentDate}', '${currentTime}')`, function (error, results, fields) {
+		});
+	});
 });
 
 //Register Employee

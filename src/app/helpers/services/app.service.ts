@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { API,BaseURL } from '../../constants/app-apiurl-constants';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ThrowStmt } from '@angular/compiler';
 @Injectable({
   providedIn: 'root'
 })
@@ -42,6 +43,7 @@ export class AppService {
 
     logout() {
         // remove user from local storage to log user out
+        this.logoutAction(localStorage.getItem('userId'))
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
     }

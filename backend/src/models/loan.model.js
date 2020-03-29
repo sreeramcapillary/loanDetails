@@ -73,6 +73,8 @@ router.post('/logoutAction', function (request, response) {
 		let currentTime = dateTimeBody.time;
 
 		connection.query(`INSERT INTO loginLogs (empId, type, date, time) VALUES ('${id}', '0', '${currentDate}', '${currentTime}')`, function (error, results, fields) {
+			let responseData = { "status": true, "code": 200 }
+			response.json(responseData)
 		});
 	});
 });

@@ -14,31 +14,32 @@ export class AppComponent {
   }
 
   ngOnInit(){
-
-    setInterval(() => {
-      var date1, date2;  
+    if(localStorage.getItem('usertype') == "2" || localStorage.getItem('usertype') == "0"){
+      setInterval(() => {
+        var date1, date2;  
+    
+        date1 = new Date( localStorage.getItem('loggedInTimeStamp') );
+        console.log(date1);
+    
+        date2 = new Date();
+        console.log(date2);
+    
+        var res = Math.abs(date1 - date2) / 1000;
   
-      date1 = new Date( localStorage.getItem('loggedInTimeStamp') );
-      console.log(date1);
+        var minutes = Math.floor(res / 60) % 60;
+        console.log("Difference (Minutes): "+minutes);  
   
-      date2 = new Date();
-      console.log(date2);
+        if(minutes >= 20){ 
+          this.appService.logoutAction(localStorage.getItem('userId'))
+          .subscribe(
+          (data:any) => {
+            localStorage.clear();
+            this.router.navigateByUrl('/login');
+          });
+        }
   
-      var res = Math.abs(date1 - date2) / 1000;
-
-      var minutes = Math.floor(res / 60) % 60;
-      console.log("Difference (Minutes): "+minutes);  
-
-      if(minutes >= 1){ 
-        this.appService.logoutAction(localStorage.getItem('userId'))
-        .subscribe(
-        (data:any) => {
-          localStorage.clear();
-          this.router.navigateByUrl('/login');
-        });
-      }
-
-    }, 1000*60);
+      }, 1000*60);
+    }
 
       // var date1, date2;  
   

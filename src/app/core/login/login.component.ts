@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
     submitted = false;
     returnUrl: string;
     pwdPattern = '^(?=.*\d)(?=.*[a-z])(?!.*\s).{6,12}$';
+    currentTimeStamp:any
   hashPassword:any;
   constructor(private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -72,10 +73,15 @@ export class LoginComponent implements OnInit {
               this.router.navigateByUrl('/emp-list');
 
             }else{
+              this.currentTimeStamp = new Date();
               localStorage.setItem("empName",data.userDetails[0].name);
               localStorage.setItem("empId",data.userDetails[0].username);
               localStorage.setItem("bucket",data.userDetails[0].bucket);
               this.router.navigateByUrl('/cutomerloandetails');
+            }
+
+            if(data.userDetails[0].usertype == 2 || data.userDetails[0].usertype == 0){
+              localStorage.setItem("loggedInTimeStamp", this.currentTimeStamp);
             }
           // })
         }

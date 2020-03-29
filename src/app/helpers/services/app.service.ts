@@ -339,7 +339,7 @@ export class AppService {
 
     logoutAction(id){
       var data={
-        "leadId":id
+        "id":id
       }
       return this.http.post(BaseURL.url+'logoutAction',data ,{
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")

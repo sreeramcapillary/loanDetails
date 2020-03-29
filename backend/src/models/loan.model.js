@@ -1370,8 +1370,9 @@ router.post('/registerTeamLead', function (request, response) {
 });
 
 router.get('/getAllActiveLeadsList', function (request, response) {
-	
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 2 AND u.active= "1" GROUP BY u.id', function (error, results, fields) {
+	let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
+	let query = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket, (SELECT COUNT(id) FROM loginLogs WHERE empId = u.id AND type = 1 AND date = '"+today+"') AS loginCount FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 2 AND u.active= '1' GROUP BY u.id"
+	connection.query(query, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

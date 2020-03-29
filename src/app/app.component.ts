@@ -29,7 +29,7 @@ export class AppComponent {
       var minutes = Math.floor(res / 60) % 60;
       console.log("Difference (Minutes): "+minutes);  
 
-      if(minutes >= 20){ 
+      if(minutes >= 1){ 
         this.appService.logoutAction(localStorage.getItem('userId'))
         .subscribe(
         (data:any) => {

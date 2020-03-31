@@ -62,6 +62,15 @@
         </div>
         <div class="row">
           <div class="col-md-5 mb-3">
+            <label for="team"><b>Select Team</b></label>
+            <select class="custom-select d-block w-100" id="team"  formControlName="team" (change)="getUsersWithKnownLanguagesOfTeam()">
+              <option value="ALL">ALL</option>
+              <option *ngFor="let lead of activeLeads" value="{{lead.id}}" >{{lead.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 mb-3">
             <label for="perEmployee"><b>Loans Per Employee</b></label>
             <input type="text" class="form-control" id="perEmployee" formControlName="perEmployee">
           </div>

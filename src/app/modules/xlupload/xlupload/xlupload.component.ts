@@ -26,6 +26,7 @@ export class XluploadComponent implements OnInit {
   usersWithKnownLanguages: any[];
   newDataForm: FormGroup;
   batchStatus : any;
+  activeLeads: any[]
 
   constructor(private route: ActivatedRoute,
     private http: HttpClient,
@@ -37,12 +38,11 @@ export class XluploadComponent implements OnInit {
 
     this.newDataForm = this.fb.group({
       newBatch : ["NO"],
+      team : ["ALL"],
       perEmployee : ['200']
     });
-    // this.getAllEmp()
-    // this.getAllBucket()
-    // this.getAllLanguage()
     this.getUsersWithKnownLanguages()
+    this.getAllActiveLeads()
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       if (response) {
@@ -131,20 +131,6 @@ export class XluploadComponent implements OnInit {
                           }
                         })
                       })
-                      // this.loanDetails['bucket'][bucketKey]["language"][languageKey]["loanData"].map(data => {
-                      //   this.loanDetails['bucket'][bucketKey]["language"][languageKey]["empdetails"].map(emp => {
-                      //     if (averageLoanValue <= data.repayment_amt && data.is_assigned == false && aempid != emp.empid) {
-                      //       aempid = emp.empid;
-                      //       data["is_assigned"] = true;
-                      //       ldata = {
-                      //         "loan_id": data.loan_id,
-                      //         "assigned_emp_id": emp.empid,
-                      //         "is_assigned": 1
-                      //       }
-                      //       finalFilteredArray.push(ldata)
-                      //     }
-                      //   })
-                      // })
                     }
                   }
                 }
@@ -165,15 +151,16 @@ export class XluploadComponent implements OnInit {
 
 
         }
-        //  this.appService.xlupload(this.xluploaddata).subscribe(
-        //   (data: any) => {
-        //     if (data.status) {
-        //       this.router.navigate(['/assignLoanList'])
-        //     }
-        //   });
       }
-      //
     };
+  }
+  getAllActiveLeads(){
+    this.appService.getActiveLeads()
+      .subscribe(
+        (data: any) => {
+          // console.log(data)
+          this.activeLeads = data.userDetails
+        });
   }
   getAllBucket() {
     this.appService.bucketList()
@@ -202,46 +189,21 @@ export class XluploadComponent implements OnInit {
     this.appService.usersWithKnownLanguages()
       .subscribe(
         (data: any) => {
-          // console.log("originalusersLanguages",data.languageList)
-          // let filteredUsersData = [];
-          // let usersLanguages = [];
-          // let fileteredUsersLanguages = [];
-          // data.languageList.map(user =>{
-          //   if(typeof usersLanguages[user.userId] === 'undefined') {
-          //     usersLanguages[user.userId] = [];
-          //     usersLanguages[user.userId][user.language_id] = user.language_name
-          //   }
-          //   else {
-          //       usersLanguages[user.userId][user.language_id] = user.language_name
-          //   }
-          // })
-
-          // console.log("usersLanguages",usersLanguages)
-
-          // usersLanguages.map((user, userIndex) => {
-          //   let langs = []
-          //   user.map((lang, langIndex) => {
-          //     if(langs.indexOf(lang) == -1){
-          //       langs[langIndex] = lang
-          //     }
-          //   })
-          //   fileteredUsersLanguages[userIndex] = langs
-          // })
-
-          // console.log("fileteredUsersLanguages",fileteredUsersLanguages)
-
-          // data.languageList.map((user, userIndex) =>{
-          //   if(typeof fileteredUsersLanguages[user.userId][user.language_id] === 'undefined') {
-
-          //   }else{
-          //     filteredUsersData.push(user)
-          //   }
-          // })
-
-          // console.log("finalarray", filteredUsersData)
+          this.emplist = []
           this.emplist = data.languageList
-         // console.log(this.emplist)
         });
+  }
+  getUsersWithKnownLanguagesOfTeam(){
+    if(this.newDataForm.value.team != "ALL"){
+      this.appService.usersWithKnownLanguagesOfTeam(this.newDataForm.value.team)
+      .subscribe(
+        (data: any) => {
+          this.emplist = []
+          this.emplist = data.languageList
+        });
+    }else{
+      this.getUsersWithKnownLanguages()
+    }
   }
   getAllEmp() {
     this.appService.getEmp().subscribe(

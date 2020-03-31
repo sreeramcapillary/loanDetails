@@ -189,6 +189,14 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
+    usersWithKnownLanguagesOfTeam(data){
+      var teamData={
+        "id":data
+      }
+      return this.http.post(BaseURL.url+'getUsersWithKnownLanguagesOfTeam',teamData ,{
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
     updateLoanData(data){
       var ldata={
         "loanupdateData":data

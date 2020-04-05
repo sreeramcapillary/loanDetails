@@ -45,14 +45,7 @@
        <div class="col-md-12">
          <h4 class="mb-3">Employee List</h4>
          <form [formGroup]="selectForm">
-            <div class="row">
-                  <!-- <div class="col-md-3 mb-3">
-                    <label for="employeeToFilter">Select Employee For Filter</label>
-                    <select class="custom-select d-block w-100" id="employeeToFilter" formControlName="employeeToFilter">
-                      <option value="ALL">--------- All ---------</option>
-                      <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
-                    </select>
-                  </div> -->
+            <!-- <div class="row">
                   <div class="col-md-3">
                       <input type="text" style="padding:8px;margin:30px auto;width:100%;" placeholder="Enter Loan Id / Customer Id / Mobile Number" formControlName="employeeFilterValue" />
                   </div>
@@ -66,6 +59,50 @@
                         <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
                       </select>
                   </div>
+            </div> -->
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <label for="employeeToFilter">Select Employee For Filter</label>
+                <select class="custom-select d-block w-100" id="employeeToFilter" formControlName="employeeToFilter">
+                  <option value="ALL">--------- All ---------</option>
+                  <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="language">Select No Of Loans</label>
+                <select class="custom-select d-block" id="noofloans" formControlName="noOfLoansSelected">
+                    <option value="0">Choose...</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                    <option value="35">35</option>
+                    <option value="40">40</option>
+                    <option value="45">45</option>
+                    <option value="50">50</option>
+                    <option value="55">55</option>
+                    <option value="60">60</option>
+                    <option value="65">65</option>
+                    <option value="70">70</option>
+                    <option value="75">75</option>
+                    <option value="80">80</option>
+                    <option value="85">85</option>
+                    <option value="90">90</option>
+                    <option value="95">95</option>
+                    <option value="100">100</option>
+                </select>
+              </div>
+              <div class="col-md-2 mb-3">
+                <button class="btn btn-primary" style="float: left; margin-right: 20px;margin-top: 30px;" type="submit" (click)="filterLoansByEmp()">Filter</button>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="language">Select Employee To Assign</label>
+                <select class="custom-select d-block w-100" id="emplist" formControlName="employee" (change)="selectedEmp()">
+                  <option value="">Choose...</option>
+                  <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
+                </select>
+              </div>
             </div>
          <!-- <div class="col-md-12 mb-3">
           <label for="language">Select Employee</label>

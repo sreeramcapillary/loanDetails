@@ -42,8 +42,9 @@ export class AssignLoanListComponent implements OnInit {
     //this.getAssinedLoanDetails();
     this.selectForm = this.formBuilder.group({
       employee: ['', Validators.required],
-      // employeeToFilter: ['ALL'],
+      employeeToFilter: ['ALL'],
       employeeFilterValue: [''],
+      noOfLoansSelected : ['0'],
     });
   }
   clickSide(val){
@@ -211,11 +212,42 @@ export class AssignLoanListComponent implements OnInit {
       //   });
       //   this.rows = filteredDataTemp;
       // }
-      const employeeFilterValue = this.f.employeeFilterValue.value.toLowerCase()
+
+
+      // const employeeFilterValue = this.f.employeeFilterValue.value.toLowerCase()
+      // let filteredDataTemp = []
+      // filteredDataTemp = this.filteredRows.filter(function(d) {
+      //   return (d.loan_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1 || d.Customer_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1) || d.mobile.toString().toLowerCase().indexOf(employeeFilterValue) !== -1 || !employeeFilterValue;
+      // });
+      // this.rows = filteredDataTemp;
+
+
+      const employeeFilterValue = this.f.employeeToFilter.value.toLowerCase()
       let filteredDataTemp = []
       filteredDataTemp = this.filteredRows.filter(function(d) {
-        return (d.loan_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1 || d.Customer_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1) || d.mobile.toString().toLowerCase().indexOf(employeeFilterValue) !== -1 || !employeeFilterValue;
+        return d.assigned_emp_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1  || !employeeFilterValue;
       });
       this.rows = filteredDataTemp;
+      this.checkLoans()
+    }
+
+    checkLoans(){
+      this.loan_id = []
+      this.theCheckbox = [];
+      if(this.f.noOfLoansSelected.value>0){
+        this.rows.map((row, index) => {
+          if(index<this.f.noOfLoansSelected.value){
+            this.rows[index].theCheckbox = true
+            this.loan_id.push(row.loan_id)
+          }else{
+            this.rows[index].theCheckbox = false
+          }
+        })
+      }else{
+        this.rows.map((row, index) => {
+          this.rows[index].theCheckbox = false
+        })
+      }
+      // console.log(this.loan_id)
     }
 }

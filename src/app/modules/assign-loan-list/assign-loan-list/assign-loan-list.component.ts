@@ -221,13 +221,14 @@ export class AssignLoanListComponent implements OnInit {
       // });
       // this.rows = filteredDataTemp;
 
-
-      const employeeFilterValue = this.f.employeeToFilter.value.toLowerCase()
-      let filteredDataTemp = []
-      filteredDataTemp = this.filteredRows.filter(function(d) {
-        return d.assigned_emp_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1  || !employeeFilterValue;
-      });
-      this.rows = filteredDataTemp;
+      if(this.f.employeeToFilter.value != "ALL"){
+        const employeeFilterValue = this.f.employeeToFilter.value.toLowerCase()
+        let filteredDataTemp = []
+        filteredDataTemp = this.filteredRows.filter(function(d) {
+          return d.assigned_emp_id.toString().toLowerCase().indexOf(employeeFilterValue) !== -1  || !employeeFilterValue;
+        });
+        this.rows = filteredDataTemp;
+      }
       this.checkLoans()
     }
 

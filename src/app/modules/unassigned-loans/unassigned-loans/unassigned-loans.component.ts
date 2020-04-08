@@ -37,7 +37,7 @@ export class UnassignedLoansComponent implements OnInit {
       this.userType = localStorage.getItem("usertype");
       if(this.userType != '1' && this.userType != '2'){
         this.router.navigateByUrl('/login');
-      } 
+      }
     }
 
   ngOnInit() {
@@ -46,10 +46,16 @@ export class UnassignedLoansComponent implements OnInit {
     this.getAllEmp();
 
     this.getAllLoanDetails();
-    //this.getAssinedLoanDetails();
+
+    let bucket
+    if(this.userType == '2'){
+      bucket = localStorage.getItem('leadBucket');
+    }else{
+      bucket = ""
+    }
     this.selectForm = this.formBuilder.group({
       employee: ['', Validators.required], 
-      selectedBucket: [''], 
+      selectedBucket: [bucket], 
       noOfLoansSelected: [''],
       stateSelected: [''],
     });

@@ -83,6 +83,10 @@ export class LoginComponent implements OnInit {
             if(data.userDetails[0].usertype == 2 || data.userDetails[0].usertype == 0){
               localStorage.setItem("loggedInTimeStamp", this.currentTimeStamp);
             }
+
+            if(data.userDetails[0].usertype == 2){
+              localStorage.setItem("leadBucket", data.userDetails[0].bucket);
+            }
           // })
         }
         }else{

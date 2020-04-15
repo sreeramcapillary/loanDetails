@@ -1007,13 +1007,14 @@ router.post('/updateOldLoanDetails', function (request, response) {
 })
 router.post('/updateRepaymentStatus', function (request, response) {
 	var ldata = request.body.repymentData;
+	var selectedDate = request.body.selectedDate
 	if (ldata) {
 		var queriesStart = "INSERT INTO loans_status_history (loanId, statusId, dateTime) VALUES"
 		var queries='';
 		var updateQueries = ''
-		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
+		// let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 		ldata.map(item=>{
-			queries += mysql.format(`('${item.loanid}', '6', '${today}'),`);
+			queries += mysql.format(`('${item.loanid}', '6', '${selectedDate}'),`);
 			updateQueries += mysql.format(`UPDATE loans_status_history SET active = '0' WHERE loanId = '${item.loanid}';`);
 			
 		})

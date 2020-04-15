@@ -5,12 +5,15 @@ import { RepaymentdatauploadRoutingModule } from './repaymentdataupload-routing.
 import { RepaymentdatauploadComponent } from './repaymentdataupload/repaymentdataupload.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
 @NgModule({
   declarations: [RepaymentdatauploadComponent],
   imports: [
     CommonModule,
     RepaymentdatauploadRoutingModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule

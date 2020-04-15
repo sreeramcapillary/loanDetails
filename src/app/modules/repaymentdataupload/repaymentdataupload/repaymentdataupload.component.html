@@ -43,15 +43,22 @@
 
     <div class="container-fluid" style="padding-top: 20px;">
       <h4 class="mb-3">Repayment Data Upload</h4>
-      <input type="file" name="file" ng2FileSelect [uploader]="uploader" />
 
-      <button type="button" class="btn btn-success btn-s" 
-        (click)="uploader.uploadAll()" 
-        [disabled]="!uploader.getNotUploadedItems().length" >
-            Upload
-      </button>
-      
-      
+      <div class="row">
+        <div class="col-md-12">
+          Select date on which you want to update data <br/>
+          <input type="text" style="width: 30%;margin-bottom:30px;padding:10px" placeholder="Select Date" [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" [(ngModel)]="dateTime1" />
+          <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+        </div>
+        <div class="col-md-12">
+          <input type="file" name="file" ng2FileSelect [uploader]="uploader" />
+          <button type="button" class="btn btn-success btn-s" 
+            (click)="uploader.uploadAll()" 
+            [disabled]="!uploader.getNotUploadedItems().length" >
+                Upload
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

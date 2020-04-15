@@ -213,9 +213,10 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
-    repaymentupload(data){
+    repaymentupload(data, selectedDate){
       var ldata={
-        "repymentData":data
+        "repymentData":data,
+        "selectedDate":selectedDate
       }
       return this.http.post(BaseURL.url+'updateRepaymentStatus',ldata ,{
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")

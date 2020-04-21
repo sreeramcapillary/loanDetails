@@ -1302,6 +1302,58 @@ router.post('/getCountAndSumReport', async(request, response) => {
 	// }
 });
 
+router.post('/getCountAndSumTeamLeadReport', async(request, response) => {
+	var fromDate = request.body.fromDate;
+	var toDate = request.body.toDate;
+	var batch = request.body.batch
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	if(batch == 1){
+		let queryString = ""
+		if(role[0].usertype == 1){
+			queryString = `SELECT TUD.id, TUD.name,
+
+			COALESCE(SUM(CASE WHEN LSH.statusId = 1 THEN LD.repayment_amt ELSE 0 END), 0) as PTP_AMOUNT_TOTAL, 
+			COUNT(CASE WHEN LSH.statusId = 1 THEN 1 ELSE NULL END) as PTP_AMOUNT_COUNT,
+			
+			COALESCE(SUM(CASE WHEN LSH.statusId = 2 THEN LD.repayment_amt ELSE 0 END), 0) as RNR_AMOUNT_TOTAL, 
+			COUNT(CASE WHEN LSH.statusId = 2 THEN 1 ELSE NULL END) as RNR_AMOUNT_COUNT, 
+						
+			COALESCE(SUM(CASE WHEN LSH.statusId = 3 THEN LD.repayment_amt ELSE 0 END), 0) as SWITCH_OFF_TOTAL, 
+			COUNT(CASE WHEN LSH.statusId = 3 THEN 1 ELSE NULL END) as SWITCH_OFF_COUNT, 
+						
+			COALESCE(SUM(CASE WHEN LSH.statusId = 4 THEN LD.repayment_amt ELSE 0 END), 0) as PAYMENT_EXPECTED_AT_TOTAL, 
+			COUNT(CASE WHEN LSH.statusId = 4 THEN 1 ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, 
+						
+			COALESCE(SUM(CASE WHEN LSH.statusId = 5 THEN LD.repayment_amt ELSE 0 END), 0) as WAITING_FOR_CONFIRMATION_TOTAL, 
+			COUNT(CASE WHEN LSH.statusId = 5 THEN 1 ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT,
+						
+			COALESCE(SUM(CASE WHEN LSH.statusId = 6 THEN LD.repayment_amt ELSE 0 END), 0) as WAITING_FOR_CONFIRMATION_TOTAL, 
+			COUNT(CASE WHEN LSH.statusId = 6 THEN 1 ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT
+			
+			FROM userdetails TUD
+			
+			JOIN userdetails UD ON UD.parentId = TUD.id AND UD.active = 1
+			JOIN loan_details LD ON LD.assigned_emp_id = UD.id
+			JOIN loans_status_history LSH ON LSH.loanId = LD.loanid AND LSH.dateTime LIKE '%${fromDate}%'
+			
+			WHERE TUD.usertype = 2 AND TUD.active = 1 GROUP BY TUD.name`
+		}
+		// console.log(queryString)
+		connection.query(queryString, function (error, results, fields) {
+			if (results.length > 0) {
+				let responseData = { "status": true, "code": 200, "reportData": results }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "reportData": [] }
+				response.json(responseData)
+			}
+			response.end();
+		});
+	}
+});
+
 router.post('/getDayAttendance', async(request, response) => {
 	var date = request.body.date;
 	let base64Credentials =  request.headers.authorization.split(' ')[1];

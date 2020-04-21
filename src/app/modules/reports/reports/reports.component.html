@@ -64,103 +64,145 @@
         </div>
       </div>
       <div class="col-md-12 order-md-1">
-        <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-          [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]" style="min-height: 600px;">
-          <ngx-datatable-column name="EMP">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.employeeName}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Bucket">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.bucket}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Assigned">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.assignedAmount}} ({{row.assignedAmount_COUNT}})
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="PTP">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.PTP_AMOUNT}} ({{row.PTP_AMOUNT_COUNT}})
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="RNR">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.RNR_AMOUNT_COUNT}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="S.A">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.SWITCH_OFF_COUNT}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="PEA">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.PAYMENT_EXPECTED_AT_COUNT}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="WFC">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.WAITING_FOR_CONFIRMATION}} ({{row.WAITING_FOR_CONFIRMATION_COUNT}})
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="RPY">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.collectedAmout}} ({{row.collectedAmout_COUNT}})
-            </ng-template>
-          </ngx-datatable-column>
-          <!-- <ngx-datatable-column name="Remaining Amout">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.remainingAmount}} ({{row.remainingAmount_COUNT}})
-            </ng-template>
-          </ngx-datatable-column> -->
-          <ngx-datatable-column name="Calls Done">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.callCount}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-footer>
-            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
-              let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset">
-              <div style="padding: 5px 10px">
-                <div>
-                  <b> Rows: {{ rowCount }} | Assigned = {{consolidatedData.assigned}} ({{consolidatedData.assignedCount}}) | PTP = {{consolidatedData.ptp}} ({{consolidatedData.ptpCount}}) | RNR = {{consolidatedData.rnr}} ({{consolidatedData.rnrCount}}) | SA = {{consolidatedData.sa}} ({{consolidatedData.saCount}}) | PEA = {{consolidatedData.pea}} ({{consolidatedData.peaCount}}) | WFC = {{consolidatedData.wfc}} ({{consolidatedData.wfcCount}}) | RPY = {{consolidatedData.rpy}} ({{consolidatedData.rpyCount}}) </b>
-                </div>
+        <div class="row">
+          
+          <div class="col-md-2 pill-container">
+            <div class="row">
+              <div class="col-md-12 pill-header orange-pill">
+                PTP
               </div>
-            </ng-template>
-          </ngx-datatable-footer>
-        </ngx-datatable>
+              <div class="col-md-2"></div>
+              <div class="col-md-8 pill-total">
+                {{countAndSumReportData.PTP_AMOUNT_TOTAL | number}}
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-12 pill-count">
+                {{countAndSumReportData.PTP_AMOUNT_COUNT | number}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 pill-container">
+            <div class="row">
+              <div class="col-md-12 pill-header">
+                SWITCH OFF
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-8 pill-total">
+                {{countAndSumReportData.SWITCH_OFF_TOTAL | number}}
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-12 pill-count">
+                {{countAndSumReportData.SWITCH_OFF_COUNT | number}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 pill-container">
+            <div class="row">
+              <div class="col-md-12 pill-header violet-pill">
+                RNR
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-8 pill-total">
+                {{countAndSumReportData.RNR_AMOUNT_TOTAL | number}}
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-12 pill-count">
+                {{countAndSumReportData.RNR_AMOUNT_COUNT | number}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 pill-container">
+            <div class="row">
+              <div class="col-md-12 pill-header green-pill">
+                PEA
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-8 pill-total">
+                {{countAndSumReportData.PAYMENT_EXPECTED_AT_TOTAL | number}}
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-12 pill-count">
+                {{countAndSumReportData.PAYMENT_EXPECTED_AT_COUNT | number}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 pill-container">
+            <div class="row">
+              <div class="col-md-12 pill-header orange-pill">
+                WFC
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-8 pill-total">
+                {{countAndSumReportData.WAITING_FOR_CONFIRMATION_TOTAL | number}}
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-12 pill-count">
+                {{countAndSumReportData.WAITING_FOR_CONFIRMATION_COUNT | number}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 pill-container">
+            <div class="row">
+              <div class="col-md-12 pill-header orange-pill">
+                ASSIGNED
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-8 pill-total">
+                {{countAndSumReportData.ASSIGNED_TOTAL | number}}
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-12 pill-count">
+                {{countAndSumReportData.ASSIGNED_COUNT | number}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2 pill-container">
+            <div class="row">
+              <div class="col-md-12 pill-header">
+                UN-ASSIGNED
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-8 pill-total">
+                {{countAndSumReportData.UNASSIGNED_TOTAL | number}}
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-12 pill-count">
+                {{countAndSumReportData.UNASSIGNED_COUNT | number}}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-2">
-        <h4 class="mb-3">Attendance</h4>
+      <hr>
+      <div class="col-md-12 margin-top-30">
+        <canvas baseChart
+          [data]="pieChartData"
+          [labels]="pieChartLabels"
+          [chartType]="pieChartType"
+          [options]="pieChartOptions"
+          [plugins]="pieChartPlugins"
+          [colors]="pieChartColors"
+          [legend]="pieChartLegend">
+        </canvas>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ngx-datatable class="material" [rows]="attendanceData" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
-          [rowHeight]="50" [scrollbarV]="true" [sorts]="[{prop: 'name', dir: 'desc'}]" style="max-height: 150px;">
-          <ngx-datatable-column name="Total Employees">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.totalEMP}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Prensent">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span style="color: blue;text-decoration: underline; cursor: pointer;" (click)="getAttendancePresentData()">{{row.present}}</span>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Absent">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span style="color: blue;text-decoration: underline; cursor: pointer;" (click)="getAttendanceAbsentData()">{{row.absent}}</span>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
+      <hr>
+      <div class="col-md-12 margin-top-30 margin-bottom-30">
+        <h1>Team Leads Report</h1>
+        <canvas baseChart
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [plugins]="barChartPlugins"
+          [legend]="barChartLegend"
+          [chartType]="barChartType">
+        </canvas>
       </div>
-    </div>
 
 
     <div id="myModal" class="modal" *ngIf="showPresentData">

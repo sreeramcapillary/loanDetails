@@ -4,6 +4,10 @@ import { AppService } from '../../../helpers/services/app.service';
 import { HttpClient } from '@angular/common/http';
 import {ExcelService} from '../../../helpers/services/excel.service';
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+
+import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
+import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+
 declare var $;
 @Component({
   selector: 'app-reports',
@@ -40,6 +44,49 @@ export class ReportsComponent implements OnInit {
   showAbsentData : boolean = false
   attendanceAbsentData : any = []
   attendancePresentDataTemp : any = []
+  countAndSumReportData : any = []
+  countAndSumTeamLeadReportData : any = []
+
+  //pie chart
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public pieChartLabels: Label[] = [];
+  public pieChartData: any[] = [];
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
+  public pieChartColors = [
+    {
+      backgroundColor: [],
+    },
+  ];
+
+  //Bar chart
+  public barChartOptions: ChartOptions = {
+    responsive: true,
+    // We use these empty structures as placeholders for dynamic theming.
+    scales: { xAxes: [{}], yAxes: [{}] },
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+      }
+    }
+  };
+  public barChartLabels: Label[] = [];
+  public barChartType: ChartType = 'bar';
+  public barChartLegend = true;
+  public barChartPlugins = [];
+
+  public barChartData: ChartDataSets[] = [
+    { data: [], label: 'PTP' },
+    { data: [], label: 'SWITCH OFF' },
+    { data: [], label: 'RNR' },
+    { data: [], label: 'PEA' },
+    { data: [], label: 'WFC' }
+    
+  ];
 
   constructor(private route: ActivatedRoute,
     private http: HttpClient,
@@ -48,6 +95,9 @@ export class ReportsComponent implements OnInit {
         if(this.userType != '1' && this.userType != '2'){
           this.router.navigateByUrl('/login');
         }
+
+        monkeyPatchChartJsTooltip();
+        monkeyPatchChartJsLegend();
      }
 
   ngOnInit() {
@@ -59,8 +109,13 @@ export class ReportsComponent implements OnInit {
     var yyyy = today.getFullYear();
 
     let todayDate = yyyy + '-' + mm + '-' + dd;
-    this.getAllReports(todayDate, todayDate, 1)
-    this.getAttendanceData(todayDate)
+    this.getCountAndSumReport(todayDate, todayDate, 1)
+    setTimeout(() => {
+      this.getCountAndSumTeamLeadReport(todayDate, todayDate, 1)
+    },2000)
+
+    // this.getAllReports(todayDate, todayDate, 1)
+    // this.getAttendanceData(todayDate)
   }
   clickSide(val) {
     if (val == 'elist') {
@@ -83,6 +138,51 @@ export class ReportsComponent implements OnInit {
 
     }
   }
+
+  getCountAndSumReport(fromDate, toDate, batch){
+    this.appService.getCountAndSumReport(fromDate, toDate, batch)
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+          this.countAndSumReportData = data.reportData[0]
+          this.pieChartLabels.push(['PTP ('+this.countAndSumReportData.PTP_AMOUNT_COUNT+')'], ['SWITCH OFF ('+this.countAndSumReportData.SWITCH_OFF_COUNT+')'], ['RNR ('+this.countAndSumReportData.RNR_AMOUNT_COUNT+')'], ['PEA ('+this.countAndSumReportData.PAYMENT_EXPECTED_AT_COUNT+')'], ['WFC ('+this.countAndSumReportData.WAITING_FOR_CONFIRMATION_COUNT+')']);
+          this.pieChartData.push(this.countAndSumReportData.PTP_AMOUNT_TOTAL, this.countAndSumReportData.SWITCH_OFF_TOTAL, this.countAndSumReportData.RNR_AMOUNT_TOTAL, this.countAndSumReportData.PAYMENT_EXPECTED_AT_TOTAL, this.countAndSumReportData.WAITING_FOR_CONFIRMATION_TOTAL);
+          this.pieChartColors[0].backgroundColor.push('#ff8f00ad', '#dc3545a8', '#5e35b1a3', '#388e3cb5', '#ff8f00ad');
+        }
+      });
+  }
+
+  getCountAndSumTeamLeadReport(fromDate, toDate, batch){
+    this.appService.getCountAndSumTeamLeadReport(fromDate, toDate, batch)
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+          this.countAndSumTeamLeadReportData = data.reportData
+          let dataLeads = []
+          let dataPTP = []
+          let dataSWITCHOFF = []
+          let dataRNR = []
+          let dataPEA = []
+          let dataWFC = []
+          this.countAndSumTeamLeadReportData.map(teamLead => {
+            dataLeads.push(teamLead.name)
+            dataPTP.push(teamLead.PTP_AMOUNT_TOTAL)
+            dataSWITCHOFF.push(teamLead.SWITCH_OFF_TOTAL)
+            dataRNR.push(teamLead.RNR_AMOUNT_TOTAL)
+            dataPEA.push(teamLead.PAYMENT_EXPECTED_AT_TOTAL)
+            dataWFC.push(teamLead.WAITING_FOR_CONFIRMATION_TOTAL)
+          })
+          this.barChartLabels = dataLeads
+          this.barChartData[0].data = dataPTP;
+          this.barChartData[1].data = dataSWITCHOFF;
+          this.barChartData[2].data = dataRNR;
+          this.barChartData[3].data = dataPEA;
+          this.barChartData[4].data = dataWFC;
+        }
+      });
+  }
+
+
   getAllReports(fromDate, toDate, batch){
     this.appService.getReports(fromDate, toDate, batch)
     .subscribe(

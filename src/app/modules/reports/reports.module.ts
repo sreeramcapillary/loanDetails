@@ -6,6 +6,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [ReportsComponent],
@@ -16,7 +17,8 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ]
 })
 export class ReportsModule { }

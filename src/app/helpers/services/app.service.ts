@@ -356,4 +356,26 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
+
+    getCountAndSumReport(fromDate, toDate, batch){
+      var body = {
+        'fromDate' : fromDate,
+        'toDate' : toDate,
+        'batch' : batch
+      }
+      return this.http.post(BaseURL.url+'getCountAndSumReport', body, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
+
+    getCountAndSumTeamLeadReport(fromDate, toDate, batch){
+      var body = {
+        'fromDate' : fromDate,
+        'toDate' : toDate,
+        'batch' : batch
+      }
+      return this.http.post(BaseURL.url+'getCountAndSumTeamLeadReport', body, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
 }

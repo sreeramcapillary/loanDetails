@@ -12,8 +12,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ExcelService } from './helpers/services/excel.service';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

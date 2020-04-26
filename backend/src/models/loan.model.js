@@ -353,7 +353,7 @@ router.post('/getLoanListByEmpByDate', function (request, response) {
 
 					JOIN userdetails u on u.id = ld.assigned_emp_id 
 
-					LEFT JOIN (SELECT comments as loan_comments, loanId, statusId, COUNT(id) as callsDone FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6 OR statusId = 1) GROUP BY loanId) AS lsh ON ld.loanid = lsh.loanId 
+					LEFT JOIN (SELECT comments as loan_comments, loanId, statusId, COUNT(id) as callsDone FROM loans_status_history WHERE (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6 OR statusId = 1) GROUP BY loanId) AS lsh ON ld.loanid = lsh.loanId 
 
 					LEFT JOIN Loan_status LS ON lsh.statusId = LS.id 
 

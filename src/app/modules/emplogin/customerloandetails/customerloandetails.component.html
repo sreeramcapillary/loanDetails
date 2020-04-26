@@ -203,7 +203,7 @@
                 </div>
                 <div class="row">
                   <div class="col-sm-12">
-                    Status : <span [ngClass]="{'payment-done-style': row.statusId == '5', 'PTP-style' : row.statusId == '1', 'RNR-style' : row.statusId == '2', 'switch-off-style' : row.statusId == '3', 'payment-expected-style' : row.statusId == '4', 'payment-completed-style' : row.statusId == '6'}"> {{row.status}} </span>    <button class="btn btn-primary"  (click)="editStatus(row)" style="margin-left: 10px;" *ngIf="row.statusId != 6"> <span><i class="fa fa-pencil"></i></span></button>
+                    <span class="info-badge">Calls Done : {{row.callsDone?row.callsDone:0}}</span> &nbsp; Status : <span [ngClass]="{'payment-done-style': row.statusId == '5', 'PTP-style' : row.statusId == '1', 'RNR-style' : row.statusId == '2', 'switch-off-style' : row.statusId == '3', 'payment-expected-style' : row.statusId == '4', 'payment-completed-style' : row.statusId == '6'}"> {{row.status}} </span>    <button class="btn btn-primary"  (click)="editStatus(row)" style="margin-left: 10px;" *ngIf="row.statusId != 6"> <span><i class="fa fa-pencil"></i></span></button>
                   </div>
                 </div>
               </div>

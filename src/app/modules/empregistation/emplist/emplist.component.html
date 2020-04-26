@@ -93,11 +93,11 @@
                   {{row.bucket}}
                 </ng-template>
               </ngx-datatable-column>
-            <ngx-datatable-column name="Login Count" *ngIf="userType == 1">
+            <!-- <ngx-datatable-column name="Login Count" *ngIf="userType == 1">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{row.loginCount}}
               </ng-template>
-            </ngx-datatable-column>
+            </ngx-datatable-column> -->
               <ngx-datatable-column name="Action" *ngIf="userType == 1">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <span><i class="fa fa-pencil" (click)="editEmp(row)"></i></span>

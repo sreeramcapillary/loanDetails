@@ -281,7 +281,7 @@ router.get("/getAllActiveEmpList", async(request, response) => {
 	let queryString = ""
 	if(role[0].usertype == 1){
 		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
-		queryString = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name, (SELECT COUNT(id) FROM loginLogs WHERE empId = u.id AND type = 1 AND date = '"+today+"') AS loginCount FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= '1' GROUP BY u.id"
+		queryString = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= '1' GROUP BY u.id"
 	}
 	if(role[0].usertype == 2){
 		queryString = `SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= "1" AND u.parentId = ${role[0].id} GROUP BY u.id`
@@ -1548,7 +1548,7 @@ router.post('/registerTeamLead', function (request, response) {
 
 router.get('/getAllActiveLeadsList', function (request, response) {
 	let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
-	let query = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket, (SELECT COUNT(id) FROM loginLogs WHERE empId = u.id AND type = 1 AND date = '"+today+"') AS loginCount FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 2 AND u.active= '1' GROUP BY u.id"
+	let query = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 2 AND u.active= '1' GROUP BY u.id"
 	connection.query(query, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;

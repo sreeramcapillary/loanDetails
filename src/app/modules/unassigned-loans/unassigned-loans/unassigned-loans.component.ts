@@ -201,7 +201,7 @@ export class UnassignedLoansComponent implements OnInit {
     const stateval = state.toLowerCase();
     let filteredDataTemp = []
     filteredDataTemp = this.filteredRows.filter(function(d) {
-      return (d.bucket.toString().toLowerCase().indexOf(val) !== -1 && d.state.toString().toLowerCase().indexOf(stateval) !== -1) || !val;
+      return (d.bucket.toString().toLowerCase() == val && d.bucket.toString().toLowerCase().indexOf(val) !== -1 && d.state.toString().toLowerCase().indexOf(stateval) !== -1) || !val;
     });
     this.rows = filteredDataTemp;
   }

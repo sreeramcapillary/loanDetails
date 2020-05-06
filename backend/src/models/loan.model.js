@@ -357,7 +357,7 @@ router.post('/getLoanListByEmpByDate', function (request, response) {
 
 					LEFT JOIN Loan_status LS ON lsh.statusId = LS.id 
 
-					where u.id = ${empId} AND ld.batch_status = 1 AND ld.is_assigned = 1 GROUP BY ld.id`, function (error, results, fields) {
+					where u.id = ${empId} AND ld.batch_status = 1 AND ld.is_assigned = 1 GROUP BY ld.id ORDER BY lsh.statusId ASC`, function (error, results, fields) {
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "assignedLoanToEmp": results }
 			response.json(responseData)

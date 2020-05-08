@@ -484,7 +484,7 @@ router.post('/updateLoan', function (request, response) {
 	if (request.body.loan_id && request.body.current_Status) {
 		// let currentDateTime = moment().tz("Asia/Kolkata").format('YYYY-MM-DD hh:mm:ss')
 
-		connection.query(`update loans_status_history set active = 0 where loanId = '${request.body.loan_id}'`, function (error, results, fields) {});
+		connection.query(`update loans_status_history set active = 0 where loanId = '${request.body.loan_id}' AND active = 1`, function (error, results, fields) {});
 
 		callApi('http://148.72.212.163/datetime.php', function (dateTimeError, dateTimeResponse, dateTimeBody) {
 			dateTimeBody = JSON.parse(dateTimeBody);
@@ -494,7 +494,7 @@ router.post('/updateLoan', function (request, response) {
 
 			connection.query(`INSERT INTO loans_status_history (loanId, statusId, callType, comments, dateTime) VALUES ('${request.body.loan_id}', '${request.body.current_Status}', '${request.body.callType}', '${request.body.comment}', '${currentDateTime}')`, function (error, results, fields) {
 				if (results) {
-					if(request.body.callType == "Customer" && request.body.current_Status == "3"){
+					if(request.body.callType == "Customer" && request.body.current_Status != "1"){
 						// let query = `UPDATE loan_details JOIN (SELECT statusId FROM loans_status_history WHERE loanId = "${request.body.loan_id}" AND callType = "Customer" ORDER BY id DESC LIMIT 1,1) AS lsh SET is_assigned = 2 WHERE lsh.statusId = 3 AND loanid = "${request.body.loan_id}"`
 						let query = `UPDATE loan_details SET is_assigned = 2 WHERE loanid = "${request.body.loan_id}"`
 						connection.query(query, function (error, results, fields) {
@@ -605,10 +605,10 @@ router.get('/getFilteredLoanDetailsList', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id WHERE batch_status = 1 AND is_assigned = 2'
+		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name, UDL.name as teamLead, ls.status_type as status FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id JOIN userdetails UDL ON UD.parentId = UDL.id JOIN loans_status_history lsh ON (lsh.loanId = ld.loanid AND lsh.active = 1) JOIN Loan_status ls ON ls.id = lsh.statusId WHERE batch_status = 1 AND is_assigned = 2'
 	}
 	if(role[0].usertype == 2){
-		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id WHERE batch_status = 1 AND is_assigned = 2 AND ld.bucket = '${role[0].bucket}'`
+		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name, ls.status_type as status FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id JOIN loans_status_history lsh ON (lsh.loanId = ld.loanid AND lsh.active = 1) JOIN Loan_status ls ON ls.id = lsh.statusId WHERE batch_status = 1 AND is_assigned = 2 AND ld.bucket = '${role[0].bucket}'`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {

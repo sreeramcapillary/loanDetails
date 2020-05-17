@@ -102,6 +102,7 @@
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <span><i class="fa fa-pencil" (click)="editEmp(row)"></i></span>
                  <span style="padding-left: 10px;" *ngIf="row.status == '1'"><button class="btn btn-danger"  (click)="deactivateEmp(row)"><i class="fa fa-times"></i></button></span>
+                 <span style="padding-left: 10px;" *ngIf="row.status == '1'"><button class="btn btn-danger"  (click)="deactivateEmpWRL(row)"><i class="fa fa-times"></i> WRL</button></span>
                  <span style="padding-left: 10px;" *ngIf="row.status == '0'"><i class="btn btn-primary" (click)="activateEmp(row)"><i class="fa fa-check"></i></i></span>
                  <span style="padding-left: 10px;" *ngIf="row.status == '1'"><i class="btn btn-primary" (click)="downloadEmployeeData(row)"><i class="fa fa-file-excel-o"></i></i></span>
                  <!-- <span style="padding-left: 10px;" *ngIf="row.status == '1'"><button class="btn btn-danger"  (click)="unassignLoans(row)">UnAssign</button></span> -->

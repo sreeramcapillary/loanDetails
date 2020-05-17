@@ -43,7 +43,7 @@ export class EmplistComponent implements OnInit {
 
   }
   getAllEmp(){
-    this.appService.getActiveEmp()
+    this.appService.getEmp()
     .subscribe(
       (data: any) => {
         if (data.status) {
@@ -106,6 +106,26 @@ export class EmplistComponent implements OnInit {
     }
    
   }
+
+  deactivateEmpWRL(row){
+    var confirmation = confirm("Are you sure? You want to deactivate the employee! (Data Will Remain As it is).")
+    console.log(confirmation)
+    if(confirmation){
+      this.appService.deActivateEmployeeWithoutRemovingLoans(row.id)
+      .subscribe(
+      (data:any) => {
+      // console.log(data.status);
+        if(data.status == true){
+          alert(data.message)
+          this.getAllEmp();
+        }else{
+            alert(data.message)
+          
+        }
+      });
+    }
+  }
+
   activateEmp(row){
     var confirmation = confirm("Are you sure? You want to activate the employee!")
     console.log(confirmation)

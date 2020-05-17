@@ -279,7 +279,7 @@ const getRoleByCreds = (creds) => {
     })
 }
 
-router.get('/getAllEmpList', function (request, response) {
+router.get('/getAllEmpList', async(request, response) => {
 	let base64Credentials =  request.headers.authorization.split(' ')[1];
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)

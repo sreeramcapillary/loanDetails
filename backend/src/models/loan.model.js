@@ -230,6 +230,27 @@ router.post('/deActivateEmployee', function (request, response) {
 		response.end();
 	}
 })
+
+
+router.post('/deActivateEmployeeWithoutUnassigning', function (request, response) {
+	var empid = request.body.empid;
+	if(empid){
+		connection.query(`update userdetails set active ='0' where id = '${empid}'`, function (error, results, fields) {
+			if (results) {
+				let responseData = { "status": true, "code": 200, "message": "Employee Deactivate successfully" }
+				response.json(responseData)
+			} else {
+				let responseData = { "status": false, "code": 401, "message": "Failed to Deactivate Employee", "err" :  error}
+				response.json(responseData)
+			}
+		});
+	}else {
+		let responseData = { "status": false, "code": 401, "message": "Please check details" }
+		response.json(responseData)
+		response.end();
+	}
+})
+
 router.post('/activateEmployee', function (request, response) {
 	var empid = request.body.empid;
 	if(empid){
@@ -248,10 +269,29 @@ router.post('/activateEmployee', function (request, response) {
 		response.end();
 	}
 })
-//SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,lt.state_name,u.bucket_id,bl.bucket,lt.name as language_name FROM userdetails u JOIN user_known_languages ukl ON ukl.userId = u.id JOIN language_table lt ON lt.id = ukl.languageId JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0 AND u.active = 1
+
+const getRoleByCreds = (creds) => {
+	let credentials = creds.split(':');
+    return new Promise((resolve) => {
+        connection.query(`SELECT ud.usertype, ud.id, bl.bucket FROM userdetails ud LEFT JOIN bucket_list bl ON ud.bucket_id = bl.id WHERE username = '${credentials[0]}' AND password = md5('${credentials[1]}')`, (err, rows, fields) => {
+			resolve(rows)  
+        })
+    })
+}
 
 router.get('/getAllEmpList', function (request, response) {
-	connection.query('SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,(NULL) as language_name FROM userdetails u JOIN bucket_list bl ON bl.id = u.bucket_id WHERE u.usertype = 0', function (error, results, fields) {
+	let base64Credentials =  request.headers.authorization.split(' ')[1];
+	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+	let role = await getRoleByCreds(Credentials)
+	let queryString = ""
+	if(role[0].usertype == 1){
+		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
+		queryString = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.id > 0 GROUP BY u.id"
+	}
+	if(role[0].usertype == 2){
+		queryString = `SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.id > 0 AND u.parentId = ${role[0].id} GROUP BY u.id`
+	}
+	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;
@@ -263,16 +303,7 @@ router.get('/getAllEmpList', function (request, response) {
 		}
 		response.end();
 	});
-
 });
-const getRoleByCreds = (creds) => {
-	let credentials = creds.split(':');
-    return new Promise((resolve) => {
-        connection.query(`SELECT ud.usertype, ud.id, bl.bucket FROM userdetails ud LEFT JOIN bucket_list bl ON ud.bucket_id = bl.id WHERE username = '${credentials[0]}' AND password = md5('${credentials[1]}')`, (err, rows, fields) => {
-			resolve(rows)  
-        })
-    })
-}
 
 router.get("/getAllActiveEmpList", async(request, response) => {
 	let base64Credentials =  request.headers.authorization.split(' ')[1];

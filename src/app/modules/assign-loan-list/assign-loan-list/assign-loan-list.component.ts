@@ -15,6 +15,7 @@ export class AssignLoanListComponent implements OnInit {
   selectForm: FormGroup;
   theCheckbox:any= [];
   loan_id: any=[];
+  filteredLoanIds: any = []
   selectedEmployee: any;
   assignedLoan: any =[];
   assignedLoanData: any;
@@ -23,6 +24,7 @@ export class AssignLoanListComponent implements OnInit {
   selectedLoanId: any;
   filteredRows= [];
   statusValuesList: any;
+  loanStatusList:any;
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -38,6 +40,8 @@ export class AssignLoanListComponent implements OnInit {
 
     this.getAllEmp();
 
+    this.getLoanStatus();
+
     this.getAllLoanDetails();
     //this.getAssinedLoanDetails();
     this.selectForm = this.formBuilder.group({
@@ -45,6 +49,7 @@ export class AssignLoanListComponent implements OnInit {
       employeeToFilter: ['ALL'],
       employeeFilterValue: [''],
       noOfLoansSelected : ['0'],
+      statusToFilter : ['']
     });
   }
   clickSide(val){
@@ -77,6 +82,17 @@ export class AssignLoanListComponent implements OnInit {
         }
       });
   }
+
+  getLoanStatus(){
+    this.appService.loanStatus()
+    .subscribe(
+      (data: any) => {
+        if (data.status) {
+          this.loanStatusList=data.loanStatus;
+        }
+      });
+  }
+
   togglemenu(){
     $("#wrapper").toggleClass("toggled");
 
@@ -97,7 +113,7 @@ export class AssignLoanListComponent implements OnInit {
           
           this.rows = data.loanDetails;
           this.filteredRows = data.loanDetails;
-	        this.getAssinedLoanDetails();
+	        // this.getAssinedLoanDetails();
         //  console.log(this.rows)
         }
       });
@@ -249,6 +265,30 @@ export class AssignLoanListComponent implements OnInit {
           this.rows[index].theCheckbox = false
         })
       }
+      // console.log(this.loan_id)
+    }
+
+    filterLoansByStatus(){
+      if(this.f.statusToFilter.value != ""){
+        const statusFilterValue = this.f.statusToFilter.value.toLowerCase()
+        let filteredDataTemp = []
+        filteredDataTemp = this.filteredRows.filter(function(d) {
+          if(d.status != null){
+            return d.status.toString().toLowerCase() == statusFilterValue || !statusFilterValue;
+          }
+        });
+        this.rows = filteredDataTemp;
+      }
+      this.checkLoansByStatus()
+    }
+
+    checkLoansByStatus(){
+      this.loan_id = []
+      this.theCheckbox = [];
+      this.rows.map((row, index) => {
+          this.rows[index].theCheckbox = true
+          this.loan_id.push(row.loan_id)
+      })
       // console.log(this.loan_id)
     }
 }

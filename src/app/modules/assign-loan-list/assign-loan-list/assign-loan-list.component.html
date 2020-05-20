@@ -104,6 +104,18 @@
                 </select>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <label for="employeeToFilter">Select Status For Filter</label>
+                <select class="custom-select d-block w-100" id="employeeToFilter" formControlName="statusToFilter">
+                  <option value="{{status.status_type}}" *ngFor="let status of loanStatusList" >{{status.status_type}}</option>
+                </select>
+              </div>
+              <div class="col-md-2 mb-3">
+                <button class="btn btn-primary" style="float: left; margin-right: 20px;margin-top: 30px;" type="submit" (click)="filterLoansByStatus()">Select</button>
+              </div>
+            </div>
          <!-- <div class="col-md-12 mb-3">
           <label for="language">Select Employee</label>
           <select class="custom-select d-block w-100" id="emplist" formControlName="employee" (change)="selectedEmp()">
@@ -175,29 +187,30 @@
               </ngx-datatable-column> -->
               <ngx-datatable-column name="Loan Id">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                    <span title="Customer Name : {{row.customer_Name}} &#013; Customer Id : {{row.Customer_id}}" class="tooltipContainer">{{row.loan_id}}</span>
+                    <!-- <span title="Customer Name : {{row.customer_Name}} &#013; Customer Id : {{row.Customer_id}}" class="tooltipContainer">{{row.loan_id}}</span> -->
+                    {{row.loan_id}}
                   </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column name="Customer Number">
+                <!-- <ngx-datatable-column name="Customer Number">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     <span title="{{row.ref_name1}} ({{row.ref_type1}}) : {{row.ref_mobile_num1}} &#013; {{row.ref_name2}} ({{row.ref_type2}}) : {{row.ref_mobile_num2}}" class="tooltipContainer">{{row.mobile}}</span>
                   </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Due Date">
+                </ngx-datatable-column> -->
+                <!-- <ngx-datatable-column name="Due Date">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                       {{row.due_date}} <b>({{row.overdue_days}})</b>
                     </ng-template>
-                  </ngx-datatable-column>
-                <ngx-datatable-column name="State">
+                  </ngx-datatable-column> -->
+                <!-- <ngx-datatable-column name="State">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.state}}
                   </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Principal Amount">
+                </ngx-datatable-column> -->
+                <!-- <ngx-datatable-column name="Principal Amount">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.principal_amt}} <b>({{row.repayment_amt}})</b>
                   </ng-template>
-                </ngx-datatable-column>
+                </ngx-datatable-column> -->
                 <ngx-datatable-column name="Bucket">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.bucket}}
@@ -205,9 +218,14 @@
                 </ngx-datatable-column>
                 <ngx-datatable-column name="Assigned To">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{row.assignedToName}}
+                      {{row.name}}
                     </ng-template>
                   </ngx-datatable-column>
+                <ngx-datatable-column name="Status">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.status}}
+                  </ng-template>
+                </ngx-datatable-column>
           </ngx-datatable>
           <div class="col-md-12 order-md-1" style="    padding-bottom: 20px;">
               <div class="row">

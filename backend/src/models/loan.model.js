@@ -569,11 +569,11 @@ router.get('/getAssignedLoanDetailsList', async(request, response) => {
 	let queryString = ""
 	if(role[0].usertype == 1){
 		// queryString = 'SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id, ld.Customer_id, ld.mobile, ld.ref_type1, ld.ref_name1, ld.ref_mobile_num1, ld.ref_type2, ld.ref_name2, ld.ref_mobile_num2, ld.repayment_amt, ld.customer_Name FROM loan_details ld WHERE batch_status = 1 AND is_assigned != 0'
-		queryString = 'SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id FROM loan_details ld WHERE batch_status = 1 AND is_assigned != 0'
+		queryString = 'SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id, ud.name FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned != 0'
 	}
 	if(role[0].usertype == 2){
 		// queryString = `SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id, ld.Customer_id, ld.mobile, ld.ref_type1, ld.ref_name1, ld.ref_mobile_num1, ld.ref_type2, ld.ref_name2, ld.ref_mobile_num2, ld.repayment_amt, ld.customer_Name FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned != 0 AND ud.parentId = ${role[0].id}`
-		queryString = `SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned != 0 AND ud.parentId = ${role[0].id}`
+		queryString = `SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id, ud.name FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned != 0 AND ud.parentId = ${role[0].id}`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {

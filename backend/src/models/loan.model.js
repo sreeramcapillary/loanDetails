@@ -379,17 +379,19 @@ router.post('/getLoanListByEmp', function (request, response) {
 router.post('/getLoanListByEmpByDate', function (request, response) {
 	var empId = request.body.empId
 	let today = request.body.date
-	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId 
+	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId, COUNT(LSHC.id) as noOfComments 
 
-					FROM loan_details ld 
+	FROM loan_details ld 
 
-					JOIN userdetails u on u.id = ld.assigned_emp_id 
+	JOIN userdetails u on u.id = ld.assigned_emp_id 
 
-					LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6 OR statusId = 1) GROUP BY loanId ORDER BY statusId DESC) AS lsh ON ld.loanid = lsh.loanId 
+	LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6 OR statusId = 1) GROUP BY loanId ORDER BY statusId DESC) AS lsh ON ld.loanid = lsh.loanId 
 
-					LEFT JOIN Loan_status LS ON lsh.statusId = LS.id 
+	LEFT JOIN loans_status_history LSHC ON ld.loanid = LSHC.loanId 
 
-					where u.id = ${empId} AND ld.batch_status = 1 AND ld.is_assigned = 1 GROUP BY ld.id ORDER BY lsh.statusId ASC`, function (error, results, fields) {
+	LEFT JOIN Loan_status LS ON lsh.statusId = LS.id 
+
+	where u.id = ${empId} AND ld.batch_status = 1 AND ld.is_assigned = 1 GROUP BY ld.id ORDER BY lsh.statusId ASC, noOfComments ASC`, function (error, results, fields) {
 		if (results.length > 0) {
 			let responseData = { "status": true, "code": 200, "assignedLoanToEmp": results }
 			response.json(responseData)

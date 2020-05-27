@@ -58,6 +58,7 @@ export class UnassignedLoansComponent implements OnInit {
       selectedBucket: [bucket], 
       noOfLoansSelected: [''],
       stateSelected: [''],
+      loanIdFilterValue : [''],
     });
 
     this.dropdownSettings = {
@@ -71,27 +72,6 @@ export class UnassignedLoansComponent implements OnInit {
     };
     this.getBucketList();
     this.getStateList();
-
-    // this.bucketList = [
-    //   { "id": "B1", 
-    //     "value":  "B1", 
-    //   },
-    //   { "id": "B2", 
-    //   "value":  "B2", 
-    //   },
-    //   { "id": "B3", 
-    //   "value":  "B3", 
-    //   },
-    //   { "id": "B4", 
-    //   "value":  "B4", 
-    //   },
-    //   { "id": "B5", 
-    //   "value":  "B5", 
-    //   },
-    //   { "id": "B5", 
-    //   "value":  "B6", 
-    //   }
-    // ]
 
   }
   clickSide(val){
@@ -288,5 +268,14 @@ export class UnassignedLoansComponent implements OnInit {
             this.excelService.exportAsExcelFile(this.detailedData, 'UnAssignedDetailedReports');
           }
         });
+    }
+
+    filterLoansById(){
+      const loanIdFilterValuee = this.f.loanIdFilterValue.value.toLowerCase()
+      let filteredDataTemp = []
+      filteredDataTemp = this.filteredRows.filter(function(d) {
+        return d.loan_id.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || !loanIdFilterValuee;
+      });
+      this.rows = filteredDataTemp;
     }
 }

@@ -49,7 +49,8 @@ export class AssignLoanListComponent implements OnInit {
       employeeToFilter: ['ALL'],
       employeeFilterValue: [''],
       noOfLoansSelected : ['0'],
-      statusToFilter : ['']
+      statusToFilter : [''],
+      loanIdFilterValue : [''],
     });
   }
   clickSide(val){
@@ -290,5 +291,14 @@ export class AssignLoanListComponent implements OnInit {
           this.loan_id.push(row.loan_id)
       })
       // console.log(this.loan_id)
+    }
+
+    filterLoansById(){
+      const loanIdFilterValuee = this.f.loanIdFilterValue.value.toLowerCase()
+      let filteredDataTemp = []
+      filteredDataTemp = this.filteredRows.filter(function(d) {
+        return d.loan_id.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || !loanIdFilterValuee;
+      });
+      this.rows = filteredDataTemp;
     }
 }

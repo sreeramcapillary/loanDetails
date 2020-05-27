@@ -161,6 +161,7 @@
               </ngx-datatable-column>
               <ngx-datatable-column name="Status">
                 <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="priorityLoan" *ngIf="row.noOfComments == 0"></div>
                   <div [ngClass]="{'payment-done-style': row.statusId == '5', 'PTP-style' : row.statusId == '1', 'RNR-style' : row.statusId == '2', 'switch-off-style' : row.statusId == '3', 'payment-expected-style' : row.statusId == '4', 'payment-completed-style' : row.statusId == '6'}"> {{row.status}} </div>
                 </ng-template>
               </ngx-datatable-column>

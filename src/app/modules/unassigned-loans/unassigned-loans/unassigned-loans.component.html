@@ -66,10 +66,10 @@
                   </select>
               </div>
               <div class="col-md-2">
-                <label for="language">Select State</label>
-                <select class="custom-select d-block" id="statelist" formControlName="stateSelected">
+                <label for="language">Select City</label>
+                <select class="custom-select d-block" id="statelist" formControlName="citySelected">
                   <option value="">Choose...</option>
-                  <option value="{{state.state_name}}" *ngFor="let state of stateList" >{{state.state_name}}</option>
+                  <option value="{{city}}" *ngFor="let city of cityList" >{{city}}</option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -102,7 +102,7 @@
                   <button class="btn btn-primary" style="float: left; margin-top: 32px;" type="submit" (click)="checkLoans()">Select</button>
               </div>
               <div class="col-md-4 mb-4">
-                <input type="text" style="padding:8px;margin:30px auto;width:100%;" placeholder="Enter LoanId to Filter" formControlName="loanIdFilterValue" (keyup)="filterLoansById()" />
+                <input type="text" style="padding:8px;margin:30px auto;width:100%;" placeholder="Enter LoanId / Mobile Number to Filter" formControlName="loanIdFilterValue" (keyup)="filterLoansById()" />
               </div>
           </div>
       </form>
@@ -122,14 +122,24 @@
                 {{row.loan_id}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="State">
+            <ngx-datatable-column name="Mobile Number">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.state}}
+                {{row.mobile}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="City">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.city}}
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Principal Amount">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{row.principal_amt}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Overdue Days">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.overdue_days}}
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Bucket">

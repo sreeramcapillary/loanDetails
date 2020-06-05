@@ -30,6 +30,7 @@ export class UnassignedLoansComponent implements OnInit {
   bucketList: any = [];
   stateList: any = [];
   detailedData: any = [];
+  cityList:any = [];
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -57,7 +58,7 @@ export class UnassignedLoansComponent implements OnInit {
       employee: ['', Validators.required], 
       selectedBucket: [bucket], 
       noOfLoansSelected: [''],
-      stateSelected: [''],
+      citySelected: [''],
       loanIdFilterValue : [''],
     });
 
@@ -142,11 +143,14 @@ export class UnassignedLoansComponent implements OnInit {
           this.theCheckbox = [];
           this.assignedLoan = [];
           data.loanDetails.map((loan,index) => {
+            if(!this.cityList.includes(loan.city)){
+              this.cityList.push(loan.city)
+            }
             //this.theCheckbox.push(false)
             data.loanDetails[index].theCheckbox = false;
             data.loanDetails[index].assignedLoan = false;
           })
-          
+          this.cityList = this.cityList.sort()
           this.rows = data.loanDetails;
           this.filteredRows = data.loanDetails;
 	      // this.getAssinedLoanDetails();
@@ -156,7 +160,7 @@ export class UnassignedLoansComponent implements OnInit {
   }
 
   checkLoans(){
-    this.customFilteringForBucketAndState(this.f.selectedBucket.value, this.f.stateSelected.value)
+    this.customFilteringForBucketAndState(this.f.selectedBucket.value, this.f.citySelected.value)
     this.loan_id = []
     this.theCheckbox = [];
     if(this.f.noOfLoansSelected.value>0){
@@ -181,7 +185,7 @@ export class UnassignedLoansComponent implements OnInit {
     const stateval = state.toLowerCase();
     let filteredDataTemp = []
     filteredDataTemp = this.filteredRows.filter(function(d) {
-      return (d.bucket.toString().toLowerCase() == val && d.bucket.toString().toLowerCase().indexOf(val) !== -1 && d.state.toString().toLowerCase().indexOf(stateval) !== -1) || !val;
+      return (d.bucket.toString().toLowerCase() == val && d.bucket.toString().toLowerCase().indexOf(val) !== -1 && d.city.toString().toLowerCase().indexOf(stateval) !== -1) || !val;
     });
     this.rows = filteredDataTemp;
   }
@@ -274,7 +278,7 @@ export class UnassignedLoansComponent implements OnInit {
       const loanIdFilterValuee = this.f.loanIdFilterValue.value.toLowerCase()
       let filteredDataTemp = []
       filteredDataTemp = this.filteredRows.filter(function(d) {
-        return d.loan_id.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || !loanIdFilterValuee;
+        return d.loan_id.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || d.mobile.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || !loanIdFilterValuee;
       });
       this.rows = filteredDataTemp;
     }

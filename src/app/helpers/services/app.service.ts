@@ -119,6 +119,11 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
+    filterLoan(data){
+      return this.http.post(BaseURL.url+'filterLoanList',data, {
+        headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
+      });
+    }
     unassignLoan(data){
       return this.http.post(BaseURL.url+'unassignLoanList',data, {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")

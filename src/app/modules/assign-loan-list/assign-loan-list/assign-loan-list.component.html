@@ -233,12 +233,15 @@
           </ngx-datatable>
           <div class="col-md-12 order-md-1" style="    padding-bottom: 20px;">
               <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                       <button class="btn btn-danger btn-lg btn-block" type="submit" [disabled]="" (click)="unassignLoanDetails()">Un - Assign</button>
                   </div>
-                  <div class="col-md-6" *ngIf="userType == 1">
+                  <div class="col-md-4" *ngIf="userType == 1">
                       <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="" (click)="assignLoanDetails()">Assign</button>
                   </div>
+                  <div class="col-md-4" *ngIf="userType == 1">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="" (click)="filterLoanDetails()">Filter</button>
+                </div>
               </div>
           </div>
         </div>

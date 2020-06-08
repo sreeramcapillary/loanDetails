@@ -193,6 +193,25 @@ export class AssignLoanListComponent implements OnInit {
       });
     }
 
+    filterLoanDetails(){
+      if(this.selectedEmployee )
+      var data ={
+        'empId': this.selectedEmployee,
+        'loanId': this.loan_id
+      }
+      this.appService.filterLoan(data)
+      .subscribe(
+        (data: any) => {
+         // console.log(data)
+          if(data.status){
+            alert(data.message)
+            // this.loan_id=[];
+            // this.getAllLoanDetails();
+            // this.getAssinedLoanDetails();
+          }
+        });
+      }
+
     unassignLoanDetails(){
       var data ={
         'loanId': this.loan_id

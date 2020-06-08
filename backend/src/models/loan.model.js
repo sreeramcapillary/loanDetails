@@ -438,8 +438,25 @@ router.post('/assignLoanList', function (request, response) {
 		}
 		response.end();
 	});
+});
 
-
+router.post('/filterLoanList', function (request, response) {
+	var empid = request.body.empId;
+	var loanid = request.body.loanId;
+   var queries='';
+   loanid.map(lId => {
+		   queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id = '${lId}';`);
+   });
+   connection.query(queries, (err, results, fields) => {
+	   if (results) {
+		   let responseData = { "status": true, "code": 200, "message": "Loans filtered successfully" }
+		   response.json(responseData)
+	   } else {
+		   let responseData = { "status": false, "code": 401, "message": "" }
+		   response.json(responseData)
+	   }
+	   response.end();
+   });
 });
 
 router.post('/unassignLoanList', function (request, response) {

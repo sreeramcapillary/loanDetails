@@ -194,9 +194,7 @@ export class AssignLoanListComponent implements OnInit {
     }
 
     filterLoanDetails(){
-      if(this.selectedEmployee )
       var data ={
-        'empId': this.selectedEmployee,
         'loanId': this.loan_id
       }
       this.appService.filterLoan(data)

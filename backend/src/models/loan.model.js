@@ -441,7 +441,6 @@ router.post('/assignLoanList', function (request, response) {
 });
 
 router.post('/filterLoanList', function (request, response) {
-	var empid = request.body.empId;
 	var loanid = request.body.loanId;
    var queries='';
    loanid.map(lId => {

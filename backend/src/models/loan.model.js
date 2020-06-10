@@ -611,10 +611,10 @@ router.get('/getUnAssignedLoanDetailsList', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = 'SELECT ld.id, ld.loan_id, ld.city, ld.principal_amt, ld.bucket, ld.mobile, ld.overdue_days FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0'
+		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, ld.mobile, ld.overdue_days FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0'
 	}
 	if(role[0].usertype == 2){
-		queryString = `SELECT ld.id, ld.loan_id, ld.city, ld.principal_amt, ld.bucket, ld.mobile, ld.overdue_days FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
+		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, ld.mobile, ld.overdue_days FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0 AND ld.bucket = '${role[0].bucket}'`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {

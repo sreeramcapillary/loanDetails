@@ -66,10 +66,10 @@
                   </select>
               </div>
               <div class="col-md-2">
-                <label for="language">Select City</label>
-                <select class="custom-select d-block" id="statelist" formControlName="citySelected">
+                <label for="language">Select State</label>
+                <select class="custom-select d-block" id="statelist" formControlName="stateSelected">
                   <option value="">Choose...</option>
-                  <option value="{{city}}" *ngFor="let city of cityList" >{{city}}</option>
+                  <option value="{{state.state_name}}" *ngFor="let state of stateList" >{{state.state_name}}</option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -127,9 +127,9 @@
                 {{row.mobile}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="City">
+            <ngx-datatable-column name="State">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.city}}
+                {{row.state}}
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Principal Amount">

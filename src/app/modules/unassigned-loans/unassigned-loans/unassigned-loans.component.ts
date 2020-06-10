@@ -58,7 +58,7 @@ export class UnassignedLoansComponent implements OnInit {
       employee: ['', Validators.required], 
       selectedBucket: [bucket], 
       noOfLoansSelected: [''],
-      citySelected: [''],
+      stateSelected: [''],
       loanIdFilterValue : [''],
     });
 
@@ -160,7 +160,7 @@ export class UnassignedLoansComponent implements OnInit {
   }
 
   checkLoans(){
-    this.customFilteringForBucketAndState(this.f.selectedBucket.value, this.f.citySelected.value)
+    this.customFilteringForBucketAndState(this.f.selectedBucket.value, this.f.stateSelected.value)
     this.loan_id = []
     this.theCheckbox = [];
     if(this.f.noOfLoansSelected.value>0){
@@ -185,7 +185,7 @@ export class UnassignedLoansComponent implements OnInit {
     const stateval = state.toLowerCase();
     let filteredDataTemp = []
     filteredDataTemp = this.filteredRows.filter(function(d) {
-      return (d.bucket.toString().toLowerCase() == val && d.bucket.toString().toLowerCase().indexOf(val) !== -1 && d.city.toString().toLowerCase().indexOf(stateval) !== -1) || !val;
+      return (d.bucket.toString().toLowerCase() == val && d.bucket.toString().toLowerCase().indexOf(val) !== -1 && d.state.toString().toLowerCase().indexOf(stateval) !== -1) || !val;
     });
     this.rows = filteredDataTemp;
   }

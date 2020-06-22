@@ -676,8 +676,10 @@ router.get('/getFilteredLoanDetailsList', async(request, response) => {
 });
 router.get('/inactiveCurrentBatch', function (request, response) {
 	connection.query('UPDATE loan_details SET `batch_status` = 0 WHERE `batch_status` = 1', function (error, results, fields) {
-		let responseData = { "status": true, "code": 200, "message": "Current Batch Inactivated." }
-		response.json(responseData)
+		connection.query('UPDATE loans_status_history SET `active` = 0 WHERE `active` = 1', function (error, results, fields) {
+			let responseData = { "status": true, "code": 200, "message": "Current Batch Inactivated." }
+			response.json(responseData)
+		});
 	});
 
 });

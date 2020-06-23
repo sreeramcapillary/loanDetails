@@ -96,11 +96,11 @@
               {{row.SWITCH_OFF_COUNT}}
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="PEA">
+          <!-- <ngx-datatable-column name="PEA">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.PAYMENT_EXPECTED_AT_COUNT}}
             </ng-template>
-          </ngx-datatable-column>
+          </ngx-datatable-column> -->
           <ngx-datatable-column name="WFC">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.WAITING_FOR_CONFIRMATION}} ({{row.WAITING_FOR_CONFIRMATION_COUNT}})
@@ -126,7 +126,7 @@
               let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset">
               <div style="padding: 5px 10px">
                 <div>
-                  <b> Rows: {{ rowCount }} | Assigned = {{consolidatedData.assigned}} ({{consolidatedData.assignedCount}}) | PTP = {{consolidatedData.ptp}} ({{consolidatedData.ptpCount}}) | RNR = {{consolidatedData.rnr}} ({{consolidatedData.rnrCount}}) | SA = {{consolidatedData.sa}} ({{consolidatedData.saCount}}) | PEA = {{consolidatedData.pea}} ({{consolidatedData.peaCount}}) | WFC = {{consolidatedData.wfc}} ({{consolidatedData.wfcCount}}) | RPY = {{consolidatedData.rpy}} ({{consolidatedData.rpyCount}}) </b>
+                  <b> Rows: {{ rowCount }} | Assigned = {{consolidatedData.assigned}} ({{consolidatedData.assignedCount}}) | PTP = {{consolidatedData.ptp}} ({{consolidatedData.ptpCount}}) | RNR = {{consolidatedData.rnr}} ({{consolidatedData.rnrCount}}) | SA = {{consolidatedData.sa}} ({{consolidatedData.saCount}}) | WFC = {{consolidatedData.wfc}} ({{consolidatedData.wfcCount}}) | RPY = {{consolidatedData.rpy}} ({{consolidatedData.rpyCount}}) </b>
                 </div>
               </div>
             </ng-template>

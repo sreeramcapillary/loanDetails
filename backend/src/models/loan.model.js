@@ -1017,7 +1017,7 @@ router.post('/updateOldLoanDetails', function (request, response) {
 		let rowCount = 0
 		let allBatchSuccess = true
 		ldata.map(item=>{
-			currentRow = `("${item.penalty_amt}", "${item.repayment_amt}", "${item.bucket}", "${item.overdue_days}", "${item.loanid}", "${item.disbursal_date}", "${item.due_date}"),`
+			currentRow = `("${item.penalty_amt}", "${item.repayment_amt}", "${item.bucket}", "${item.overdue_days}", "${item.loanid}", "${item.disbursal_date}", "${item.due_date}", "${item.interest_amount}"),`
 
 			currentRow = currentRow.replace(/\n|\r/g, "");
 			currentRow = currentRow.replace(/~+$/, '');

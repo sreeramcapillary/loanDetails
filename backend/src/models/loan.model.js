@@ -1010,8 +1010,8 @@ router.post('/updateOldLoanDetails', function (request, response) {
 		let inserData = [];
 		inserData[0] = ""
 		let queryTest
-		let startQuery = "INSERT INTO `loan_details` (`penalty_amt`, `repayment_amt`, `bucket`, `overdue_days`, `loanid`, `disbursal_date`, `due_date`) VALUES";
-		let duplicateColumn = "ON DUPLICATE KEY UPDATE `penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`),`disbursal_date`=VALUES(`disbursal_date`),`due_date`=VALUES(`due_date`)"
+		let startQuery = "INSERT INTO `loan_details` (`penalty_amt`, `repayment_amt`, `bucket`, `overdue_days`, `loanid`, `disbursal_date`, `due_date`, `interest_amount`) VALUES";
+		let duplicateColumn = "ON DUPLICATE KEY UPDATE `penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`),`disbursal_date`=VALUES(`disbursal_date`),`due_date`=VALUES(`due_date`),`interest_amount`=VALUES(`interest_amount`)"
 		let responseData;
 		let currentBatch = 0
 		let rowCount = 0

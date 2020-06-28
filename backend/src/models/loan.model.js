@@ -158,7 +158,13 @@ router.post('/updateEmployee', function (request, response) {
 	var bucket = request.body.assignedbucket;
 	var language = request.body.language
 	if (id) {
-		connection.query(`update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}' where id = '${id}'`, function (error, results, fields) {
+		let query = ''
+		if(password == ""){
+			query = `update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}' where id = '${id}'`
+		}else{
+			query = `update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}', password = '${password}' where id = '${id}'`
+		}
+		connection.query(query, function (error, results, fields) {
 			if (results) {
 				//Deleting emp old languages
 				connection.query(`DELETE FROM user_known_languages where userId = '${id}'`, function (error, results, fields) {
@@ -1649,7 +1655,13 @@ router.post('/updateLead', function (request, response) {
 	var employees = request.body.employees
 	employees = employees.join()
 	if (id) {
-		connection.query(`update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}' where id = '${id}'`, function (error, results, fields) {
+		let query = ''
+		if(password == ""){
+			query = `update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}' where id = '${id}'`
+		}else{
+			query = `update userdetails set name ='${name}',username ='${username}',email='${email}',mobile='${mobile}',bucket_id= '${bucket}', password = '${password}' where id = '${id}'`
+		}
+		connection.query(query, function (error, results, fields) {
 			if (results) {
 				//Deleting emp old languages
 				connection.query(`update userdetails set parentId = NULL WHERE parentId = ${id}`, function (error, results, fields) {

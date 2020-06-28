@@ -70,6 +70,16 @@
           </div>
 
           <div class="mb-3">
+            <label for="name">Password</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="password" placeholder="password" formControlName="password">
+            </div>
+            <!-- <div *ngIf="submitted && registerForm.get('name').errors" class="invalid-feedback-custom">
+              <div *ngIf="registerForm.get('name').errors.required">Name is required</div>
+            </div> -->
+          </div>
+
+          <div class="mb-3">
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" placeholder="you@example.com" formControlName="email">
             <div *ngIf="submitted && registerForm.get('email').errors" class="invalid-feedback-custom">

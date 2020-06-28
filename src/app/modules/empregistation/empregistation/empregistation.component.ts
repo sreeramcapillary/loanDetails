@@ -45,6 +45,7 @@ export class EmpregistationComponent implements OnInit {
     this.registerForm = this.fb.group({
       name: [null, Validators.required],
       username: [null, Validators.required],
+      password: [null],
       email:[null, [Validators.required,Validators.pattern(this.emailPattern)]],
       mobile:[null,[Validators.required]],
       assignedbucket:[null, Validators.required],
@@ -113,12 +114,19 @@ export class EmpregistationComponent implements OnInit {
           finalLanguages.push(lang)
         })
       })
+      let pwd
+      if(this.f.password.value != null){
+        console.log(this.f.password.value)
+        pwd = Md5.hashStr(this.f.password.value)
+      }else{
+        pwd = ''
+      }
       data = {
         "id":this.editEmpVal["id"],
         "name":this.f.name.value,
         "username":this.f.username.value,
         "email":this.f.email.value,
-        "password": this.autoPassword,
+        "password": pwd,
         "mobile":this.f.mobile.value,
         "language":finalLanguages,
         "assignedbucket":this.f.assignedbucket.value
@@ -147,7 +155,7 @@ export class EmpregistationComponent implements OnInit {
         });
     }else{
    
-    this.autoPassword = Md5.hashStr(this.f.username.value+'@123')
+    // this.autoPassword = Md5.hashStr(this.f.username.value+'@123')
 
     //Geting list of rows based on selected languages
     let finalLanguages = []
@@ -160,7 +168,7 @@ export class EmpregistationComponent implements OnInit {
       "name":this.f.name.value,
       "username":this.f.username.value,
       "email":this.f.email.value,
-      "password": this.autoPassword,
+      "password": Md5.hashStr(this.f.password.value),
       "mobile":this.f.mobile.value,
       "language":finalLanguages,
       "assignedbucket":this.f.assignedbucket.value

@@ -1108,7 +1108,24 @@ router.post('/updateRepaymentStatus', function (request, response) {
 		});
 	}
 
+	//moving un assigned completed loans to dummy user
+	unassignedPaidData()
 })
+
+function unassignedPaidData(){
+	connection.query(`UPDATE loan_details LD 
+	JOIN loans_status_history LSH ON LSH.loanId = LD.loanid 
+	SET LD.is_assigned = 1, LD.assigned_emp_id = 1263 
+	WHERE LD.is_assigned = 0 AND LSH.statusId = 6`, function (error, results, fields) {
+		console.log(error)
+		console.log(results)
+	});
+}
+
+router.get('/updateUnassignedPaidLoans', function (request, response) {
+	unassignedPaidData()
+});
+
 router.post('/updateLoanDetails', function (request, response) {
 	var ldata = request.body.loanupdateData;
 	if (ldata) {

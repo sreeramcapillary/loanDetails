@@ -49,6 +49,7 @@ export class FilteredLoansComponent implements OnInit {
       employee: ['', Validators.required], 
       selectedBucket: [''], 
       noOfLoansSelected: [''],
+      loanIdFilterValue: ['']
     });
 
     this.dropdownSettings = {
@@ -156,6 +157,15 @@ export class FilteredLoansComponent implements OnInit {
         //  console.log(this.rows)
         }
       });
+  }
+
+  filterLoansById(){
+    const loanIdFilterValuee = this.f.loanIdFilterValue.value.toLowerCase()
+    let filteredDataTemp = []
+    filteredDataTemp = this.filteredRows.filter(function(d) {
+      return d.loan_id.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || d.mobile.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || !loanIdFilterValuee;
+    });
+    this.rows = filteredDataTemp;
   }
 
   checkLoans(){

@@ -593,11 +593,11 @@ router.get('/getAssignedLoanDetailsList', async(request, response) => {
 	let queryString = ""
 	if(role[0].usertype == 1){
 		// queryString = 'SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id, ld.Customer_id, ld.mobile, ld.ref_type1, ld.ref_name1, ld.ref_mobile_num1, ld.ref_type2, ld.ref_name2, ld.ref_mobile_num2, ld.repayment_amt, ld.customer_Name FROM loan_details ld WHERE batch_status = 1 AND is_assigned != 0'
-		queryString = `SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id, ud.name, ls.status_type as status FROM loan_details ld LEFT JOIN userdetails ud ON ld.assigned_emp_id = ud.id LEFT JOIN loans_status_history lsh ON lsh.loanId = ld.loan_id AND lsh.active = 1 LEFT JOIN Loan_status ls ON ls.id = lsh.statusId WHERE ld.batch_status = 1 AND ld.assigned_emp_id != '' AND ld.is_assigned = 1`
+		queryString = `SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id, ud.name, ls.status_type as status, ld.mobile FROM loan_details ld LEFT JOIN userdetails ud ON ld.assigned_emp_id = ud.id LEFT JOIN loans_status_history lsh ON lsh.loanId = ld.loan_id AND lsh.active = 1 LEFT JOIN Loan_status ls ON ls.id = lsh.statusId WHERE ld.batch_status = 1 AND ld.assigned_emp_id != '' AND ld.is_assigned = 1`
 	}
 	if(role[0].usertype == 2){
 		// queryString = `SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id, ld.Customer_id, ld.mobile, ld.ref_type1, ld.ref_name1, ld.ref_mobile_num1, ld.ref_type2, ld.ref_name2, ld.ref_mobile_num2, ld.repayment_amt, ld.customer_Name FROM loan_details ld JOIN userdetails ud ON ld.assigned_emp_id = ud.id WHERE batch_status = 1 AND is_assigned != 0 AND ud.parentId = ${role[0].id}`
-		queryString = `SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id, ud.name, ls.status_type as status FROM loan_details ld LEFT JOIN userdetails ud ON ld.assigned_emp_id = ud.id LEFT JOIN loans_status_history lsh ON lsh.loanId = ld.loan_id AND lsh.active = 1 LEFT JOIN Loan_status ls ON ls.id = lsh.statusId WHERE ld.batch_status = 1 AND ld.assigned_emp_id != ''  AND ld.is_assigned = 1 AND ud.parentId = ${role[0].id}`
+		queryString = `SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id, ud.name, ls.status_type as status, ld.mobile FROM loan_details ld LEFT JOIN userdetails ud ON ld.assigned_emp_id = ud.id LEFT JOIN loans_status_history lsh ON lsh.loanId = ld.loan_id AND lsh.active = 1 LEFT JOIN Loan_status ls ON ls.id = lsh.statusId WHERE ld.batch_status = 1 AND ld.assigned_emp_id != ''  AND ld.is_assigned = 1 AND ud.parentId = ${role[0].id}`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {
@@ -663,10 +663,10 @@ router.get('/getFilteredLoanDetailsList', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
 	if(role[0].usertype == 1){
-		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name, UDL.name as teamLead, ls.status_type as status FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id JOIN userdetails UDL ON UD.parentId = UDL.id JOIN loans_status_history lsh ON (lsh.loanId = ld.loanid AND lsh.active = 1) JOIN Loan_status ls ON ls.id = lsh.statusId WHERE batch_status = 1 AND is_assigned = 2'
+		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, ld.mobile, UD.name, UDL.name as teamLead, ls.status_type as status FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id JOIN userdetails UDL ON UD.parentId = UDL.id JOIN loans_status_history lsh ON (lsh.loanId = ld.loanid AND lsh.active = 1) JOIN Loan_status ls ON ls.id = lsh.statusId WHERE batch_status = 1 AND is_assigned = 2'
 	}
 	if(role[0].usertype == 2){
-		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, UD.name, ls.status_type as status FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id JOIN loans_status_history lsh ON (lsh.loanId = ld.loanid AND lsh.active = 1) JOIN Loan_status ls ON ls.id = lsh.statusId WHERE batch_status = 1 AND is_assigned = 2 AND ld.bucket = '${role[0].bucket}'`
+		queryString = `SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, ld.mobile, UD.name, ls.status_type as status FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id JOIN loans_status_history lsh ON (lsh.loanId = ld.loanid AND lsh.active = 1) JOIN Loan_status ls ON ls.id = lsh.statusId WHERE batch_status = 1 AND is_assigned = 2 AND ld.bucket = '${role[0].bucket}'`
 	}
 	connection.query(queryString, function (error, results, fields) {
 		if (results.length > 0) {

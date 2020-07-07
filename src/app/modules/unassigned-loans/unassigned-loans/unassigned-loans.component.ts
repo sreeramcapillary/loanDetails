@@ -75,29 +75,6 @@ export class UnassignedLoansComponent implements OnInit {
     this.getStateList();
 
   }
-  clickSide(val){
-    if(val == 'elist'){
-      this.router.navigate(['/emp-list']);
-    }else if(val == 'xlupload'){
-      this.router.navigate(['/xl-upload']);
-
-    }else if(val == 'aloan'){
-      this.router.navigate(['/assignLoanList']);
-
-    }else if(val == 'ualoan'){
-      this.router.navigate(['/unassignedLoanList']);
-
-    }else if(val == 'oldxlupload'){
-      this.router.navigate(['/oldxlupload']);
-
-    }else if(val == 'repaymentdataupload'){
-      this.router.navigate(['/repaymentupload']);
-
-    }else if(val == 'reports'){
-      this.router.navigate(['/reports']);
-
-    }
-  }
 
   getAllEmp(){
     this.appService.getActiveEmp()

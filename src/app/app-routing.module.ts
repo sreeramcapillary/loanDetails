@@ -77,6 +77,12 @@ const routes: Routes = [{
   canActivate: [AuthGuard]
 
 },
+{
+  path: 'downloadloans',
+  loadChildren: './modules/downloadloans/downloadloans.module#DownloadloansModule',
+  canActivate: [AuthGuard]
+
+},
 { path: '**', redirectTo: '' }
 ]
 

@@ -51,30 +51,7 @@ export class LeadlistComponent implements OnInit {
     this.router.navigate(['lead-list','lead-registation']);
 
   }
-  clickSide(val){
-    if(val == 'elist'){
-      this.router.navigate(['/emp-list']);
-
-    }else if(val == 'xlupload'){
-      this.router.navigate(['/xl-upload']);
-
-    }else if(val == 'aloan'){
-      this.router.navigate(['/assignLoanList']);
-
-    }else if(val == 'oldxlupload'){
-      this.router.navigate(['/oldxlupload']);
-
-    }else if(val == 'repaymentdataupload'){
-      this.router.navigate(['/repaymentupload']);
-
-    }else if(val == 'reports'){
-      this.router.navigate(['/reports']);
-
-    }else if(val == 'leadlist'){
-      this.router.navigate(['/lead-list']);
-
-    }
-  }
+  
   editLead(row){
     console.log(row)
     localStorage.setItem("editlead",JSON.stringify(row));

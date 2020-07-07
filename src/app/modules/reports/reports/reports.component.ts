@@ -62,27 +62,6 @@ export class ReportsComponent implements OnInit {
     this.getAllReports(todayDate, todayDate, 1)
     this.getAttendanceData(todayDate)
   }
-  clickSide(val) {
-    if (val == 'elist') {
-      this.router.navigate(['/emp-list']);
-
-    } else if (val == 'xlupload') {
-      this.router.navigate(['/xl-upload']);
-
-    } else if (val == 'aloan') {
-      this.router.navigate(['/assignLoanList']);
-
-    }else if(val == 'oldxlupload'){
-      this.router.navigate(['/oldxlupload']);
-
-    }else if(val == 'repaymentdataupload'){
-      this.router.navigate(['/repaymentupload']);
-
-    }else if(val == 'reports'){
-      this.router.navigate(['/reports']);
-
-    }
-  }
   getAllReports(fromDate, toDate, batch){
     this.appService.getReports(fromDate, toDate, batch)
     .subscribe(

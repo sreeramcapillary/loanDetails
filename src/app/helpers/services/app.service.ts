@@ -370,4 +370,13 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
+
+    sendOtp(number){
+      var data={
+        "phone_number":number
+      }
+      return this.http.post('http://3.7.145.175:8080/collection/login',data ,{
+        headers: new HttpHeaders().set('accept', "application/json").set('Content-Type', "application/json")
+      });
+    }
 }

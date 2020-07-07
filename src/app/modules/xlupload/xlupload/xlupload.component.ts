@@ -86,6 +86,12 @@ export class XluploadComponent implements OnInit {
                         "assigned" : false
                       }
                       this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"].push(empdata);
+                      // this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id] = 0
+                      // if(typeof this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id] === 'undefined'){
+                      //   this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id] = 1
+                      // }else{
+                      //   this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id]++
+                      // }
                     }
                   })
                 })
@@ -98,7 +104,7 @@ export class XluploadComponent implements OnInit {
                     uniqueEmployeeList[employee.userId] = 0
                   }
                 })
-              //  console.log("uniqueEmployeeList", uniqueEmployeeList)
+               console.log("uniqueEmployeeList", uniqueEmployeeList)
 
                 var finalFilteredArray = [];
 
@@ -136,7 +142,7 @@ export class XluploadComponent implements OnInit {
                 }
                 //console.log("uniqueEmployeeList", uniqueEmployeeList)
                console.log("finalFilteredArray", finalFilteredArray)
-              //  return false
+               return false
                 if (finalFilteredArray) {
                   this.appService.updateLoanData(finalFilteredArray).subscribe(
                     (data: any) => {
@@ -215,27 +221,7 @@ export class XluploadComponent implements OnInit {
         }
       });
   }
-  clickSide(val) {
-    if (val == 'elist') {
-      this.router.navigate(['/emp-list']);
-
-    } else if (val == 'xlupload') {
-      this.router.navigate(['/xl-upload']);
-
-    } else if (val == 'aloan') {
-      this.router.navigate(['/assignLoanList']);
-
-    }else if(val == 'oldxlupload'){
-      this.router.navigate(['/oldxlupload']);
-
-    }else if(val == 'repaymentdataupload'){
-      this.router.navigate(['/repaymentupload']);
-
-    }else if(val == 'reports'){
-      this.router.navigate(['/reports']);
-
-    }
-  }
+  
   togglemenu() {
     $("#wrapper").toggleClass("toggled");
 

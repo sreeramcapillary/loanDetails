@@ -12,6 +12,7 @@
         <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='filteredloan'}" (click)="clickSide('filteredloan')" >Filtered Loans</a>
         <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='repaymentdataupload'}" (click)="clickSide('repaymentdataupload')" *ngIf="userRole == 1">Repayment Data Upload</a>
         <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='reports'}" (click)="clickSide('reports')">Reports</a>
+        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='downloadloans'}" (click)="clickSide('downloadloans')" *ngIf="userRole == 1">Download Loans</a>
   
       </div>
     </div>

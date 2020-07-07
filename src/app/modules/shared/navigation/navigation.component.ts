@@ -16,7 +16,6 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit() {
     this.appService.activeTab.subscribe(data => {
-      console.log(data);
       if(data){
         this.activeTab =data;
       }else{   
@@ -54,7 +53,10 @@ export class NavigationComponent implements OnInit {
     }else if(val == 'reports'){
       this.router.navigate(['/reports']);
 
-    }else if(val == 'leadlist'){
+    }else if(val == 'downloadloans'){
+    this.router.navigate(['/downloadloans']);
+
+  }else if(val == 'leadlist'){
       this.router.navigate(['/lead-list']);
 
     }

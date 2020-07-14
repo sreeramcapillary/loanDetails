@@ -16,6 +16,7 @@ export class DownloadloansComponent implements OnInit {
   otpSent:boolean = false
   otpValue:any
   token:any
+  loanData:any
 
   constructor(private route: ActivatedRoute,
     private http: HttpClient,
@@ -35,20 +36,30 @@ export class DownloadloansComponent implements OnInit {
       this.appService.sendOtp(this.mobileNumber)
     .subscribe(
       (data: any) => {
-        console.log(data)
+        if(data.code == 200){
+          this.otpSent = true
+        }else{
+          alert("something went wrong. Please try again later");
+        }
       });
-    // this.otpSent = true
   }
 
-  // exportDetailedData():void {
-  //   this.appService.getCurrentDetailedReportsDataForExcel()
-  //   .subscribe(
-  //     (data: any) => {
-  //       if (data.status) {
-  //         this.detailedData = data.loanDetails
-  //         // console.log(this.detailedData)
-  //         this.excelService.exportAsExcelFile(this.detailedData, 'DetailedReports');
-  //       }
-  //     });
-  // }
+  downloadData(){
+    this.appService.validateOtp(this.mobileNumber,this.otpValue)
+    .subscribe(
+      (data: any) => {
+        
+        if (data.status == "OK") {
+          this.appService.downloadLoanData(data.token)
+          .subscribe(
+            (data: any) => {
+              console.log(data)
+              this.loanData = data.result
+              this.excelService.exportAsExcelFile(this.loanData, 'LoanData');
+            })
+        }else{
+          alert("Invalid OTP");
+        }
+      });
+  }
 }

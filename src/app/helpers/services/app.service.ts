@@ -379,4 +379,17 @@ export class AppService {
         headers: new HttpHeaders().set('accept', "application/json").set('Content-Type', "application/json")
       });
     }
+
+    validateOtp(number, otp){
+      var data={ "mobile_number": number, "otp": otp}
+      return this.http.post('http://3.7.145.175:8080/collection/validate_mobile_otp',data ,{
+        headers: new HttpHeaders().set('accept', "application/json").set('Content-Type', "application/json")
+      });
+    }
+
+    downloadLoanData(token){
+      return this.http.get('http://3.7.145.175:8080/collection/get-external-agency', {
+        headers: new HttpHeaders().set('accept', "application/json").set('token', token)
+      });
+    }
 }

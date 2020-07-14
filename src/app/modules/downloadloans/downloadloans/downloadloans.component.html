@@ -53,7 +53,7 @@
           <input type="text" style="padding:8px;margin:5px auto;width:100%;" placeholder="Enter Mobile number" [(ngModel)]="mobileNumber" />
         </div>
         <div class="col-md-6">
-          <button class="btn btn-primary" type="button" (click)="sendOtp()">Send OTP</button>
+          <button class="btn btn-primary" type="button" (click)="sendOtp()" *ngIf="!otpSent">Send OTP</button>
         </div>
       </div>
 

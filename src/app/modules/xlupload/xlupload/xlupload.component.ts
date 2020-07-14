@@ -86,12 +86,6 @@ export class XluploadComponent implements OnInit {
                         "assigned" : false
                       }
                       this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"].push(empdata);
-                      // this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id] = 0
-                      // if(typeof this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id] === 'undefined'){
-                      //   this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id] = 1
-                      // }else{
-                      //   this.loanDetails['bucket'][row.bucket]['language'][row.state.toLowerCase()]["empdetails"][elist.id]++
-                      // }
                     }
                   })
                 })
@@ -104,7 +98,7 @@ export class XluploadComponent implements OnInit {
                     uniqueEmployeeList[employee.userId] = 0
                   }
                 })
-               console.log("uniqueEmployeeList", uniqueEmployeeList)
+              //  console.log("uniqueEmployeeList", uniqueEmployeeList)
 
                 var finalFilteredArray = [];
 
@@ -142,7 +136,7 @@ export class XluploadComponent implements OnInit {
                 }
                 //console.log("uniqueEmployeeList", uniqueEmployeeList)
                console.log("finalFilteredArray", finalFilteredArray)
-               return false
+              //  return false
                 if (finalFilteredArray) {
                   this.appService.updateLoanData(finalFilteredArray).subscribe(
                     (data: any) => {
@@ -221,7 +215,6 @@ export class XluploadComponent implements OnInit {
         }
       });
   }
-  
   togglemenu() {
     $("#wrapper").toggleClass("toggled");
 

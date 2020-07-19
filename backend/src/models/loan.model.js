@@ -385,13 +385,13 @@ router.post('/getLoanListByEmp', function (request, response) {
 router.post('/getLoanListByEmpByDate', function (request, response) {
 	var empId = request.body.empId
 	let today = request.body.date
-	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId, COUNT(LSHC.id) as noOfComments 
+	connection.query(`SELECT ld.*, LS.status_type as status, lsh.loan_comments, lsh.statusId, lsh.calledToday, COUNT(LSHC.id) as noOfComments 
 
 	FROM loan_details ld 
 
 	JOIN userdetails u on u.id = ld.assigned_emp_id 
 
-	LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6 OR statusId = 1) GROUP BY loanId ORDER BY statusId DESC) AS lsh ON ld.loanid = lsh.loanId 
+	LEFT JOIN (SELECT comments as loan_comments, loanId, statusId, (CASE WHEN SUBSTR(dateTime, 1, 10) = '${today}' THEN 1 ELSE 0 END) as calledToday FROM loans_status_history WHERE active = 1 AND (dateTime LIKE '%${today}%' OR statusId = 5 OR statusId = 6 OR statusId = 1) GROUP BY loanId ORDER BY statusId DESC) AS lsh ON ld.loanid = lsh.loanId 
 
 	LEFT JOIN loans_status_history LSHC ON ld.loanid = LSHC.loanId 
 

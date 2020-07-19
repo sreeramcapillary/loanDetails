@@ -24,7 +24,9 @@
 
         <a class="nav-item nav-link" style="color: orange">Total Assigned Amount : {{totalAssignedAmount}}</a> | 
         <a class="nav-item nav-link" style="color: grey">Waiting For Confirmation : {{totalPendingAmount}}</a> |
-        <a class="nav-item nav-link" style="color: green">Total Recovered Amount : {{totalRecoveredAmount}}</a>
+        <a class="nav-item nav-link" style="color: green">Total Recovered Amount : {{totalRecoveredAmount}}</a> |
+        <a class="nav-item nav-link" style="color: green">Total Calls Done : {{callsDone}}</a> | 
+        <a class="nav-item nav-link" style="color: orange">Calls Remaining : {{callsRemaining}}</a>
 
         <!-- <div style="position: absolute;right: 70px;">Sreeram</div> -->
 
@@ -213,7 +215,9 @@
                 <div class="row">
                   <div class="col-sm-12">
                     <!-- <span class="info-badge">Calls Done : {{row.callsDone?row.callsDone:0}}</span> &nbsp; -->
-                    Status : <span [ngClass]="{'payment-done-style': row.statusId == '5', 'PTP-style' : row.statusId == '1', 'RNR-style' : row.statusId == '2', 'switch-off-style' : row.statusId == '3', 'payment-expected-style' : row.statusId == '4', 'payment-completed-style' : row.statusId == '6'}"> {{row.status}} </span>    <button class="btn btn-primary"  (click)="editStatus(row)" style="margin-left: 10px;" *ngIf="row.statusId != 6"> <span><i class="fa fa-pencil"></i></span></button>
+                    Status : 
+                    <div class="priorityLoan" *ngIf="row.noOfComments == 0"></div>
+                    <span [ngClass]="{'payment-done-style': row.statusId == '5', 'PTP-style' : row.statusId == '1', 'RNR-style' : row.statusId == '2', 'switch-off-style' : row.statusId == '3', 'payment-expected-style' : row.statusId == '4', 'payment-completed-style' : row.statusId == '6'}"> {{row.status}} </span>    <button class="btn btn-primary"  (click)="editStatus(row)" style="margin-left: 10px;" *ngIf="row.statusId != 6"> <span><i class="fa fa-pencil"></i></span></button>
                   </div>
                 </div>
               </div>

@@ -45,6 +45,8 @@ export class CustomerloandetailsComponent implements OnInit {
   public dateTime1: Date;
   currentSelectedRow: any
   mobileView : boolean = false
+  callsDone : any = 0
+  callsRemaining : any = 0
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -105,6 +107,11 @@ export class CustomerloandetailsComponent implements OnInit {
           this.filteredRows = data.assignedLoanToEmp;
           this.selected = [data[2]];
           data.assignedLoanToEmp.map(row => {
+            if(row.calledToday == 1){
+              this.callsDone++
+            }else{
+              this.callsRemaining++
+            }
             this.totalAssignedAmount += row.repayment_amt
             if(row.statusId == 6){
               this.totalRecoveredAmount += row.repayment_amt

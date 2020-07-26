@@ -112,12 +112,12 @@ export class CustomerloandetailsComponent implements OnInit {
             }else{
               this.callsRemaining++
             }
-            this.totalAssignedAmount += row.repayment_amt
+            this.totalAssignedAmount += row.principal_amt
             if(row.statusId == 6){
-              this.totalRecoveredAmount += row.repayment_amt
+              this.totalRecoveredAmount += row.principal_amt
             }
             if(row.statusId == 5){
-              this.totalPendingAmount += row.repayment_amt
+              this.totalPendingAmount += row.principal_amt
             }
             if(!this.principalAmountUniqueList.includes(row.principal_amt)){
               this.principalAmountUniqueList.push(row.principal_amt)

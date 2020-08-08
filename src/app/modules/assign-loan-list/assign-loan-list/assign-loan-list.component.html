@@ -241,13 +241,13 @@
           <div class="col-md-12 order-md-1" style="    padding-bottom: 20px;">
               <div class="row">
                   <div class="col-md-4">
-                      <button class="btn btn-danger btn-lg btn-block" type="submit" [disabled]="" (click)="unassignLoanDetails()">Un - Assign</button>
+                      <button class="btn btn-danger btn-lg btn-block" type="submit" [disabled]="" (click)="unassignLoanDetails()" *ngIf="userType == 1">Un - Assign</button>
                   </div>
                   <div class="col-md-4">
-                      <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="" (click)="assignLoanDetails()">Assign</button>
+                      <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="" (click)="assignLoanDetails()" *ngIf="userType == 1">Assign</button>
                   </div>
                   <div class="col-md-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="" (click)="filterLoanDetails()">Filter</button>
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="" (click)="filterLoanDetails()" *ngIf="userType == 1">Filter</button>
                 </div>
               </div>
           </div>

@@ -163,9 +163,9 @@
                 </ng-template>
               </ngx-datatable-column> -->
           </ngx-datatable>
-          <div class="col-md-12 order-md-1" style="    padding-bottom: 20px;">
+          <div class="col-md-12 order-md-1" style="padding-bottom: 20px;">
               <button class="btn btn-primary btn-lg btn-block" type="submit"
-                    [disabled]="" (click)="assignLoanDetails()">Assign</button>
+                    [disabled]="" (click)="assignLoanDetails()" *ngIf="userType == 1">Assign</button>
           </div>
         </div>
         

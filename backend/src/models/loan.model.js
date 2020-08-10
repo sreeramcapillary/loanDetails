@@ -89,7 +89,7 @@ router.post('/registerEmployee', function (request, response) {
 	var mobile = request.body.mobile;
 	var bucket = request.body.assignedbucket;
 	var language = request.body.language
-	if (name && username && password && email && mobile ) {
+	if (name && username && password) {
 		var data = {
 			client_id:"1",
 			name: name,

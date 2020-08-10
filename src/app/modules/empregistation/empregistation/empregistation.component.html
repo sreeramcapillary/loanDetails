@@ -79,7 +79,7 @@
             </div> -->
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3" style="display: none;">
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" placeholder="you@example.com" formControlName="email">
             <div *ngIf="submitted && registerForm.get('email').errors" class="invalid-feedback-custom">
@@ -88,7 +88,7 @@
             </div>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3" style="display: none;">
             <label for="address">Mobile Number</label>
             <input type="text" class="form-control" id="mobile" placeholder="918884757932" formControlName="mobile">
             <div *ngIf="submitted && registerForm.get('mobile').errors" class="invalid-feedback-custom">

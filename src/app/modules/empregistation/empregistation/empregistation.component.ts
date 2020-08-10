@@ -46,8 +46,10 @@ export class EmpregistationComponent implements OnInit {
       name: [null, Validators.required],
       username: [null, Validators.required],
       password: [null],
-      email:[null, [Validators.required,Validators.pattern(this.emailPattern)]],
-      mobile:[null,[Validators.required]],
+      email: [null],
+      mobile: [null],
+      // email:[null, [Validators.required,Validators.pattern(this.emailPattern)]],
+      // mobile:[null,[Validators.required]],
       assignedbucket:[null, Validators.required],
       language:[null,[Validators.required]]
     });

@@ -447,11 +447,13 @@ router.post('/assignLoanList', function (request, response) {
 });
 
 router.post('/filterLoanList', function (request, response) {
-	var loanid = request.body.loanId;
-   var queries='';
-   loanid.map(lId => {
-		   queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id = '${lId}';`);
-   });
+	var loanid = request.body.loanId.join();
+
+    var queries='';
+//    loanid.map(lId => {
+// 		   queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id = '${lId}';`);
+//    });
+	queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id IN ('${loanid}')`);
    connection.query(queries, (err, results, fields) => {
 	   if (results) {
 		   let responseData = { "status": true, "code": 200, "message": "Loans filtered successfully" }

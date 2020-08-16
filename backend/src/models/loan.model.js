@@ -455,6 +455,7 @@ router.post('/filterLoanList', function (request, response) {
 //    });
 	queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id IN ('${loanid}')`);
    connection.query(queries, (err, results, fields) => {
+	   console.log("filterLoanList", err)
 	   if (results) {
 		   let responseData = { "status": true, "code": 200, "message": "Loans filtered successfully" }
 		   response.json(responseData)

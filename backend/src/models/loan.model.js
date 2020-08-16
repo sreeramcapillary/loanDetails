@@ -453,7 +453,7 @@ router.post('/filterLoanList', function (request, response) {
 //    loanid.map(lId => {
 // 		   queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id = '${lId}';`);
 //    });
-	queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id IN ('${loanid}')`);
+	queries += mysql.format(`UPDATE loan_details SET is_assigned= '2' WHERE loan_id IN (${loanid})`);
    connection.query(queries, (err, results, fields) => {
 	   console.log("filterLoanList", err)
 	   if (results) {

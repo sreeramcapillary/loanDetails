@@ -413,7 +413,8 @@ router.post('/getLoanPastStatus', function (request, response) {
 	var loanId = request.body.loanId
 	let yesterday = moment().tz("Asia/Kolkata").subtract(1, 'days').format('YYYY-MM-DD')
 	let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
-	connection.query(`SELECT lsh.comments as loan_comments, lsh.callType as callType, lsh.statusId, ls.status_type as status, lsh.dateTime FROM loans_status_history lsh JOIN Loan_status ls ON ls.id = lsh.statusId WHERE lsh.loanId = '${loanId}' AND (lsh.dateTime LIKE '%${yesterday}%' OR lsh.dateTime LIKE '%${today}%') ORDER BY lsh.id DESC`, function (error, results, fields) {
+	// connection.query(`SELECT lsh.comments as loan_comments, lsh.callType as callType, lsh.statusId, ls.status_type as status, lsh.dateTime FROM loans_status_history lsh JOIN Loan_status ls ON ls.id = lsh.statusId WHERE lsh.loanId = '${loanId}' AND (lsh.dateTime LIKE '%${yesterday}%' OR lsh.dateTime LIKE '%${today}%') ORDER BY lsh.id DESC`, function (error, results, fields) {
+		connection.query(`SELECT lsh.comments as loan_comments, lsh.callType as callType, lsh.statusId, ls.status_type as status, lsh.dateTime FROM loans_status_history lsh JOIN Loan_status ls ON ls.id = lsh.statusId WHERE lsh.loanId = '${loanId}' ORDER BY lsh.id DESC`, function (error, results, fields) {
 		if (results.length > 0) {
 			//	request.session.loggedin = true;
 			// request.session.username = username;

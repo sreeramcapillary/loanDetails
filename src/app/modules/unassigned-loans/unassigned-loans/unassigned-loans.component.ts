@@ -31,6 +31,8 @@ export class UnassignedLoansComponent implements OnInit {
   stateList: any = [];
   detailedData: any = [];
   cityList:any = [];
+  languages = []
+  languagesWithState = []
   // marked = false;
   // theCheckbox = false;
   constructor(private route: ActivatedRoute,
@@ -59,6 +61,7 @@ export class UnassignedLoansComponent implements OnInit {
       selectedBucket: [bucket], 
       noOfLoansSelected: [''],
       stateSelected: [''],
+      stateLanguage : [''],
       loanIdFilterValue : [''],
     });
 
@@ -102,6 +105,19 @@ export class UnassignedLoansComponent implements OnInit {
       (data: any) => {
         if (data.status) {
           this.stateList=data.stateList;
+          data.stateList.map(state => {
+            if(this.languagesWithState[state.name] == undefined){
+              this.languagesWithState[state.name] = []
+              this.languagesWithState[state.name].push(state.state_name)
+            }else{
+              this.languagesWithState[state.name].push(state.state_name)
+            }
+            if(!this.languages.includes(state.name)){
+              this.languages.push(state.name)
+            }
+          })
+          // console.log(this.languages,"languages")
+          // console.log(this.languagesWithState,"languagesWithState")
         }
       });
   }
@@ -138,6 +154,10 @@ export class UnassignedLoansComponent implements OnInit {
 
   checkLoans(){
     this.customFilteringForBucketAndState(this.f.selectedBucket.value, this.f.stateSelected.value)
+    // console.log(this.f.stateLanguage.value,"this.f.stateLanguage.value")
+    if(this.f.stateLanguage.value != ""){
+      this.customFilteringForLanguage(this.f.stateLanguage.value)
+    }
     this.loan_id = []
     this.theCheckbox = [];
     if(this.f.noOfLoansSelected.value>0){
@@ -155,6 +175,19 @@ export class UnassignedLoansComponent implements OnInit {
       })
     }
     // console.log(this.loan_id)
+  }
+
+  customFilteringForLanguage(language){
+    let filteredLanguageData = []
+    this.languagesWithState[language].map(state => {
+      let filteredDataTemp = []
+      filteredDataTemp = this.filteredRows.filter(function(d) {
+        return (d.state.toLowerCase() == state.toLowerCase());
+      });
+      filteredLanguageData = filteredLanguageData.concat(filteredDataTemp)
+    })
+    console.log("filteredLanguageData", filteredLanguageData)
+    this.rows = filteredLanguageData;
   }
 
   customFilteringForBucketAndState(bucket, state){

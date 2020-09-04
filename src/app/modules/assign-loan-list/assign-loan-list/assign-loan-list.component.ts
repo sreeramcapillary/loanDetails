@@ -274,6 +274,9 @@ export class AssignLoanListComponent implements OnInit {
           if(d.status != null){
             return d.status.toString().toLowerCase() == statusFilterValue || !statusFilterValue;
           }
+          if(statusFilterValue == "null" || statusFilterValue == null){
+            return d
+          }
         });
         this.rows = filteredDataTemp;
       }

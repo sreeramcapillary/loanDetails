@@ -51,11 +51,11 @@
       </div>
       <form [formGroup]="selectForm" style="width:100%">
           <div class="row">
-              <div class="col-md-3">
+              <div class="col-md-2">
                   <label for="language">Select Employee</label>
                   <select class="custom-select d-block" id="emplist" formControlName="employee" (change)="selectedEmp()">
                     <option value="">Choose...</option>
-                    <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}}</option>
+                    <option value="{{emp.id}}" *ngFor="let emp of empList" >{{emp.name}} ({{emp.language_name}})</option>
                   </select>
               </div>
               <div class="col-md-2" [ngClass]="{'show': userType == '0', 'hide' : userType == '2'}">
@@ -72,6 +72,13 @@
                   <option value="{{state.state_name}}" *ngFor="let state of stateList" >{{state.state_name}}</option>
                 </select>
             </div>
+            <div class="col-md-2">
+              <label for="language">Select Language</label>
+              <select class="custom-select d-block" id="languages" formControlName="stateLanguage">
+                <option value="">Choose...</option>
+                <option value="{{language}}" *ngFor="let language of languages" >{{language}}</option>
+              </select>
+          </div>
             <div class="col-md-2">
               <label for="language">Select No Of Loans</label>
               <select class="custom-select d-block" id="noofloans" formControlName="noOfLoansSelected">

@@ -104,6 +104,7 @@
                 <label for="employeeToFilter">Select Status For Filter</label>
                 <select class="custom-select d-block w-100" id="employeeToFilter" formControlName="statusToFilter">
                   <option value="{{status.status_type}}" *ngFor="let status of loanStatusList" >{{status.status_type}}</option>
+                  <option value="null">Un Touched</option>
                 </select>
               </div>
               <div class="col-md-2 mb-3">

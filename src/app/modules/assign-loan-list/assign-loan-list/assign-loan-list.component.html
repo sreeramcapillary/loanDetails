@@ -112,7 +112,7 @@
               </div>
 
               <div class="col-md-4 mb-4">
-                <input type="text" style="padding:8px;margin:30px auto;width:100%;" placeholder="Enter LoanId / Mobile to Filter" formControlName="loanIdFilterValue" (keyup)="filterLoansById()" />
+                <input type="text" style="padding:8px;margin:30px auto;width:100%;" placeholder="Enter LoanId / Mobile / Customer Name to Filter" formControlName="loanIdFilterValue" (keyup)="filterLoansById()" />
               </div>
             </div>
          <!-- <div class="col-md-12 mb-3">
@@ -149,12 +149,12 @@
                       </div>              
                   </ng-template>
               </ngx-datatable-column>
-            <!-- <ngx-datatable-column name="Customer Name">
+            <ngx-datatable-column name="Customer Name">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.customer_Name}}
+                {{row.customerName}}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Mobile">
+            <!-- <ngx-datatable-column name="Mobile">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{row.mobile}}
               </ng-template>

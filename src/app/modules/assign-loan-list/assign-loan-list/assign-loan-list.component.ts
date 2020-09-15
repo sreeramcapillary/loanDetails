@@ -297,7 +297,7 @@ export class AssignLoanListComponent implements OnInit {
       const loanIdFilterValuee = this.f.loanIdFilterValue.value.toLowerCase()
       let filteredDataTemp = []
       filteredDataTemp = this.filteredRows.filter(function(d) {
-        return d.loan_id.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || d.mobile.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || !loanIdFilterValuee;
+        return d.loan_id.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || d.mobile.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || d.customerName.toString().toLowerCase().indexOf(loanIdFilterValuee) !== -1 || !loanIdFilterValuee;
       });
       this.rows = filteredDataTemp;
     }

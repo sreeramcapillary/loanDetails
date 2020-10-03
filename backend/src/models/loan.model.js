@@ -290,7 +290,7 @@ router.get('/getAllEmpList', async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 		queryString = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.id > 0 GROUP BY u.id"
 	}
@@ -316,7 +316,7 @@ router.get("/getAllActiveEmpList", async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		let today = moment().tz("Asia/Kolkata").format('YYYY-MM-DD')
 		queryString = "SELECT u.id,u.client_id,u.name,u.username,u.email,u.mobile,u.bucket_id,u.active as status,bl.bucket,GROUP_CONCAT(DISTINCT(LT.name)) as language_name FROM userdetails u LEFT JOIN bucket_list bl ON bl.id = u.bucket_id LEFT JOIN user_known_languages UKL ON UKL.userId = u.id LEFT JOIN language_table LT ON LT.id = UKL.languageId WHERE u.usertype = 0 AND u.active= '1' GROUP BY u.id"
 	}
@@ -595,7 +595,7 @@ router.get('/getAssignedLoanDetailsList', async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		// queryString = 'SELECT ld.id, ld.loan_id, ld.due_date, ld.overdue_days, ld.state, ld.principal_amt, ld.bucket, ld.assigned_emp_id, ld.Customer_id, ld.mobile, ld.ref_type1, ld.ref_name1, ld.ref_mobile_num1, ld.ref_type2, ld.ref_name2, ld.ref_mobile_num2, ld.repayment_amt, ld.customer_Name FROM loan_details ld WHERE batch_status = 1 AND is_assigned != 0'
 		queryString = `SELECT ld.id, ld.loan_id, ld.bucket, ld.assigned_emp_id, ld.principal_amt, ud.name, ls.status_type as status, ld.mobile, ld.customer_Name as customerName FROM loan_details ld LEFT JOIN userdetails ud ON ld.assigned_emp_id = ud.id LEFT JOIN loans_status_history lsh ON lsh.loanId = ld.loan_id AND lsh.active = 1 LEFT JOIN Loan_status ls ON ls.id = lsh.statusId WHERE ld.batch_status = 1 AND ld.assigned_emp_id != '' AND ld.is_assigned = 1`
 	}
@@ -620,7 +620,7 @@ router.get('/getUnAssignedLoanDetailsList', async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, ld.mobile, ld.overdue_days FROM loan_details ld WHERE batch_status = 1 AND is_assigned = 0'
 	}
 	if(role[0].usertype == 2){
@@ -643,7 +643,7 @@ router.get('/getUnAssignedLoanDetailsListForExport', async(request, response) =>
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		queryString = 'SELECT * FROM loan_details WHERE batch_status = 1 AND is_assigned = 0'
 	}
 	if(role[0].usertype == 2){
@@ -666,7 +666,7 @@ router.get('/getFilteredLoanDetailsList', async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		queryString = 'SELECT ld.id, ld.loan_id, ld.state, ld.principal_amt, ld.bucket, ld.mobile, UD.name, UDL.name as teamLead, ls.status_type as status FROM loan_details ld JOIN userdetails UD ON UD.id = ld.assigned_emp_id JOIN userdetails UDL ON UD.parentId = UDL.id JOIN loans_status_history lsh ON (lsh.loanId = ld.loanid AND lsh.active = 1) JOIN Loan_status ls ON ls.id = lsh.statusId WHERE batch_status = 1 AND is_assigned = 2'
 	}
 	if(role[0].usertype == 2){
@@ -1268,7 +1268,7 @@ router.post('/getDayReport', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	if(batch == 1){
 		let queryString = ""
-		if(role[0].usertype == 1){
+		if(role[0].usertype == 1 || role[0].usertype == 3){
 			queryString = `SELECT UD.id, UD.name as employeeName, UDP.name as teamLead, UD.username as employeeID, bl.bucket, 
 
 			COALESCE(SUM(CASE WHEN LD.is_assigned = 1 THEN LD.principal_amt ELSE 0 END), 0) as assignedAmount, 
@@ -1439,7 +1439,7 @@ router.post('/getDayReport', async(request, response) => {
 		});
 	}else{
 		let queryString = ""
-		if(role[0].usertype == 1){
+		if(role[0].usertype == 1 || role[0].usertype == 3){
 			queryString = `SELECT UD.id, UD.name as employeeName, UDP.name as teamLead, UD.username as employeeID, bl.bucket, COALESCE(SUM(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE 0 END), 0) as assignedAmount, COUNT(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE NULL END) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 7 THEN LD.repayment_amt END), 0) as NRAmout, COUNT(CASE WHEN lsh.statusId = 7 THEN lsh.statusId ELSE NULL END) as NRAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 8 THEN LD.repayment_amt END), 0) as NCAmout, COUNT(CASE WHEN lsh.statusId = 8 THEN lsh.statusId ELSE NULL END) as NCAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 9 THEN LD.repayment_amt END), 0) as INAmout, COUNT(CASE WHEN lsh.statusId = 9 THEN lsh.statusId ELSE NULL END) as INAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 10 THEN LD.repayment_amt END), 0) as RTPAmout, COUNT(CASE WHEN lsh.statusId = 10 THEN lsh.statusId ELSE NULL END) as RTPAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 11 THEN LD.repayment_amt END), 0) as CBAmout, COUNT(CASE WHEN lsh.statusId = 11 THEN lsh.statusId ELSE NULL END) as CBAmout_COUNT, COUNT(CASE WHEN lsh.statusId = 12 THEN lsh.statusId ELSE NULL END) as P3M_COUNT, COUNT(CASE WHEN lsh.statusId = 13 THEN lsh.statusId ELSE NULL END) as ALD_COUNT, COUNT(CASE WHEN lsh.statusId = 14 THEN lsh.statusId ELSE NULL END) as ATDC_COUNT, COUNT(CASE WHEN lsh.statusId = 15 THEN lsh.statusId ELSE NULL END) as EMI_COUNT,COUNT(CASE WHEN lsh.statusId = 16 THEN lsh.statusId ELSE NULL END) as PTPWIW_COUNT, COUNT(CASE WHEN lsh.statusId = 17 THEN lsh.statusId ELSE NULL END) as PP_COUNT, COUNT(CASE WHEN lsh.statusId = 18 THEN lsh.statusId ELSE NULL END) as RBI_COUNT, COUNT(CASE WHEN lsh.statusId = 20 THEN lsh.statusId ELSE NULL END) as CASH_COUNT, (COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 7 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 8 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 9 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 10 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 11 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 12 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 13 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 14 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 15 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 16 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 17 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 18 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 20 THEN lsh.statusId ELSE NULL END)) as callCount, COALESCE(COALESCE(SUM(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE NULL END) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(COALESCE(COUNT(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE NULL END)) - COALESCE((COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 7 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 8 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 9 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 10 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 11 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 12 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 13 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 14 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 15 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 16 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 17 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 18 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 20 THEN lsh.statusId ELSE NULL END)))) as remainingCalls, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE 0 END), 0)) * 100), 0) as inPercentage FROM userdetails UD JOIN userdetails UDP ON UDP.id = UD.parentId JOIN bucket_list bl ON bl.id = UD.bucket_id LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime between '${fromDate} 00:00:00' and '${toDate} 23:59:00' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`
 		}
 		if(role[0].usertype == 2){
@@ -1468,7 +1468,7 @@ router.post('/getCountAndSumReport', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	if(batch == 1){
 		let queryString = ""
-		if(role[0].usertype == 1){
+		if(role[0].usertype == 1 || role[0].usertype == 3){
 			queryString = `SELECT 
 
 			COALESCE(SUM(CASE WHEN LSH.statusId = 1 THEN LD.repayment_amt ELSE 0 END), 0) as PTP_AMOUNT_TOTAL, 
@@ -1525,7 +1525,7 @@ router.post('/getCountAndSumReport', async(request, response) => {
 		});
 	}//else{
 	// 	let queryString = ""
-	// 	if(role[0].usertype == 1){
+	// 	if(role[0].usertype == 1 || role[0].usertype == 3){
 	// 		queryString = `SELECT UD.id, UD.name as employeeName, UDP.name as teamLead, UD.username as employeeID, bl.bucket, COALESCE(SUM(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE 0 END), 0) as assignedAmount, COUNT(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE NULL END) as assignedAmount_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 1 THEN LD.repayment_amt END), 0) as PTP_AMOUNT, COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) as PTP_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 2 THEN LD.repayment_amt END), 0) as RNR_AMOUNT, COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) as RNR_AMOUNT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 3 THEN LD.repayment_amt END), 0) as SWITCH_OFF, COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) as SWITCH_OFF_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 4 THEN LD.repayment_amt END), 0) as PAYMENT_EXPECTED_AT, COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) as PAYMENT_EXPECTED_AT_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0) as WAITING_FOR_CONFIRMATION, COUNT(CASE WHEN lsh.statusId = 5 THEN lsh.statusId ELSE NULL END) as WAITING_FOR_CONFIRMATION_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) as collectedAmout, COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END) as collectedAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 7 THEN LD.repayment_amt END), 0) as NRAmout, COUNT(CASE WHEN lsh.statusId = 7 THEN lsh.statusId ELSE NULL END) as NRAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 8 THEN LD.repayment_amt END), 0) as NCAmout, COUNT(CASE WHEN lsh.statusId = 8 THEN lsh.statusId ELSE NULL END) as NCAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 9 THEN LD.repayment_amt END), 0) as INAmout, COUNT(CASE WHEN lsh.statusId = 9 THEN lsh.statusId ELSE NULL END) as INAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 10 THEN LD.repayment_amt END), 0) as RTPAmout, COUNT(CASE WHEN lsh.statusId = 10 THEN lsh.statusId ELSE NULL END) as RTPAmout_COUNT, COALESCE(SUM(CASE WHEN lsh.statusId = 11 THEN LD.repayment_amt END), 0) as CBAmout, COUNT(CASE WHEN lsh.statusId = 11 THEN lsh.statusId ELSE NULL END) as CBAmout_COUNT, COUNT(CASE WHEN lsh.statusId = 12 THEN lsh.statusId ELSE NULL END) as P3M_COUNT, COUNT(CASE WHEN lsh.statusId = 13 THEN lsh.statusId ELSE NULL END) as ALD_COUNT, COUNT(CASE WHEN lsh.statusId = 14 THEN lsh.statusId ELSE NULL END) as ATDC_COUNT, COUNT(CASE WHEN lsh.statusId = 15 THEN lsh.statusId ELSE NULL END) as EMI_COUNT,COUNT(CASE WHEN lsh.statusId = 16 THEN lsh.statusId ELSE NULL END) as PTPWIW_COUNT, COUNT(CASE WHEN lsh.statusId = 17 THEN lsh.statusId ELSE NULL END) as PP_COUNT, COUNT(CASE WHEN lsh.statusId = 18 THEN lsh.statusId ELSE NULL END) as RBI_COUNT, COUNT(CASE WHEN lsh.statusId = 20 THEN lsh.statusId ELSE NULL END) as CASH_COUNT, (COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 7 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 8 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 9 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 10 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 11 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 12 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 13 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 14 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 15 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 16 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 17 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 18 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 20 THEN lsh.statusId ELSE NULL END)) as callCount, COALESCE(COALESCE(SUM(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN lsh.statusId = 5 THEN LD.repayment_amt END), 0)) as remainingAmount, (COUNT(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE NULL END) - COUNT(CASE WHEN lsh.statusId = 6 THEN lsh.statusId ELSE NULL END)) as remainingAmount_COUNT, COALESCE(COALESCE(COUNT(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE NULL END)) - COALESCE((COUNT(CASE WHEN lsh.statusId = 1 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 2 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 3 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 4 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 7 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 8 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 9 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 10 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 11 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 12 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 13 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 14 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 15 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 16 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 17 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 18 THEN lsh.statusId ELSE NULL END) + COUNT(CASE WHEN lsh.statusId = 20 THEN lsh.statusId ELSE NULL END)))) as remainingCalls, COALESCE(((COALESCE(SUM(CASE WHEN lsh.statusId = 6 THEN LD.repayment_amt END), 0) / COALESCE(SUM(CASE WHEN LD.is_assigned = 1 THEN LD.repayment_amt ELSE 0 END), 0)) * 100), 0) as inPercentage FROM userdetails UD JOIN userdetails UDP ON UDP.id = UD.parentId JOIN bucket_list bl ON bl.id = UD.bucket_id LEFT JOIN loan_details LD ON UD.id = LD.assigned_emp_id AND LD.batch_status = 1 LEFT JOIN (SELECT comments as loan_comments, loanId, statusId FROM loans_status_history WHERE active = 1 AND dateTime between '${fromDate} 00:00:00' and '${toDate} 23:59:00' GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId WHERE UD.usertype = 0 AND UD.active = 1 GROUP BY UD.id`
 	// 	}
 	// 	if(role[0].usertype == 2){
@@ -1554,7 +1554,7 @@ router.post('/getCountAndSumTeamLeadReport', async(request, response) => {
 	let role = await getRoleByCreds(Credentials)
 	if(batch == 1){
 		let queryString = ""
-		if(role[0].usertype == 1){
+		if(role[0].usertype == 1 || role[0].usertype == 3){
 			queryString = `SELECT TUD.id, TUD.name,
 
 			COALESCE(SUM(CASE WHEN LSH.statusId = 1 THEN LD.repayment_amt ELSE 0 END), 0) as PTP_AMOUNT_TOTAL, 
@@ -1603,7 +1603,7 @@ router.post('/getDayAttendance', async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		queryString = `SELECT COUNT(UD.id) as totalEMP, COUNT(LL.id) as present, COALESCE(COUNT(UD.id) - COUNT(LL.id)) as absent FROM userdetails UD LEFT JOIN loginLogs LL ON (LL.empId = UD.id AND LL.date = '${date}' AND time BETWEEN '08:00:00' AND '11:00:00') WHERE UD.usertype = 0 AND UD.active = 1`
 	}
 	// console.log(queryString)
@@ -1625,7 +1625,7 @@ router.post('/getAttendancePresentData', async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '11:00:00'`
 	}
 	// console.log(queryString)
@@ -1647,7 +1647,7 @@ router.post('/getAttendanceAbsentData', async(request, response) => {
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		queryString = `SELECT UD.id, UD.name FROM loginLogs LL JOIN userdetails UD ON UD.id = LL.empId WHERE LL.date = '${date}' AND LL.time BETWEEN '08:00:00' AND '11:00:00'`
 	}
 	// console.log(queryString)
@@ -1668,7 +1668,7 @@ router.get('/getCurrentDetailedReportsDataForExcel', async(request, response) =>
 	let Credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
 	let role = await getRoleByCreds(Credentials)
 	let queryString = ""
-	if(role[0].usertype == 1){
+	if(role[0].usertype == 1 || role[0].usertype == 3){
 		queryString = `SELECT LD.loanid, LD.customer_Name, LD.disbursal_amt, LD.disbursal_date, LD.due_date, LD.principal_amt, LD.interest_amount, LD.penalty_amt, LD.repayment_amt, LD.bucket, LD.overdue_days, LD.is_collected, LD.repaid_date, UD.username as employeeUserName, UD.name as employeeName, LS.status_type as status, lsh.loan_comments, lsh.dateTime as status_updated_date, LT.name as language, UDP.name as team_lead FROM loan_details LD LEFT JOIN userdetails UD ON LD.assigned_emp_id = UD.id LEFT JOIN userdetails UDP ON UD.parentId = UDP.id LEFT JOIN (SELECT comments as loan_comments, loanId, statusId, dateTime FROM loans_status_history WHERE active = 1 GROUP BY loanId) AS lsh ON LD.loanid = lsh.loanId LEFT JOIN Loan_status LS ON lsh.statusId = LS.id LEFT JOIN language_table LT ON LOWER(LD.state) = LOWER(LT.state_name) WHERE LD.batch_status = 1 AND LD.is_assigned = 1 GROUP BY LD.id`;
 	}
 	if(role[0].usertype == 2){

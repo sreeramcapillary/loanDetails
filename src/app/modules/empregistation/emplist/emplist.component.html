@@ -98,7 +98,7 @@
                 {{row.loginCount}}
               </ng-template>
             </ngx-datatable-column> -->
-              <ngx-datatable-column name="Action" *ngIf="userType == 1">
+              <ngx-datatable-column name="Action" *ngIf="userType == 1 || userType == 3">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <span *ngIf="row.status == '1'"><i class="fa fa-pencil" (click)="editEmp(row)"></i></span>
                  <span style="padding-left: 10px;" *ngIf="row.status == '1'"><button class="btn btn-danger"  (click)="deactivateEmp(row)"><i class="fa fa-times"></i></button></span>

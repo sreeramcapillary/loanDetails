@@ -57,10 +57,10 @@
             <button class="btn btn-primary" style="float: left;" type="submit" (click)="reportsByDate()">Submit</button>
         </div>
         <div class="col-md-6">
-          <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()">Export
+          <button class="btn btn-primary" style="float: right;" type="submit" (click)="exportDetailedData()" *ngIf="userRole == 1 || userRole == 2">Export
             Detailed Data as Excel <i class="fa fa-file-excel-o"></i></button>
           <button class="btn btn-primary" style="float: right; margin-right: 20px;" type="submit"
-            (click)="exportReportData()">Export Only Report Data as Excel <i class="fa fa-file-excel-o"></i></button>
+            (click)="exportReportData()" *ngIf="userRole == 1 || userRole == 2">Export Only Report Data as Excel <i class="fa fa-file-excel-o"></i></button>
         </div>
       </div>
       <div class="col-md-12 order-md-1">

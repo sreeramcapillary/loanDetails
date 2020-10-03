@@ -45,7 +45,7 @@ export class ReportsComponent implements OnInit {
     private http: HttpClient,
     private router: Router, private appService: AppService, private excelService:ExcelService,private formBuilder: FormBuilder) {
         this.userType = localStorage.getItem("usertype");
-        if(this.userType != '1' && this.userType != '2'){
+        if(this.userType != '1' && this.userType != '3' && this.userType != '2'){
           this.router.navigateByUrl('/login');
         }
      }

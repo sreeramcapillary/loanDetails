@@ -22,7 +22,7 @@ export class EmplistComponent implements OnInit {
     private router: Router,private appService: AppService, private excelService:ExcelService,private formBuilder: FormBuilder) {
      
       this.userType = localStorage.getItem("usertype");
-      if(this.userType != '1' && this.userType != '2'){
+      if(this.userType != '1' && this.userType != '2' && this.userType != '3'){
         this.router.navigateByUrl('/login');
       } 
     }

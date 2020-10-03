@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem("usertype",data.userDetails[0].usertype);
             localStorage.setItem("userId",data.userDetails[0].id);
 
-            if(data.userDetails[0].usertype == 1 || data.userDetails[0].usertype == 2){
+            if(data.userDetails[0].usertype == 1 || data.userDetails[0].usertype == 2 || data.userDetails[0].usertype == 3){
               this.router.navigateByUrl('/emp-list');
 
             }else{

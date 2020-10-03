@@ -19,7 +19,7 @@ export class LeadlistComponent implements OnInit {
     private router: Router,private appService: AppService, private excelService:ExcelService) { 
      
       this.userType = localStorage.getItem("usertype");
-      if(this.userType != '1'){
+      if(this.userType != '1' && this.userType != '3'){
         this.router.navigateByUrl('/login');
       } 
     }

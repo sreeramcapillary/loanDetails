@@ -3,16 +3,16 @@
     <div class="sidebar-heading"><b>INFRO TECH</b></div>
       <div class="list-group list-group-flush">
         <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='elist'}" (click)="clickSide('elist')" >Employee List</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='leadlist'}" (click)="clickSide('leadlist')" *ngIf="userRole == 1">Team Leads</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='xlupload'}"  (click)="clickSide('xlupload')" *ngIf="userRole == 1">New Data Upload</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='oldxlupload'}" (click)="clickSide('oldxlupload')" *ngIf="userRole == 1">Old Data Upload</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='singleempdataupload'}" (click)="clickSide('singleempdataupload')" *ngIf="userRole == 1">Single Employee Data Upload</a>
+        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='leadlist'}" (click)="clickSide('leadlist')" *ngIf="userRole == 1 || userRole == 3">Team Leads</a>
+        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='xlupload'}"  (click)="clickSide('xlupload')" *ngIf="userRole == 1 || userRole == 3">New Data Upload</a>
+        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='oldxlupload'}" (click)="clickSide('oldxlupload')" *ngIf="userRole == 1 || userRole == 3">Old Data Upload</a>
+        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='singleempdataupload'}" (click)="clickSide('singleempdataupload')" *ngIf="userRole == 1 || userRole == 3">Single Employee Data Upload</a>
         <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='aloan'}" (click)="clickSide('aloan')" >Assigned Loans</a>
         <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='ualoan'}" (click)="clickSide('ualoan')" >Un-assigned Loans</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='filteredloan'}" (click)="clickSide('filteredloan')" >Filtered Loans</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='repaymentdataupload'}" (click)="clickSide('repaymentdataupload')" *ngIf="userRole == 1">Repayment Data Upload</a>
+        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='filteredloan'}" (click)="clickSide('filteredloan')" *ngIf="userRole == 1 || userRole == 2">Filtered Loans</a>
+        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='repaymentdataupload'}" (click)="clickSide('repaymentdataupload')" *ngIf="userRole == 1 || userRole == 3">Repayment Data Upload</a>
         <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='reports'}" (click)="clickSide('reports')">Reports</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='downloadloans'}" (click)="clickSide('downloadloans')" *ngIf="userRole == 1">Download Loans</a>
+        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='downloadloans'}" (click)="clickSide('downloadloans')" *ngIf="userRole == 1 || userRole == 3">Download Loans</a>
   
       </div>
     </div>

@@ -24,7 +24,7 @@ router.post('/login', function (request, response) {
 	response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 	//request.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 	if (username && password) {
-		if(username == "admin"){
+		if(username == "admin" || username == "co-admin"){
 			connection.query('SELECT UD.id, UD.name, UD.username, UD.email, UD.mobile, UD.usertype FROM userdetails UD WHERE UD.username = ? AND UD.password = ? AND UD.active = ?', [username, password, 1], function (error, results, fields) {
 				if (results.length > 0) {
 					//	request.session.loggedin = true;

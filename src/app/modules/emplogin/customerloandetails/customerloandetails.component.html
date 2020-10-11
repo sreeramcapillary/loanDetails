@@ -275,7 +275,9 @@
                         <li *ngFor="let pastStatus of loanPastStatus"> * {{pastStatus.status}} ({{pastStatus.dateTime.substring(11,16)}}) ({{pastStatus.callType}}) : {{pastStatus.loan_comments}}</li>
                       </ul>
                     </div>
-            
+                    <div>
+                      <a href="https://web.whatsapp.com/send?{{whatsappMsg}}" target="_blank"><button class="btn btn-primary btn-lg btn-block" type="button">Send whatsapp Msg</button></a>
+                    </div>
               </div>
             </div>
           </div>

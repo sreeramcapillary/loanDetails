@@ -47,6 +47,7 @@ export class CustomerloandetailsComponent implements OnInit {
   mobileView : boolean = false
   callsDone : any = 0
   callsRemaining : any = 0
+  whatsappMsg : any
   constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
     
     this.userType = localStorage.getItem("usertype");
@@ -151,6 +152,7 @@ export class CustomerloandetailsComponent implements OnInit {
           this.loanPastStatus = data.loanPastStatus
         }
       });
+      this.whatsappMsg = "phone=91"+ selected[0].mobile +"&text=Dear *LOANFRONT CUSTOMER*%0a%0aNAME : *"+ selected[0].customer_Name +"*%0aREFERENCE 1 : *"+ selected[0].ref_name1 +"* (*"+ selected[0].ref_mobile_num1 +"*)%0aREFERENCE 2 : *"+ selected[0].ref_name2 +"* (*"+ selected[0].ref_mobile_num2 +"*)%0aDUE AMOUNT : *"+ selected[0].repayment_amt +"*%0aADDRESS : *"+ selected[0].current_address +"*%0a%0aWe are legally mandated by RBI to report all financial behaviour of our customers to Credit bureaus(CIBIL/CRIF/Equifax/Experian) agencies every month please repay your overdue loan, within 24 hours  without fail to avoid delay/overdue reporting, which will affect your credit score badly, making it very difficult to get loans with any banks /financial institution in future.%0a%0aHello *"+ selected[0].customer_Name +"*,%0aYour loan is overdue by more than 150 days. Today our field agent tried to visit your address, but your phone is not reachable. We tried to help you out with different flexible payment options also, but you are not responding to our calls. But now we have no choice but to initiate the legal procedure if you are not paying your amount by today and the ‘Suit filed’ status will be updated to your CIBIL which will create a problem to get any loan in future from any other Bank(s). Request you to get in touch with our agent and discuss the payment plan to resolve the matter.%0a%0a*Alert* : We are unable to help u to remove penalty charges, also if you are unreachable, this message will be shared with your reference contacts given in Loan Application till repayment.%0a%0aTHANK YOU : *LOANFRONT*"
    }else{
     this.showActionsContainer = false
    }

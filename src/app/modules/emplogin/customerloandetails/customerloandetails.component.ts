@@ -6,6 +6,7 @@ import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { ColumnMode, SelectionType  } from '@swimlane/ngx-datatable';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import {Md5} from 'ts-md5/dist/md5';
+import {ExcelService} from '../../../helpers/services/excel.service';
 
 const URL = 'http://localhost:3000/uploadFile';
 
@@ -48,7 +49,7 @@ export class CustomerloandetailsComponent implements OnInit {
   callsDone : any = 0
   callsRemaining : any = 0
   whatsappMsg : any
-  constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder) { 
+  constructor(private router: Router,private appService: AppService,private formBuilder: FormBuilder, private excelService:ExcelService) { 
     
     this.userType = localStorage.getItem("usertype");
     this.empId = localStorage.getItem("userId");
@@ -346,6 +347,16 @@ export class CustomerloandetailsComponent implements OnInit {
     this.totalPendingAmount = 0
     this.totalRecoveredAmount = 0
     this.getAllLoanDetails(selectedDate)
+  }
+
+  downloadCustomerMobileNumbers(){
+    let customerMobileNumbers = []
+    this.rows.map(row => {
+      customerMobileNumbers.push({"mobile" : row.mobile})
+    })
+    setTimeout(()=>{
+      this.excelService.exportAsExcelFile(customerMobileNumbers, 'Customer Mobile Numbers');
+    }, 500);
   }
 
 }

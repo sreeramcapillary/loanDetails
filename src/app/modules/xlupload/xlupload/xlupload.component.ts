@@ -39,7 +39,8 @@ export class XluploadComponent implements OnInit {
     this.newDataForm = this.fb.group({
       newBatch : ["NO"],
       team : ["ALL"],
-      perEmployee : ['200']
+      perEmployee : ['200'],
+      client : ["LoanFront"]
     });
     this.getUsersWithKnownLanguages()
     this.getAllActiveLeads()
@@ -51,7 +52,7 @@ export class XluploadComponent implements OnInit {
           if(this.newDataForm.value.newBatch == "YES"){
             this.inactiveCurrentBatch()
           }
-          this.appService.xlupload(this.xluploaddata).subscribe(
+          this.appService.xlupload(this.xluploaddata, this.newDataForm.value.client).subscribe(
             (data: any) => {
               if (data.status) {
                 this.loanDetails = []

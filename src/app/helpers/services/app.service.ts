@@ -95,12 +95,18 @@ export class AppService {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }
-    xlupload(loand){
+    xlupload(loand, client){
       var loan = {
         loanDetails:loand.data,
         filename:loand.filename
       }
-      return this.http.post(BaseURL.url+'insertExcel',loan, {
+      let endPoint = ""
+      if(client == "LoanFront"){
+        endPoint = "insertExcel"
+      }else{
+        endPoint = "insertExcelRedCarpet"
+      }
+      return this.http.post(BaseURL.url+''+endPoint,loan, {
         headers: new HttpHeaders().set('Authorization', "Basic " + localStorage.getItem('current_user_token')).set('Content-Type', "application/json")
       });
     }

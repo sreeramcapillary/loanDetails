@@ -928,6 +928,91 @@ router.post('/insertExcel', function (request, response) {
 	}
 });
 
+router.post('/insertExcelRedCarpet', function (request, response) {
+	var loanDetails = request.body.loanDetails;
+	var filename = request.body.filename;
+	if (loanDetails == null) {
+		let loanData = { "status": false, "code": 404, "message": "No Data" }
+		response.json(loanData)
+	} else {
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1;
+		var yyyy = today.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd
+
+		} if (mm < 10) {
+
+			mm = '0' + mm
+		}
+		var today = yyyy + '-' + mm + '-' + dd;
+
+		if (filename) {
+			var file = {
+				client_id: "1",
+				filename: filename,
+				date: today,
+				active: '1'
+			}
+			connection.query('INSERT INTO imported_files SET ?', file, (err, results, fields) => {
+				var lastinserttedId = results.insertId;
+				let inserData = [];
+				inserData[0] = ""
+				let queryTest
+				let startQuery = "INSERT INTO `loan_details` (`client_id`,`imported_file_id`,`Customer_id`, `Loan_Count`, `loanid`, `customer_Name`, `mobile`,`email`, `DOB`, `Age`, `city`, `pin_code`, `state`, `loan_id`, `disbursal_amt`, `disbursal_date`,`due_date`, `principal_amt`, `interest_amount`, `penalty_amt`, `repayment_amt`, `ref_type1`, `ref_name1`, `ref_mobile_num1`, `ref_type2`, `ref_name2`, `ref_mobile_num2`, `current_address`, `permanent_address`, `bucket`,`overdue_days`, `is_collected`, `ESIGN_MOBILE_NUMBER`, `repaid_date`,`is_assigned`,`date`, `batch_status`) VALUES";
+				let duplicateColumn = "ON DUPLICATE KEY UPDATE `client_id`=VALUES(`client_id`),`imported_file_id`=VALUES(`imported_file_id`),`assigned_emp_id`=VALUES(`assigned_emp_id`),`Customer_id`=VALUES(`customer_id`), `Loan_Count`=VALUES(`loan_count`), `loanid`=VALUES(`loan_id`),`customer_Name`=VALUES(`customer_name`),`Gender`=VALUES(`gender`),`mobile`=VALUES(`mobile`),`email`=VALUES(`email`),`DOB`=VALUES(`dob`),`Age`=VALUES(`age`),`city`=VALUES(`city`) ,`pin_code`=VALUES(`pin_code`),`state`=VALUES(`state`),`loan_id`=VALUES(`loan_id`),`disbursal_amt`=VALUES(`disbursal_amt`),`disbursal_date`=VALUES(`disbursal_date`),`due_date`=VALUES(`due_date`),`principal_amt`=VALUES(`principal_amt`),`interest_amount`=VALUES(`interest_amount`),`penalty_amt`=VALUES(`penalty_amt`),`repayment_amt`=VALUES(`repayment_amt`),`ref_type1`=VALUES(`ref_type1`),`ref_name1`=VALUES(`ref_name1`),`ref_mobile_num1`=VALUES(`ref_mobile_num1`),`ref_type2`=VALUES(`ref_type2`),`ref_name2`=VALUES(`ref_name2`),`ref_mobile_num2`=VALUES(`ref_mobile_num2`), `current_address`=VALUES(`current_address`), `permanent_address`=VALUES(`permanent_address`),`bucket`=VALUES(`bucket`),`overdue_days`=VALUES(`overdue_days`),`is_collected`=VALUES(`is_collected`),`ESIGN_MOBILE_NUMBER`=VALUES(`esign_mobile_number`),`repaid_date`=VALUES(`repaid_date`),`is_assigned`=VALUES(`is_assigned`),`date`=VALUES(`date`), `batch_status` =VALUES(`batch_status`)"
+				let responseData;
+				let currentBatch = 0
+				let rowCount = 0
+				let allBatchSuccess = true
+				loanDetails.map(item => {
+					if(item.loanid !=""){
+						currentRow = `("1","${lastinserttedId}","${item.user_id}","${item.total_loans}" ,"${item.loanid}" ,"${item.first_name}",  "${item.mobile}","${item.email}" ,
+						"NULL" ,"0" ,"${item.marvin_city_name}" ,
+						"NULL" ,"${item.state}" ,"${item.loanid}" ,"${item.exposure}","NULL" ,"NULL" ,"${item.loan_amount}" ,
+						"0" ,"0" ,"${item.due_amount}" ,"Father" , 
+						"${item.father_name}","NULL" , "NULL","NULL" ,"NULL", "${item.building}", "${item.permenant_building}" ,
+						"${item.bucket}" ,"${item.dpd}" , "NULL",
+						"NULL" , "NULL","0","${today}", "1"),`
+
+						currentRow = currentRow.replace(/\n|\r/g, "");
+						currentRow = currentRow.replace(/~+$/, '');
+						currentRow = currentRow.replace(/'/g, "''");
+						
+						inserData[currentBatch] = inserData[currentBatch] + currentRow
+
+						if(rowCount == 1000){
+							currentBatch = currentBatch + 1
+							rowCount = 0
+							inserData[currentBatch] = ""
+						}
+						rowCount = rowCount + 1
+					}
+				});
+				inserData.map( (batch, key) => {
+					inserData[key] = inserData[key].replace(/,\s*$/, "");
+					queryTest = startQuery + inserData[key] + duplicateColumn;
+					connection.query(queryTest, (err, results, fields) => {
+						if(!results){
+							allBatchSuccess = false
+						}
+					});
+				})
+				if(allBatchSuccess){
+					let responseData = { "status": true, "code": 200, "message": "Excel uploaded successfully" }
+					response.json(responseData)
+					response.end()
+				}else{
+					let responseData = { "status": true, "code": 401, "message": "something went wrong" }
+					response.json(responseData)
+					response.end()
+				}
+			});
+		}
+	}
+});
+
 router.post('/uploadSingleEmployeeDetails', function (request, response) {
 	var loanDetails = request.body.loanDetails;
 	var filename = request.body.filename;

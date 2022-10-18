@@ -27,14 +27,10 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/@swimlane/ngx-datatable/assets/app.css",
-              "node_modules/@swimlane/ngx-datatable/themes/material.css",
-              "node_modules/@swimlane/ngx-datatable/assets/icons.css",
               "src/styles.scss",
+              "src/assets/css/we4u.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss"
-          
-           
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

@@ -141,7 +141,7 @@ export class EmpregistationComponent implements OnInit {
           this.loading = false;
         // console.log(data.status);
           if(data.status == true){
-           // localStorage.setItem('current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
+           // localStorage.setItem('we4u_current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
           //  console.log(true)
           alert(data.message)
            this.router.navigateByUrl('/emp-list');
@@ -183,7 +183,7 @@ export class EmpregistationComponent implements OnInit {
         this.loading = false;
       // console.log(data.status);
         if(data.status == true){
-         // localStorage.setItem('current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
+         // localStorage.setItem('we4u_current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
         //  console.log(true)
          this.router.navigateByUrl('/emp-list');
         }else{

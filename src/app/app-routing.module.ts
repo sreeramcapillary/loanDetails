@@ -1,90 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './helpers/guards/auth.guard';
-const routes: Routes = [{
-  path: '',
-  loadChildren: './core/core.module#CoreModule',
-  pathMatch: 'full'
-},
-{
-  path: 'login',
-  loadChildren: './core/core.module#CoreModule',
-  pathMatch: 'full'
-},
-{
-  path: 'emp-list',
-  loadChildren: './modules/empregistation/empregistation.module#EmpregistationModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'lead-list',
-  loadChildren: './modules/leadregistation/leadregistation.module#LeadregistationModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'xl-upload',
-  loadChildren: './modules/xlupload/xlupload.module#XluploadModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'assignLoanList',
-  loadChildren: './modules/assign-loan-list/assign-loan-list.module#AssignLoanListModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'unassignedLoanList',
-  loadChildren: './modules/unassigned-loans/unassigned-loans.module#UnassignedLoansModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'filteredLoanList',
-  loadChildren: './modules/filtered-loans/filtered-loans.module#FilteredLoansModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'singleEmployeeDataUpload',
-  loadChildren: './modules/single-employee-data-upload/single-employee-data-upload.module#SingleEmployeeDataUploadModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'cutomerloandetails',
-  loadChildren: './modules/emplogin/emplogin.module#EmploginModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'oldxlupload',
-  loadChildren: './modules/olddataupload/olddataupload.module#OlddatauploadModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'repaymentupload',
-  loadChildren: './modules/repaymentdataupload/repaymentdataupload.module#RepaymentdatauploadModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'reports',
-  loadChildren: './modules/reports/reports.module#ReportsModule',
-  canActivate: [AuthGuard]
-
-},
-{
-  path: 'downloadloans',
-  loadChildren: './modules/downloadloans/downloadloans.module#DownloadloansModule',
-  canActivate: [AuthGuard]
-
-},
-{ path: '**', redirectTo: '' }
-]
+const routes: Routes = [
+  {
+    path: 'login',
+    loadChildren: './core/core.module#CoreModule', 
+  },
+  {
+    path: '',
+    loadChildren: './modules/home/home.module#HomeModule', 
+    canActivate: [AuthGuard]
+  },
+  
+  { path: '', redirectTo: '/', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

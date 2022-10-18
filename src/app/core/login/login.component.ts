@@ -26,12 +26,11 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private appService: AppService) { 
       if (this.appService.currentUserValue) { 
-       // this.router.navigate(['/dashboard']);
+       this.router.navigate(['/']);
        }
     }
 
   ngOnInit() {
-    localStorage.clear();
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', [Validators.required]]
@@ -62,7 +61,7 @@ export class LoginComponent implements OnInit {
         this.loading = false;
      //  console.log(data.status);
         if(data.status == true){
-          localStorage.setItem('current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
+          localStorage.setItem('we4u_current_user_token', btoa(this.f.username.value + ":"+this.f.password.value));
         //  console.log(true)
         if(data.userDetails != ''){
           // data.userDetails.map(d =>{
@@ -70,7 +69,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem("userId",data.userDetails[0].id);
 
             if(data.userDetails[0].usertype == 1 || data.userDetails[0].usertype == 2 || data.userDetails[0].usertype == 3){
-              this.router.navigateByUrl('/emp-list');
+              this.router.navigateByUrl('/');
 
             }else{
               this.currentTimeStamp = new Date();

@@ -1,19 +1,57 @@
-  <!-- Sidebar -->
-  <div class="bg-light border-right" id="sidebar-wrapper">
-    <div class="sidebar-heading"><b>INFRO TECH</b></div>
-      <div class="list-group list-group-flush">
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='elist'}" (click)="clickSide('elist')" >Employee List</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='leadlist'}" (click)="clickSide('leadlist')" *ngIf="userRole == 1 || userRole == 3">Team Leads</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='xlupload'}"  (click)="clickSide('xlupload')" *ngIf="userRole == 1 || userRole == 3">New Data Upload</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='oldxlupload'}" (click)="clickSide('oldxlupload')" *ngIf="userRole == 1 || userRole == 3">Old Data Upload</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='singleempdataupload'}" (click)="clickSide('singleempdataupload')" *ngIf="userRole == 1 || userRole == 3">Single Employee Data Upload</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='aloan'}" (click)="clickSide('aloan')" >Assigned Loans</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='ualoan'}" (click)="clickSide('ualoan')" >Un-assigned Loans</a>
-        <a  class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='filteredloan'}" (click)="clickSide('filteredloan')" *ngIf="userRole == 1 || userRole == 2">Filtered Loans</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='repaymentdataupload'}" (click)="clickSide('repaymentdataupload')" *ngIf="userRole == 1 || userRole == 3">Repayment Data Upload</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='reports'}" (click)="clickSide('reports')">Reports</a>
-        <a class="list-group-item list-group-item-action bg-light" [ngClass]="{'activetab':activeTab =='downloadloans'}" (click)="clickSide('downloadloans')" *ngIf="userRole == 1 || userRole == 3">Download Loans</a>
-  
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+  <!-- Sidebar - Brand -->
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+      <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fa fa-users"></i>
       </div>
-    </div>
-    <!-- /#sidebar-wrapper -->
+      <div class="sidebar-brand-text mx-3">WE4U</div>
+  </a>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider my-0">
+
+  <!-- Nav Item - Dashboard -->
+  <li class="nav-item" [ngClass]="{'active':activeTab =='elist'}" (click)="clickSide('elist')">
+      <a class="nav-link" >
+          <i class="fa fa-tachometer"></i>
+          <span>Employee List</span></a>
+  </li>
+
+  <li class="nav-item" *ngIf="userRole == 1 || userRole == 3" [ngClass]="{'active':activeTab =='leadlist'}" (click)="clickSide('leadlist')">
+      <a class="nav-link">
+          <i class="fa fa-users"></i>
+          <span>Team Leads</span></a>
+  </li>
+  <li class="nav-item" [ngClass]="{'active':activeTab =='xlupload'}"  (click)="clickSide('xlupload')" *ngIf="userRole == 1 || userRole == 3">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>New Data Upload</span></a>
+  </li>
+
+  <li class="nav-item" [ngClass]="{'active':activeTab =='oldxlupload'}" (click)="clickSide('oldxlupload')" *ngIf="userRole == 1 || userRole == 3">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Old Data Upload</span></a>
+  </li>
+
+  <li class="nav-item" [ngClass]="{'active':activeTab =='singleempdataupload'}" (click)="clickSide('singleempdataupload')" *ngIf="userRole == 1 || userRole == 3">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Single Employee Data Upload</span></a>
+  </li>
+  <li class="nav-item" [ngClass]="{'active':activeTab =='aloan'}" (click)="clickSide('aloan')">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Assigned Loans</span></a>
+  </li>
+  <li class="nav-item" [ngClass]="{'active':activeTab =='ualoan'}" (click)="clickSide('ualoan')" >
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Un-assigned Loans</span></a>
+  </li>
+  <li class="nav-item" [ngClass]="{'active':activeTab =='filteredloan'}" (click)="clickSide('filteredloan')" *ngIf="userRole == 1 || userRole == 2">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Filtered Loans</span></a>
+  </li>
+  <li class="nav-item" [ngClass]="{'active':activeTab =='repaymentdataupload'}" (click)="clickSide('repaymentdataupload')" *ngIf="userRole == 1 || userRole == 3">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Repayment Data Upload</span></a>
+  </li>
+  <li class="nav-item" [ngClass]="{'active':activeTab =='reports'}" (click)="clickSide('reports')">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Reports</span></a>
+  </li>
+  <li class="nav-item" [ngClass]="{'active':activeTab =='downloadloans'}" (click)="clickSide('downloadloans')" *ngIf="userRole == 1 || userRole == 3">
+      <a class="nav-link"><i class="fa fa-cloud-upload"></i><span>Download Loans</span></a>
+  </li>
+  <!-- Divider -->
+  <hr class="sidebar-divider">
+</ul>

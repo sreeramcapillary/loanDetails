@@ -7,6 +7,7 @@ import { EmplistComponent } from './emplist/emplist.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { SharedModule } from '../shared/shared.module';
 
+
 @NgModule({
   declarations: [EmpregistationComponent,EmplistComponent],
   imports: [
